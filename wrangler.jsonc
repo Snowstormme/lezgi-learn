@@ -1,0 +1,20 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "lezgi-learn",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2025-03-01",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "observability": {
+    "enabled": true
+  },
+  "vars": {
+    "NEXT_PUBLIC_SUPABASE_URL": "https://tvodnkeytyqqzqvzdczc.supabase.co",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2b2Rua2V5dHlxcXpxdnpkY3pjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTUxODM5MDgsImV4cCI6MjExMDc1OTkwOH0.8R5fFgDdUdfHpuDNwry-hovwd7PdRV8HnCOYWMyLk_k"
+  }
+}
