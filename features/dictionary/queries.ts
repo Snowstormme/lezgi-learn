@@ -3,6 +3,7 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { loadAndValidateContentBundle } from '@/content/loader';
 
 export interface DictionaryWordItem {
+  id?: string;
   slug: string;
   lemma_lez: string;
   translation_ru: string;
@@ -41,6 +42,7 @@ export async function getPublishedDictionaryWords(): Promise<
 
       if (!wordsError && !exError && words && words.length > 0) {
         return words.map((w) => ({
+          id: w.id,
           slug: w.slug,
           lemma_lez: w.lemma_lez,
           translation_ru: w.translation_ru,
