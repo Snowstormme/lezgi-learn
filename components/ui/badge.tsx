@@ -13,13 +13,13 @@ export function Badge({
       className={cn(
         'inline-flex items-center gap-1 rounded-xl border-2 px-2.5 py-0.5 text-xs font-extrabold uppercase tracking-wide',
         variant === 'default' &&
-          'border-primary/40 bg-primary/15 text-primary',
+          'border-primary/50 bg-primary/15 text-primary',
         variant === 'verified' &&
-          'border-[#46a302] bg-primary/15 text-primary',
+          'border-emerald-400/50 bg-emerald-500/15 text-emerald-300',
         variant === 'secondary' &&
-          'border-border bg-secondary text-secondary-foreground',
+          'border-border bg-secondary text-foreground',
         variant === 'warning' &&
-          'border-amber-500/50 bg-amber-500/15 text-amber-300',
+          'border-primary/60 bg-primary/15 text-primary',
         variant === 'outline' &&
           'border-border bg-transparent text-muted-foreground',
         className

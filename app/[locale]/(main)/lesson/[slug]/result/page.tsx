@@ -44,13 +44,13 @@ export default async function LessonResultScreenPage({
 
   return (
     <div className="space-y-6 py-4">
-      {/* Golden Trophy Celebration */}
+      {/* Vermillion & Cloud White Trophy Celebration */}
       <div className="space-y-3 text-center">
-        <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-3xl border-b-[6px] border-[#CC9F00] bg-[#FFC800] text-primary-foreground">
+        <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-3xl border-2 border-b-[6px] border-[#B92B1C] bg-primary text-[#F8FAFC]">
           <Trophy className="h-12 w-12 stroke-[2.5]" />
         </div>
 
-        <h1 className="text-3xl font-black tracking-tight text-[#FFC800]">
+        <h1 className="text-3xl font-black tracking-tight text-[#F8FAFC]">
           {tResult('title')}
         </h1>
         <p className="text-sm font-bold text-muted-foreground">
@@ -58,37 +58,37 @@ export default async function LessonResultScreenPage({
         </p>
       </div>
 
-      {/* 3 Colored-Header Stat Boxes */}
+      {/* 3 Tactile Stat Boxes (Vermillion / Cloud White / Navy) */}
       <div className="grid grid-cols-3 gap-3">
-        {/* XP Box */}
-        <div className="overflow-hidden rounded-2xl border-2 border-b-4 border-[#FFC800] bg-[#FFC800]">
-          <p className="py-1 text-center text-[11px] font-black uppercase tracking-wider text-primary-foreground">
+        {/* XP Box (Vermillion) */}
+        <div className="overflow-hidden rounded-2xl border-2 border-b-4 border-[#B92B1C] bg-primary">
+          <p className="py-1.5 text-center text-[11px] font-black uppercase tracking-wider text-[#F8FAFC]">
             ОПЫТ
           </p>
-          <div className="flex items-center justify-center gap-1 rounded-xl bg-background py-3 text-lg font-black text-[#FFC800]">
-            <Zap className="h-5 w-5 fill-[#FFC800]" />
+          <div className="flex items-center justify-center gap-1 rounded-xl bg-background py-3 text-lg font-black text-primary">
+            <Zap className="h-5 w-5 fill-primary text-primary" />
             <span>+{xpEarned}</span>
           </div>
         </div>
 
-        {/* Accuracy Box */}
-        <div className="overflow-hidden rounded-2xl border-2 border-b-4 border-primary bg-primary">
-          <p className="py-1 text-center text-[11px] font-black uppercase tracking-wider text-primary-foreground">
+        {/* Accuracy Box (Cloud White) */}
+        <div className="overflow-hidden rounded-2xl border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC]">
+          <p className="py-1.5 text-center text-[11px] font-black uppercase tracking-wider text-[#0B132B]">
             ТОЧНОСТЬ
           </p>
-          <div className="flex items-center justify-center gap-1 rounded-xl bg-background py-3 text-lg font-black text-primary">
-            <Target className="h-5 w-5" />
+          <div className="flex items-center justify-center gap-1 rounded-xl bg-background py-3 text-lg font-black text-[#F8FAFC]">
+            <Target className="h-5 w-5 text-[#F8FAFC]" />
             <span>{score}%</span>
           </div>
         </div>
 
-        {/* Correct Answers Box */}
-        <div className="overflow-hidden rounded-2xl border-2 border-b-4 border-accent bg-accent">
-          <p className="py-1 text-center text-[11px] font-black uppercase tracking-wider text-primary-foreground">
+        {/* Correct Answers Box (Navy + Cloud) */}
+        <div className="overflow-hidden rounded-2xl border-2 border-b-4 border-border bg-secondary">
+          <p className="py-1.5 text-center text-[11px] font-black uppercase tracking-wider text-[#F8FAFC]">
             ВЕРНО
           </p>
-          <div className="flex items-center justify-center gap-1 rounded-xl bg-background py-3 text-lg font-black text-accent">
-            <Check className="h-5 w-5 stroke-[3]" />
+          <div className="flex items-center justify-center gap-1 rounded-xl bg-background py-3 text-lg font-black text-[#F8FAFC]">
+            <Check className="h-5 w-5 stroke-[3] text-primary" />
             <span>
               {correct}/{total}
             </span>
@@ -104,7 +104,7 @@ export default async function LessonResultScreenPage({
           </p>
           <Link
             href="/login"
-            className="shrink-0 rounded-xl border-b-4 border-[#1899D6] bg-accent px-3.5 py-2 text-xs font-black uppercase text-primary-foreground"
+            className="flex h-10 shrink-0 items-center rounded-xl border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC] px-3.5 text-xs font-black uppercase text-[#0B132B] active:translate-y-[1px]"
           >
             Войти
           </Link>
@@ -121,13 +121,13 @@ export default async function LessonResultScreenPage({
             {lesson.practice_words.map((word) => (
               <div
                 key={word.slug}
-                className="flex items-center justify-between rounded-2xl border-2 border-b-4 border-border bg-card px-4 py-3"
+                className="flex items-center justify-between gap-3 rounded-2xl border-2 border-b-4 border-border bg-card px-4 py-3"
               >
-                <div>
+                <div className="min-w-0">
                   <p className="text-base font-black text-primary">
                     {word.lemma_lez}
                   </p>
-                  <p className="text-xs font-bold text-foreground">
+                  <p className="text-xs font-bold text-[#F8FAFC]">
                     {word.translation_ru}
                   </p>
                 </div>
@@ -141,7 +141,7 @@ export default async function LessonResultScreenPage({
         </div>
       )}
 
-      {/* Action Buttons */}
+      {/* Full-height Action Buttons */}
       <div className="space-y-3 pt-2">
         <Link
           href={
@@ -149,7 +149,7 @@ export default async function LessonResultScreenPage({
               ? `/lesson/${lesson.next_lesson_slug}`
               : '/learn'
           }
-          className="flex h-13 w-full items-center justify-center rounded-2xl border-b-4 border-[#46a302] bg-primary px-6 text-base font-black uppercase tracking-wider text-primary-foreground transition-all hover:brightness-105 active:translate-y-[2px]"
+          className="flex min-h-[56px] w-full items-center justify-center rounded-2xl border-2 border-b-4 border-[#B92B1C] bg-primary px-6 py-3.5 text-base font-black uppercase tracking-wider text-[#F8FAFC] transition-all hover:brightness-105 active:translate-y-[2px] active:border-b-2"
         >
           ПРОДОЛЖИТЬ
         </Link>
@@ -157,14 +157,14 @@ export default async function LessonResultScreenPage({
         <div className="grid grid-cols-2 gap-3">
           <Link
             href="/learn"
-            className="flex h-12 items-center justify-center rounded-2xl border-2 border-b-4 border-border bg-card px-4 text-xs font-extrabold uppercase tracking-wider text-foreground transition-all active:translate-y-[2px]"
+            className="flex min-h-[48px] items-center justify-center rounded-2xl border-2 border-b-4 border-border bg-card px-4 py-2.5 text-center text-xs font-extrabold uppercase tracking-wider text-[#F8FAFC] transition-all hover:bg-secondary active:translate-y-[2px] active:border-b-2"
           >
             К КАРТЕ КУРСА
           </Link>
 
           <Link
             href={`/lesson/${lesson.slug}`}
-            className="flex h-12 items-center justify-center gap-1.5 rounded-2xl border-2 border-b-4 border-border bg-background px-4 text-xs font-extrabold uppercase tracking-wider text-accent transition-all active:translate-y-[2px]"
+            className="flex min-h-[48px] items-center justify-center gap-1.5 rounded-2xl border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC] px-4 py-2.5 text-center text-xs font-black uppercase tracking-wider text-[#0B132B] transition-all hover:bg-white active:translate-y-[2px] active:border-b-2"
           >
             <RotateCcw className="h-4 w-4" />
             <span>ПОВТОРИТЬ</span>

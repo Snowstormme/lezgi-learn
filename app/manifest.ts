@@ -8,8 +8,8 @@ export default function manifest(): MetadataRoute.Manifest {
       'Веб-платформа (PWA) для изучения лезгинского языка с русского по материалам, проверенным носителями.',
     start_url: '/learn',
     display: 'standalone',
-    background_color: '#0c1017',
-    theme_color: '#2bbaa0',
+    background_color: '#0B132B',
+    theme_color: '#F04E37',
     lang: 'ru',
     icons: [
       {

@@ -46,7 +46,7 @@ export function MobileShell({
 
   if (isInsideLessonRunner) {
     return (
-      <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col bg-background px-4 py-4">
+      <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col border-x-2 border-border bg-background px-4 py-4">
         {children}
       </div>
     );
@@ -55,33 +55,33 @@ export function MobileShell({
   return (
     <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col border-x-2 border-border bg-background">
       {/* Top Stat Bar */}
-      <header className="sticky top-0 z-20 flex h-14 items-center justify-between border-b-2 border-border bg-background/95 px-4 backdrop-blur">
+      <header className="sticky top-0 z-20 flex h-16 items-center justify-between gap-2 border-b-2 border-border bg-background/95 px-4 backdrop-blur">
         <Link
           href="/learn"
-          className="flex items-center gap-2 rounded-xl px-1.5 py-1 transition-transform active:scale-95"
+          className="flex shrink-0 items-center gap-2 rounded-xl py-1 transition-transform active:scale-95"
         >
-          <span className="flex h-8 w-9 items-center justify-center rounded-lg border-b-2 border-[#46a302] bg-primary text-xs font-black text-primary-foreground">
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl border-b-4 border-[#B92B1C] bg-primary text-xs font-black text-[#F8FAFC]">
             ЛӀ
           </span>
-          <span className="text-sm font-black uppercase tracking-wider text-muted-foreground">
+          <span className="text-sm font-black uppercase tracking-wider text-[#F8FAFC]">
             Лезги
           </span>
         </Link>
 
-        <div className="flex items-center gap-4">
+        <div className="flex shrink-0 items-center gap-3.5">
           <div
-            className="flex items-center gap-1.5 text-sm font-black text-[#FF9600]"
+            className="flex items-center gap-1 text-sm font-black text-primary"
             title="Ударный режим (дней подряд)"
           >
-            <Flame className="h-5 w-5 fill-[#FF9600]" />
+            <Flame className="h-5 w-5 fill-primary text-primary" />
             <span>{streakDays}</span>
           </div>
 
           <div
-            className="flex items-center gap-1 text-sm font-black text-[#FFC800]"
+            className="flex items-center gap-1 text-sm font-black text-[#F8FAFC]"
             title="Очки опыта (XP)"
           >
-            <Zap className="h-5 w-5 fill-[#FFC800]" />
+            <Zap className="h-5 w-5 fill-[#FFC800] text-[#FFC800]" />
             <span>{xp}</span>
           </div>
         </div>
@@ -89,21 +89,23 @@ export function MobileShell({
         <Link
           href={isAuthenticated ? '/profile' : '/login'}
           className={cn(
-            'flex h-9 items-center gap-1.5 rounded-xl border-2 border-b-4 px-3 text-xs font-extrabold uppercase tracking-wide transition-all active:translate-y-[1px]',
+            'flex h-10 shrink-0 items-center gap-1.5 rounded-xl border-2 border-b-4 px-3 text-xs font-extrabold uppercase tracking-wide transition-all active:translate-y-[1px] active:border-b-2',
             isAuthenticated
-              ? 'border-border bg-secondary text-foreground'
-              : 'border-[#1899D6] bg-accent text-primary-foreground'
+              ? 'border-border bg-card text-[#F8FAFC]'
+              : 'border-[#CBD5E1] bg-[#F8FAFC] text-[#0B132B]'
           )}
         >
-          <User className="h-4 w-4" />
-          <span>{isAuthenticated ? (displayName ?? 'Профиль') : 'Войти'}</span>
+          <User className="h-4 w-4 shrink-0" />
+          <span className="max-w-[96px] truncate">
+            {isAuthenticated ? (displayName ?? 'Профиль') : 'Войти'}
+          </span>
         </Link>
       </header>
 
-      <main className="flex-1 px-4 py-5 pb-24">{children}</main>
+      <main className="flex-1 px-4 py-5 pb-28">{children}</main>
 
-      {/* Bottom Tab Bar */}
-      <nav className="fixed bottom-0 left-1/2 z-20 flex h-20 w-full max-w-md -translate-x-1/2 items-center justify-around border-t-2 border-border bg-background px-2">
+      {/* Bottom Tab Bar (5 equal-width tactile tabs) */}
+      <nav className="fixed bottom-0 left-1/2 z-20 grid h-20 w-full max-w-md -translate-x-1/2 grid-cols-5 items-center gap-1 border-x-2 border-t-2 border-border bg-background px-2">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive =
@@ -113,14 +115,14 @@ export function MobileShell({
               key={item.href}
               href={item.href}
               className={cn(
-                'flex flex-col items-center justify-center gap-1 rounded-2xl border-2 px-3 py-2 text-[11px] font-extrabold uppercase tracking-wide transition-all active:scale-95',
+                'flex h-14 w-full flex-col items-center justify-center gap-1 rounded-2xl border-2 px-1 text-[10px] font-extrabold uppercase tracking-wide transition-all active:scale-95',
                 isActive
-                  ? 'border-accent bg-accent/15 text-accent'
-                  : 'border-transparent text-muted-foreground hover:text-foreground'
+                  ? 'border-primary bg-primary/15 text-primary'
+                  : 'border-transparent text-muted-foreground hover:text-[#F8FAFC]'
               )}
             >
-              <Icon className="h-5 w-5 stroke-[2.5]" />
-              <span>{item.label}</span>
+              <Icon className="h-5 w-5 shrink-0 stroke-[2.5]" />
+              <span className="truncate">{item.label}</span>
             </Link>
           );
         })}

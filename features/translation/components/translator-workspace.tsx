@@ -183,9 +183,14 @@ export function TranslatorWorkspace({
                   ? 'Введите слово или фразу по-русски...'
                   : 'Введите слово или фразу по-лезгински...'
               }
-              className="h-11 flex-1 text-sm"
+              className="h-12 flex-1 text-sm"
             />
-            <Button type="submit" disabled={isPending || !queryText.trim()}>
+            <Button
+              type="submit"
+              size="default"
+              className="shrink-0"
+              disabled={isPending || !queryText.trim()}
+            >
               <Search className="h-4 w-4" />
               <span>Найти</span>
             </Button>
@@ -339,16 +344,16 @@ export function TranslatorWorkspace({
               {!showSuggestionForm ? (
                 <Button
                   type="button"
-                  variant="secondary"
-                  size="sm"
+                  variant="cloud"
+                  size="default"
                   className="w-full"
                   onClick={() => setShowSuggestionForm(true)}
                 >
-                  <MessageSquarePlus className="h-3.5 w-3.5" />
+                  <MessageSquarePlus className="h-4 w-4 shrink-0" />
                   <span>
                     {result.isVerified
-                      ? 'Предложить альтернативный вариант перевода'
-                      : 'Предложить точный перевод для проверки носителем'}
+                      ? 'Предложить свой вариант'
+                      : 'Предложить точный перевод'}
                   </span>
                 </Button>
               ) : (
@@ -470,24 +475,26 @@ export function TranslatorWorkspace({
                 </div>
 
                 {isReviewerOrAdmin && item.status === 'pending_review' && (
-                  <div className="flex gap-2 pt-1">
+                  <div className="grid grid-cols-2 gap-2.5 pt-1">
                     <Button
                       type="button"
                       size="sm"
+                      className="w-full"
                       disabled={isPending}
                       onClick={() => handleModerate(item.id, 'published')}
                     >
-                      <CheckCircle2 className="h-3.5 w-3.5" />
-                      <span>Одобрить в базу</span>
+                      <CheckCircle2 className="h-3.5 w-3.5 shrink-0" />
+                      <span>Одобрить</span>
                     </Button>
                     <Button
                       type="button"
                       size="sm"
-                      variant="destructive"
+                      variant="secondary"
+                      className="w-full"
                       disabled={isPending}
                       onClick={() => handleModerate(item.id, 'rejected')}
                     >
-                      <XCircle className="h-3.5 w-3.5" />
+                      <XCircle className="h-3.5 w-3.5 shrink-0" />
                       <span>Отклонить</span>
                     </Button>
                   </div>

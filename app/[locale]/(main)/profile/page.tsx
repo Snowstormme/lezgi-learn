@@ -13,28 +13,36 @@ export default async function ProfilePage() {
 
   return (
     <div className="space-y-5">
-      <h1 className="text-xl font-bold tracking-tight">{tProfile('title')}</h1>
+      <h1 className="text-2xl font-black tracking-tight">{tProfile('title')}</h1>
 
       {session.isAuthenticated ? (
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-base">{session.displayName}</CardTitle>
-              <Badge variant="verified">{session.role}</Badge>
+            <div className="flex items-center justify-between gap-2">
+              <CardTitle className="text-lg font-black">
+                {session.displayName}
+              </CardTitle>
+              <Badge variant="default">{session.role}</Badge>
             </div>
-            <p className="text-xs text-muted-foreground">{session.email}</p>
+            <p className="text-xs font-bold text-muted-foreground">
+              {session.email}
+            </p>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-3 text-center">
-              <div className="rounded-lg border border-border bg-secondary/40 p-3">
-                <p className="text-lg font-bold text-primary">{session.xp}</p>
-                <p className="text-xs text-muted-foreground">Опыт (XP)</p>
+              <div className="rounded-2xl border-2 border-b-4 border-border bg-secondary p-3.5">
+                <p className="text-2xl font-black text-primary">{session.xp}</p>
+                <p className="text-xs font-extrabold uppercase tracking-wider text-muted-foreground">
+                  Опыт (XP)
+                </p>
               </div>
-              <div className="rounded-lg border border-border bg-secondary/40 p-3">
-                <p className="text-lg font-bold text-primary">
+              <div className="rounded-2xl border-2 border-b-4 border-border bg-secondary p-3.5">
+                <p className="text-2xl font-black text-[#F8FAFC]">
                   {session.streakDays}
                 </p>
-                <p className="text-xs text-muted-foreground">Дней подряд</p>
+                <p className="text-xs font-extrabold uppercase tracking-wider text-muted-foreground">
+                  Дней подряд
+                </p>
               </div>
             </div>
 
@@ -44,7 +52,12 @@ export default async function ProfilePage() {
                 await signOutAction();
               }}
             >
-              <Button type="submit" variant="secondary" className="w-full">
+              <Button
+                type="submit"
+                variant="secondary"
+                size="lg"
+                className="w-full"
+              >
                 {tAuth('signOutButton')}
               </Button>
             </form>
@@ -53,13 +66,15 @@ export default async function ProfilePage() {
       ) : (
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Гостевой просмотр</CardTitle>
+            <CardTitle className="text-lg font-black">
+              Гостевой просмотр
+            </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4 text-xs text-muted-foreground">
+          <CardContent className="space-y-4 text-sm font-bold text-muted-foreground">
             <p>{tProfile('guestNotice')}</p>
             <Link
               href="/login"
-              className="flex h-10 w-full items-center justify-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
+              className="flex min-h-[52px] w-full items-center justify-center rounded-2xl border-2 border-b-4 border-[#B92B1C] bg-primary px-6 py-3 text-sm font-black uppercase tracking-wider text-[#F8FAFC] transition-all hover:brightness-105 active:translate-y-[2px]"
             >
               Войти по Email и паролю
             </Link>

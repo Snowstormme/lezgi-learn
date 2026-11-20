@@ -5,23 +5,24 @@
 @layer base {
   :root,
   .dark {
-    --background: 200 30% 11%;
-    --foreground: 0 0% 100%;
-    --card: 200 24% 16%;
-    --card-foreground: 0 0% 100%;
-    --primary: 95 92% 41%;
-    --primary-foreground: 200 30% 11%;
-    --secondary: 200 24% 17%;
-    --secondary-foreground: 200 15% 88%;
-    --muted: 202 18% 26%;
-    --muted-foreground: 198 14% 72%;
-    --accent: 199 90% 54%;
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 95% 64%;
-    --destructive-foreground: 200 30% 11%;
-    --border: 202 18% 26%;
-    --input: 202 18% 26%;
-    --ring: 199 90% 54%;
+    /* Midnight Navy + Cloud White + Vermillion Palette */
+    --background: 225 59% 11%;        /* #0B132B Midnight Navy */
+    --foreground: 210 40% 98%;        /* #F8FAFC Cloud White */
+    --card: 223 48% 16%;              /* #16213E Deep Navy Surface */
+    --card-foreground: 210 40% 98%;   /* #F8FAFC Cloud White */
+    --primary: 6 86% 57%;             /* #F04E37 Vermillion */
+    --primary-foreground: 210 40% 98%;/* #F8FAFC Cloud White */
+    --secondary: 221 44% 19%;         /* #1B2845 Elevated Navy */
+    --secondary-foreground: 210 40% 98%;
+    --muted: 223 39% 25%;             /* #273659 Muted Navy */
+    --muted-foreground: 214 28% 72%;  /* #A3B5CC Soft Cloud */
+    --accent: 210 40% 98%;            /* #F8FAFC Cloud White Accent */
+    --accent-foreground: 225 59% 11%; /* #0B132B Midnight Navy */
+    --destructive: 0 84% 58%;         /* #EE3F3F Alert Red */
+    --destructive-foreground: 210 40% 98%;
+    --border: 223 39% 28%;            /* #2B3B63 Navy Border */
+    --input: 223 39% 28%;
+    --ring: 6 86% 57%;                /* Vermillion focus ring */
     --radius: 1rem;
   }
 
@@ -30,6 +31,6 @@
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply bg-background text-foreground antialiased selection:bg-primary/30 selection:text-foreground;
   }
 }

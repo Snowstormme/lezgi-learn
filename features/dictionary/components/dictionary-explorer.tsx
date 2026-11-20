@@ -74,19 +74,19 @@ export function DictionaryExplorer({ words }: DictionaryExplorerProps) {
     <div className="space-y-4">
       {/* Search bar */}
       <div className="relative">
-        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <Input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder={t('searchPlaceholder')}
-          className="h-11 pl-9 pr-9 text-sm"
+          className="h-12 pl-10 pr-10 text-sm"
         />
         {query && (
           <button
             type="button"
             onClick={() => setQuery('')}
             aria-label="Очистить поиск"
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
           >
             <X className="h-4 w-4" />
           </button>
@@ -103,10 +103,10 @@ export function DictionaryExplorer({ words }: DictionaryExplorerProps) {
               type="button"
               onClick={() => setPosFilter(chip.key)}
               className={cn(
-                'rounded-xl border-2 border-b-4 px-3 py-1.5 text-xs font-extrabold uppercase tracking-wide transition-all active:translate-y-[1px]',
+                'rounded-xl border-2 border-b-4 px-3.5 py-2 text-xs font-extrabold uppercase tracking-wide transition-all active:translate-y-[1px] active:border-b-2',
                 isActive
-                  ? 'border-accent bg-accent/15 text-accent'
-                  : 'border-border bg-card text-muted-foreground hover:text-foreground'
+                  ? 'border-[#CBD5E1] bg-[#F8FAFC] text-[#0B132B]'
+                  : 'border-border bg-card text-muted-foreground hover:text-[#F8FAFC]'
               )}
             >
               {chip.label}

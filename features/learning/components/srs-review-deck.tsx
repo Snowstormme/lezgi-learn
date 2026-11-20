@@ -92,10 +92,12 @@ export function SrsReviewDeck({
               Войдите в аккаунт, чтобы интервалы FSRS сохранялись между сессиями.
             </div>
           )}
-          <div className="grid grid-cols-2 gap-2.5">
+          <div className="grid grid-cols-2 gap-3">
             <Button
               type="button"
               variant="secondary"
+              size="default"
+              className="w-full"
               onClick={() => {
                 setQueue(initialCards);
                 setCurrentIndex(0);
@@ -108,9 +110,9 @@ export function SrsReviewDeck({
             </Button>
             <Link
               href="/learn"
-              className="flex h-10 items-center justify-center rounded-lg bg-primary px-4 text-xs font-semibold text-primary-foreground"
+              className="flex min-h-[48px] w-full items-center justify-center rounded-2xl border-2 border-b-4 border-[#B92B1C] bg-primary px-4 py-2.5 text-center text-xs font-black uppercase tracking-wider text-[#F8FAFC] transition-all active:translate-y-[2px]"
             >
-              К урокам курса
+              К урокам
             </Link>
           </div>
         </CardContent>
@@ -127,25 +129,25 @@ export function SrsReviewDeck({
       grade: 1,
       label: 'Снова',
       colorClass:
-        'border-2 border-b-4 border-destructive bg-destructive/15 text-destructive',
+        'border-2 border-b-4 border-[#B92B1C] bg-primary/20 text-primary',
     },
     {
       grade: 2,
       label: 'Трудно',
       colorClass:
-        'border-2 border-b-4 border-[#FF9600] bg-[#FF9600]/15 text-[#FF9600]',
+        'border-2 border-b-4 border-border bg-secondary text-[#F8FAFC]',
     },
     {
       grade: 3,
       label: 'Хорошо',
       colorClass:
-        'border-2 border-b-4 border-primary bg-primary/15 text-primary',
+        'border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC] text-[#0B132B]',
     },
     {
       grade: 4,
       label: 'Легко',
       colorClass:
-        'border-2 border-b-4 border-accent bg-accent/15 text-accent',
+        'border-2 border-b-4 border-emerald-500/60 bg-emerald-500/15 text-emerald-300',
     },
   ];
 
@@ -237,7 +239,7 @@ export function SrsReviewDeck({
                     disabled={isPending}
                     onClick={() => handleRate(btn.grade)}
                     className={cn(
-                      'flex flex-col items-center justify-center rounded-xl border px-2 py-2.5 text-center transition-all active:scale-95 disabled:opacity-50',
+                      'flex min-h-[58px] w-full flex-col items-center justify-center rounded-2xl px-2 py-2.5 text-center transition-all active:translate-y-[2px] disabled:opacity-50',
                       btn.colorClass
                     )}
                   >

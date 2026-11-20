@@ -46,12 +46,12 @@ export function AuthForm() {
   return (
     <Card className="w-full max-w-md border-border/80 bg-card/90">
       <CardHeader className="space-y-1">
-        <div className="flex gap-2 pb-2">
+        <div className="grid grid-cols-2 gap-2.5 pb-2">
           <Button
             type="button"
-            variant={mode === 'signin' ? 'default' : 'secondary'}
+            variant={mode === 'signin' ? 'cloud' : 'secondary'}
             size="sm"
-            className="flex-1"
+            className="w-full"
             onClick={() => {
               setMode('signin');
               setError(null);
@@ -61,9 +61,9 @@ export function AuthForm() {
           </Button>
           <Button
             type="button"
-            variant={mode === 'signup' ? 'default' : 'secondary'}
+            variant={mode === 'signup' ? 'cloud' : 'secondary'}
             size="sm"
-            className="flex-1"
+            className="w-full"
             onClick={() => {
               setMode('signup');
               setError(null);
@@ -146,7 +146,12 @@ export function AuthForm() {
             </div>
           )}
 
-          <Button type="submit" className="w-full" disabled={isPending}>
+          <Button
+            type="submit"
+            size="lg"
+            className="w-full"
+            disabled={isPending}
+          >
             {isPending
               ? 'Подождите...'
               : mode === 'signin'

@@ -71,12 +71,12 @@ export function AudioPlayerButton({
           : 'Прослушать фонетическое демо (запись носителя в очереди)'
       }
       className={cn(
-        'inline-flex items-center gap-1.5 rounded-lg border transition-all active:scale-95',
-        size === 'sm' ? 'px-2 py-1 text-[11px]' : 'px-3 py-1.5 text-xs',
+        'inline-flex shrink-0 items-center gap-1.5 rounded-xl border-2 border-b-4 font-extrabold transition-all active:translate-y-[1px] active:border-b-2',
+        size === 'sm' ? 'h-9 px-2.5 text-xs' : 'h-10 px-3.5 text-xs',
         hasVerifiedNativeAudio
-          ? 'border-emerald-500/40 bg-emerald-500/15 font-medium text-emerald-300 hover:bg-emerald-500/25'
-          : 'border-border bg-secondary/60 text-muted-foreground hover:border-primary/40 hover:text-foreground',
-        isPlaying && 'border-primary bg-primary/20 text-primary'
+          ? 'border-[#B92B1C] bg-primary text-[#F8FAFC] hover:brightness-105'
+          : 'border-border bg-secondary text-[#F8FAFC] hover:border-primary',
+        isPlaying && 'border-[#B92B1C] bg-primary text-[#F8FAFC]'
       )}
     >
       {isPlaying ? (
