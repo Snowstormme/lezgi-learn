@@ -3,7 +3,6 @@
 import { useMemo, useState, useTransition } from 'react';
 import {
   Check,
-  Heart,
   Lightbulb,
   X,
 } from 'lucide-react';
@@ -47,7 +46,6 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showGrammarTip, setShowGrammarTip] = useState(false);
   const [correctCount, setCorrectCount] = useState(0);
-  const [hearts, setHearts] = useState(5);
 
   // Per-exercise state
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
@@ -113,7 +111,6 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
       }
     } else {
       setHadMatchingMistake(true);
-      setHearts((h) => Math.max(1, h - 1));
       setMismatchRight(rightValue);
       setTimeout(() => {
         setMismatchRight(null);
@@ -131,8 +128,6 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
       setCheckResult(isRight ? 'correct' : 'wrong');
       if (isRight) {
         setCorrectCount((c) => c + 1);
-      } else {
-        setHearts((h) => Math.max(1, h - 1));
       }
       return;
     }
@@ -146,8 +141,6 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
       setCheckResult(isRight ? 'correct' : 'wrong');
       if (isRight) {
         setCorrectCount((c) => c + 1);
-      } else {
-        setHearts((h) => Math.max(1, h - 1));
       }
     }
   }
@@ -209,10 +202,9 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
             className="flex-1"
           />
 
-          <div className="flex shrink-0 items-center gap-1 text-sm font-black text-destructive">
-            <Heart className="h-5 w-5 fill-destructive" />
-            <span>{hearts}</span>
-          </div>
+          <span className="shrink-0 text-xs font-black tabular-nums text-muted-foreground">
+            {currentIndex + 1} / {totalExercises}
+          </span>
         </div>
 
         {/* Prompt Header + Theory Toggle */}
