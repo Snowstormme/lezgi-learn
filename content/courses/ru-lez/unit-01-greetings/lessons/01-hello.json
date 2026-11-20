@@ -1,0 +1,48 @@
+{
+  "slug": "u1-l1-hello",
+  "unit_slug": "unit-01-greetings",
+  "order_index": 1,
+  "title_ru": "Приветствие: салам, брат и сестра",
+  "grammar_tip_ru": "В лезгинском языке при дружеском обращении часто используют слова **стха** (брат) и **вах** (сестра).",
+  "status": "published",
+  "exercises": [
+    {
+      "slug": "u1-l1-ex1",
+      "order_index": 1,
+      "type": "multiple_choice",
+      "word_slug": "salam",
+      "prompt_ru": "Выберите правильный перевод слова «салам»",
+      "status": "published",
+      "payload": {
+        "question": "салам",
+        "options": ["привет / здравствуй", "до свидания", "спасибо", "хорошо"],
+        "correct_index": 0
+      }
+    },
+    {
+      "slug": "u1-l1-ex2",
+      "order_index": 2,
+      "type": "matching",
+      "prompt_ru": "Сопоставьте лезгинские слова с переводом",
+      "status": "published",
+      "payload": {
+        "pairs": [
+          { "left": "салам", "right": "привет" },
+          { "left": "стха", "right": "брат" },
+          { "left": "вах", "right": "сестра" }
+        ]
+      }
+    },
+    {
+      "slug": "u1-l1-ex3",
+      "order_index": 3,
+      "type": "word_input",
+      "word_slug": "stxa",
+      "prompt_ru": "Напишите по-лезгински слово «брат»",
+      "status": "published",
+      "payload": {
+        "accepted_answers": ["стха"]
+      }
+    }
+  ]
+}
