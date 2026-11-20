@@ -18,6 +18,7 @@ const POS_LABELS: Record<string, string> = {
   adverb: 'Наречие',
   verb: 'Глагол',
   adjective: 'Прил.',
+  particle: 'Частица',
 };
 
 interface DictionaryExplorerProps {
