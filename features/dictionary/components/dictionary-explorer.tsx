@@ -103,10 +103,10 @@ export function DictionaryExplorer({ words }: DictionaryExplorerProps) {
               type="button"
               onClick={() => setPosFilter(chip.key)}
               className={cn(
-                'rounded-full border px-3 py-1 text-xs font-medium transition-colors',
+                'rounded-xl border-2 border-b-4 px-3 py-1.5 text-xs font-extrabold uppercase tracking-wide transition-all active:translate-y-[1px]',
                 isActive
-                  ? 'border-primary bg-primary/15 text-primary'
-                  : 'border-border bg-secondary/40 text-muted-foreground hover:text-foreground'
+                  ? 'border-accent bg-accent/15 text-accent'
+                  : 'border-border bg-card text-muted-foreground hover:text-foreground'
               )}
             >
               {chip.label}

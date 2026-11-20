@@ -1,9 +1,16 @@
 import type { Metadata, Viewport } from 'next';
+import { Nunito } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/lib/i18n/routing';
 import '@/app/globals.css';
+
+const nunito = Nunito({
+  subsets: ['cyrillic', 'latin'],
+  weight: ['600', '700', '800', '900'],
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: 'Lezgi Learn — Изучение лезгинского языка',
@@ -35,7 +42,9 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} className="dark">
-      <body className="min-h-dvh bg-background text-foreground">
+      <body
+        className={`${nunito.className} min-h-dvh bg-background text-foreground`}
+      >
         <NextIntlClientProvider messages={messages}>
           {children}
         </NextIntlClientProvider>

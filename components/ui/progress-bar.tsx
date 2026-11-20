@@ -17,14 +17,18 @@ export function LessonProgressBar({
   return (
     <div
       className={cn(
-        'h-2.5 w-full overflow-hidden rounded-full bg-secondary/80',
+        'h-4 w-full overflow-hidden rounded-full bg-muted',
         className
       )}
     >
       <div
-        className="h-full rounded-full bg-primary transition-all duration-300"
+        className="relative h-full rounded-full bg-primary transition-all duration-300"
         style={{ width: `${ratio}%` }}
-      />
+      >
+        {ratio > 6 && (
+          <div className="mx-2 mt-1 h-1 rounded-full bg-white/30" />
+        )}
+      </div>
     </div>
   );
 }

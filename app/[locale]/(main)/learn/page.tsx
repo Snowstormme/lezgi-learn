@@ -1,55 +1,51 @@
 import {
-  CheckCircle2,
-  Flame,
-  Play,
-  RotateCcw,
+  Award,
+  BookOpen,
+  Check,
+  Compass,
+  HeartHandshake,
+  MessageCircle,
   Sparkles,
+  Star,
   Trophy,
+  Users,
 } from 'lucide-react';
-import { getTranslations } from 'next-intl/server';
 import { getPublishedUnitsWithLessons } from '@/features/learning/queries';
-import { getCurrentUserSession } from '@/features/profile/queries';
 import { Link } from '@/lib/i18n/routing';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { LessonProgressBar } from '@/components/ui/progress-bar';
 import { cn } from '@/lib/utils';
 
+const PATH_OFFSETS = [
+  'translate-x-0',
+  '-translate-x-10',
+  '-translate-x-16',
+  '-translate-x-8',
+  'translate-x-2',
+  'translate-x-12',
+  'translate-x-16',
+  'translate-x-8',
+  '-translate-x-2',
+  'translate-x-0',
+];
+
+const NODE_ICONS = [
+  Star,
+  Sparkles,
+  MessageCircle,
+  Users,
+  BookOpen,
+  Compass,
+  MessageCircle,
+  HeartHandshake,
+  Award,
+  Trophy,
+];
+
 export default async function UnitMapPage() {
-  const tLearn = await getTranslations('learn');
-  const [units, session] = await Promise.all([
-    getPublishedUnitsWithLessons(),
-    getCurrentUserSession(),
-  ]);
+  const units = await getPublishedUnitsWithLessons();
 
   return (
-    <div className="space-y-5">
-      {/* Top stats bar */}
-      <div className="flex items-center justify-between rounded-xl border border-border bg-card px-4 py-3">
-        <div className="space-y-0.5">
-          <h1 className="text-base font-bold tracking-tight">
-            {tLearn('title')}
-          </h1>
-          <p className="text-[11px] text-muted-foreground">
-            {tLearn('subtitle')}
-          </p>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1 rounded-lg border border-amber-500/30 bg-amber-500/10 px-2.5 py-1 text-xs font-bold text-amber-300">
-            <Flame className="h-3.5 w-3.5" />
-            <span>{session.streakDays}</span>
-          </div>
-          <div className="flex items-center gap-1 rounded-lg border border-primary/30 bg-primary/10 px-2.5 py-1 text-xs font-bold text-primary">
-            <Trophy className="h-3.5 w-3.5" />
-            <span>{session.xp} XP</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Units & stepping-stone lesson nodes */}
+    <div className="space-y-8">
       {units.map((unit) => {
-        const totalLessons = unit.lessons.length;
         const firstIncompleteIndex = unit.lessons.findIndex(
           (l) => !l.is_completed
         );
@@ -57,127 +53,115 @@ export default async function UnitMapPage() {
           firstIncompleteIndex === -1 ? 0 : firstIncompleteIndex;
 
         return (
-          <Card key={unit.slug} className="overflow-hidden border-border/90">
-            <CardHeader className="space-y-2.5 border-b border-border/60 bg-secondary/30">
-              <div className="flex items-center justify-between gap-2">
-                <Badge variant="verified">{tLearn('verifiedBadge')}</Badge>
-                <span className="text-[11px] font-medium text-muted-foreground">
-                  {tLearn('unitProgress', {
-                    completed: unit.completed_count,
-                    total: totalLessons,
-                  })}
-                </span>
+          <div key={unit.slug} className="space-y-8">
+            {/* Solid Green Unit Header Banner */}
+            <div className="flex items-center justify-between gap-3 rounded-2xl border-b-4 border-[#46a302] bg-primary px-5 py-4 text-primary-foreground">
+              <div className="space-y-0.5">
+                <p className="text-xs font-black uppercase tracking-wider opacity-80">
+                  МОДУЛЬ {unit.order_index} • {unit.completed_count} ИЗ{' '}
+                  {unit.lessons.length}
+                </p>
+                <h1 className="text-lg font-black leading-snug">
+                  {unit.title_ru.replace(/^Юнит \d+\.\s*/, '')}
+                </h1>
               </div>
 
-              <div>
-                <CardTitle className="text-base">{unit.title_ru}</CardTitle>
-                {unit.description_ru && (
-                  <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                    {unit.description_ru}
-                  </p>
-                )}
-              </div>
+              <Link
+                href="/dictionary"
+                title="Открыть словарь модуля"
+                className="flex h-11 shrink-0 items-center gap-1.5 rounded-xl border-2 border-b-4 border-primary-foreground/25 bg-black/15 px-3 text-xs font-black uppercase tracking-wider text-primary-foreground transition-transform active:translate-y-[2px]"
+              >
+                <BookOpen className="h-4 w-4 stroke-[2.5]" />
+                <span>Слова</span>
+              </Link>
+            </div>
 
-              <LessonProgressBar
-                current={unit.completed_count}
-                total={totalLessons}
-              />
-            </CardHeader>
+            {/* Winding Stepping-Stone Snake Path */}
+            <div className="flex flex-col items-center space-y-6 py-2">
+              {unit.lessons.map((lesson, idx) => {
+                const isCurrentTarget = idx === activeLessonIndex;
+                const isCompleted = lesson.is_completed;
+                const offsetClass =
+                  PATH_OFFSETS[idx % PATH_OFFSETS.length] ?? 'translate-x-0';
+                const NodeIcon =
+                  NODE_ICONS[idx % NODE_ICONS.length] ?? Star;
 
-            <CardContent className="p-4">
-              <div className="relative space-y-3">
-                {unit.lessons.map((lesson, idx) => {
-                  const isCurrentTarget = idx === activeLessonIndex;
+                return (
+                  <div
+                    key={lesson.slug}
+                    className={cn(
+                      'relative flex flex-col items-center transition-transform',
+                      offsetClass
+                    )}
+                  >
+                    {/* Floating speech bubble above active current lesson */}
+                    {isCurrentTarget && (
+                      <div className="mb-2.5 flex flex-col items-center animate-bounce">
+                        <div className="rounded-xl border-2 border-b-4 border-border bg-card px-3.5 py-1.5 text-xs font-black uppercase tracking-wider text-primary shadow-md">
+                          {isCompleted ? 'ПОВТОРИТЬ' : 'НАЧАТЬ'}
+                        </div>
+                        <div className="h-0 w-0 border-x-[7px] border-t-[7px] border-x-transparent border-t-border" />
+                      </div>
+                    )}
 
-                  return (
+                    {/* Outer ring for active target */}
                     <div
-                      key={lesson.slug}
                       className={cn(
-                        'flex items-center justify-between gap-3 rounded-xl border p-3.5 transition-all',
-                        lesson.is_completed &&
-                          'border-emerald-500/30 bg-emerald-500/5',
-                        !lesson.is_completed &&
-                          isCurrentTarget &&
-                          'border-primary/60 bg-primary/10 ring-1 ring-primary/30',
-                        !lesson.is_completed &&
-                          !isCurrentTarget &&
-                          'border-border bg-background/50'
+                        'rounded-full transition-all',
+                        isCurrentTarget &&
+                          'border-4 border-border bg-background p-2'
                       )}
                     >
-                      <div className="flex items-start gap-3">
-                        {/* Step node circle */}
-                        <div
-                          className={cn(
-                            'mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-bold',
-                            lesson.is_completed &&
-                              'bg-emerald-500 text-background',
-                            !lesson.is_completed &&
-                              isCurrentTarget &&
-                              'bg-primary text-primary-foreground',
-                            !lesson.is_completed &&
-                              !isCurrentTarget &&
-                              'border border-border bg-secondary text-muted-foreground'
-                          )}
-                        >
-                          {lesson.is_completed ? (
-                            <CheckCircle2 className="h-4 w-4" />
-                          ) : (
-                            lesson.order_index
-                          )}
-                        </div>
-
-                        <div className="space-y-1">
-                          <p className="text-sm font-semibold leading-snug text-foreground">
-                            {lesson.title_ru}
-                          </p>
-                          <div className="flex flex-wrap items-center gap-1.5">
-                            <Badge variant="outline">
-                              {tLearn('exercisesCount', {
-                                count: lesson.exercises_count,
-                              })}
-                            </Badge>
-                            {lesson.grammar_tip_ru && (
-                              <Badge variant="secondary">
-                                <Sparkles className="h-2.5 w-2.5 text-primary" />
-                                <span>{tLearn('grammarTipBadge')}</span>
-                              </Badge>
-                            )}
-                            {lesson.best_score !== null && (
-                              <Badge variant="verified">
-                                {lesson.best_score}%
-                              </Badge>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-
                       <Link
                         href={`/lesson/${lesson.slug}`}
                         className={cn(
-                          'inline-flex shrink-0 items-center gap-1.5 rounded-lg px-3.5 py-2 text-xs font-semibold transition-colors',
-                          lesson.is_completed
-                            ? 'border border-border bg-secondary/80 text-foreground hover:bg-secondary'
-                            : 'bg-primary text-primary-foreground hover:bg-primary/90'
+                          'flex h-[70px] w-[76px] items-center justify-center rounded-full transition-all active:translate-y-[4px]',
+                          isCompleted &&
+                            'border-b-[6px] border-[#CC9F00] bg-[#FFC800] text-primary-foreground hover:brightness-105',
+                          !isCompleted &&
+                            isCurrentTarget &&
+                            'border-b-[6px] border-[#46a302] bg-primary text-primary-foreground hover:brightness-105',
+                          !isCompleted &&
+                            !isCurrentTarget &&
+                            'border-2 border-b-[6px] border-border bg-card text-muted-foreground hover:border-accent hover:text-foreground'
                         )}
                       >
-                        {lesson.is_completed ? (
-                          <>
-                            <RotateCcw className="h-3.5 w-3.5" />
-                            <span>{tLearn('repeatLesson')}</span>
-                          </>
+                        {isCompleted ? (
+                          <Check className="h-8 w-8 stroke-[3.5]" />
                         ) : (
-                          <>
-                            <Play className="h-3.5 w-3.5" />
-                            <span>{tLearn('startLesson')}</span>
-                          </>
+                          <NodeIcon className="h-7 w-7 stroke-[2.5]" />
                         )}
                       </Link>
                     </div>
-                  );
-                })}
-              </div>
-            </CardContent>
-          </Card>
+
+                    {/* Lesson title pill under node */}
+                    <Link
+                      href={`/lesson/${lesson.slug}`}
+                      className="mt-2 max-w-[200px] text-center"
+                    >
+                      <p
+                        className={cn(
+                          'text-xs font-extrabold leading-tight',
+                          isCurrentTarget
+                            ? 'text-primary'
+                            : isCompleted
+                              ? 'text-[#FFC800]'
+                              : 'text-muted-foreground'
+                        )}
+                      >
+                        {lesson.order_index}. {lesson.title_ru.split(':')[0]}
+                      </p>
+                      {lesson.best_score !== null && (
+                        <span className="mt-0.5 inline-block rounded-lg bg-[#FFC800]/15 px-2 py-0.5 text-[10px] font-black text-[#FFC800]">
+                          ★ {lesson.best_score}%
+                        </span>
+                      )}
+                    </Link>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         );
       })}
     </div>

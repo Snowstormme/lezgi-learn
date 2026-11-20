@@ -2,11 +2,10 @@
 
 import { useMemo, useState, useTransition } from 'react';
 import {
-  BookOpenCheck,
-  CheckCircle2,
-  Sparkles,
+  Check,
+  Heart,
+  Lightbulb,
   X,
-  XCircle,
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Link, useRouter } from '@/lib/i18n/routing';
@@ -15,10 +14,9 @@ import { completeLessonAction } from '@/features/learning/actions';
 import { isLezgiAnswerCorrect } from '@/lib/lezgi-utils';
 import { LessonProgressBar } from '@/components/ui/progress-bar';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
 import { ReportMistakeTrigger } from '@/features/shared/components/report-mistake-trigger';
+import { AudioPlayerButton } from '@/features/shared/components/audio-player-button';
 import { cn } from '@/lib/utils';
 
 const LEZGI_HELPER_KEYS = [
@@ -47,10 +45,9 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
   const totalExercises = exercises.length;
 
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [showGrammarTip, setShowGrammarTip] = useState(
-    Boolean(lesson.grammar_tip_ru)
-  );
+  const [showGrammarTip, setShowGrammarTip] = useState(false);
   const [correctCount, setCorrectCount] = useState(0);
+  const [hearts, setHearts] = useState(5);
 
   // Per-exercise state
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
@@ -60,7 +57,6 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
   const [mismatchRight, setMismatchRight] = useState<string | null>(null);
   const [hadMatchingMistake, setHadMatchingMistake] = useState(false);
 
-  // Check result state: null = not checked yet, 'correct' | 'wrong'
   const [checkResult, setCheckResult] = useState<'correct' | 'wrong' | null>(
     null
   );
@@ -68,7 +64,6 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
   const currentExercise: LessonExerciseItem | undefined =
     exercises[currentIndex];
 
-  // Deterministic shuffle for matching right-side options based on exercise slug
   const shuffledRightOptions = useMemo(() => {
     if (!currentExercise || currentExercise.type !== 'matching') return [];
     const items = currentExercise.payload.pairs.map((p) => p.right);
@@ -118,6 +113,7 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
       }
     } else {
       setHadMatchingMistake(true);
+      setHearts((h) => Math.max(1, h - 1));
       setMismatchRight(rightValue);
       setTimeout(() => {
         setMismatchRight(null);
@@ -133,7 +129,11 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
       const isRight =
         selectedOption === currentExercise.payload.correct_index;
       setCheckResult(isRight ? 'correct' : 'wrong');
-      if (isRight) setCorrectCount((c) => c + 1);
+      if (isRight) {
+        setCorrectCount((c) => c + 1);
+      } else {
+        setHearts((h) => Math.max(1, h - 1));
+      }
       return;
     }
 
@@ -144,7 +144,11 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
         currentExercise.payload.accepted_answers
       );
       setCheckResult(isRight ? 'correct' : 'wrong');
-      if (isRight) setCorrectCount((c) => c + 1);
+      if (isRight) {
+        setCorrectCount((c) => c + 1);
+      } else {
+        setHearts((h) => Math.max(1, h - 1));
+      }
     }
   }
 
@@ -163,7 +167,7 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
         score: finalScore,
       });
 
-      const xp = res.ok ? res.data.xpEarned : 10;
+      const xp = res.ok ? res.data.xpEarned : 15;
       const saved = res.ok && res.data.savedToAccount ? '1' : '0';
 
       router.push(
@@ -187,83 +191,84 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
         : '';
 
   return (
-    <div className="flex flex-col space-y-5">
-      {/* Top progress header */}
-      <div className="flex items-center gap-3">
-        <Link
-          href="/learn"
-          aria-label={t('exitToMap')}
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border bg-secondary/50 text-muted-foreground transition-colors hover:text-foreground"
-        >
-          <X className="h-4 w-4" />
-        </Link>
+    <div className="flex min-h-[calc(100dvh-2rem)] flex-col justify-between">
+      {/* Top Bar: X + Chunky Glossy Progress Bar + Hearts */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-3">
+          <Link
+            href="/learn"
+            aria-label={t('exitToMap')}
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <X className="h-6 w-6 stroke-[2.5]" />
+          </Link>
 
-        <LessonProgressBar
-          current={
-            checkResult !== null ? currentIndex + 1 : currentIndex
-          }
-          total={totalExercises}
-          className="flex-1"
-        />
+          <LessonProgressBar
+            current={checkResult !== null ? currentIndex + 1 : currentIndex}
+            total={totalExercises}
+            className="flex-1"
+          />
 
-        <span className="shrink-0 text-xs font-semibold tabular-nums text-muted-foreground">
-          {currentIndex + 1} / {totalExercises}
-        </span>
-      </div>
+          <div className="flex shrink-0 items-center gap-1 text-sm font-black text-destructive">
+            <Heart className="h-5 w-5 fill-destructive" />
+            <span>{hearts}</span>
+          </div>
+        </div>
 
-      {/* Lesson title & collapsible grammar tip */}
-      <div className="space-y-2">
-        <div className="flex items-center justify-between gap-2">
-          <p className="text-xs font-medium text-primary">
-            Урок {lesson.order_index} • {lesson.title_ru}
-          </p>
-          {lesson.grammar_tip_ru && (
-            <button
-              type="button"
-              onClick={() => setShowGrammarTip((v) => !v)}
-              className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-0.5 text-[11px] font-medium text-primary"
-            >
-              <Sparkles className="h-3 w-3" />
-              <span>Теория</span>
-            </button>
+        {/* Prompt Header + Theory Toggle */}
+        <div className="space-y-3 pt-2">
+          <div className="flex items-start justify-between gap-2">
+            <h1 className="text-2xl font-black leading-tight text-foreground">
+              {currentExercise.prompt_ru}
+            </h1>
+
+            {lesson.grammar_tip_ru && (
+              <button
+                type="button"
+                onClick={() => setShowGrammarTip((v) => !v)}
+                title="Показать подсказку к уроку"
+                className={cn(
+                  'flex h-10 shrink-0 items-center gap-1.5 rounded-xl border-2 border-b-4 px-3 text-xs font-extrabold uppercase tracking-wider transition-all active:translate-y-[1px]',
+                  showGrammarTip
+                    ? 'border-[#CC9F00] bg-[#FFC800] text-primary-foreground'
+                    : 'border-border bg-card text-[#FFC800]'
+                )}
+              >
+                <Lightbulb className="h-4 w-4 stroke-[2.5]" />
+                <span>Подсказка</span>
+              </button>
+            )}
+          </div>
+
+          {showGrammarTip && lesson.grammar_tip_ru && (
+            <div className="rounded-2xl border-2 border-b-4 border-border bg-card p-4 text-sm font-bold leading-relaxed text-secondary-foreground">
+              {lesson.grammar_tip_ru}
+            </div>
           )}
         </div>
 
-        {showGrammarTip && lesson.grammar_tip_ru && (
-          <div className="rounded-xl border border-primary/25 bg-primary/5 p-3.5 text-xs leading-relaxed text-foreground/90">
-            <p className="mb-1 font-semibold text-primary">
-              {t('grammarTipTitle')}
-            </p>
-            <p>{lesson.grammar_tip_ru}</p>
-          </div>
-        )}
-      </div>
-
-      {/* Active exercise card */}
-      <Card className="border-border/90">
-        <CardHeader className="space-y-2 pb-3">
-          <div className="flex items-center justify-between">
-            <Badge variant="secondary">
-              Задание {currentIndex + 1}
-            </Badge>
-            <Badge variant="verified">Проверено носителем</Badge>
-          </div>
-          <CardTitle className="text-base leading-snug">
-            {currentExercise.prompt_ru}
-          </CardTitle>
-        </CardHeader>
-
-        <CardContent className="space-y-4">
+        {/* Exercise Workspace directly on canvas */}
+        <div className="pt-2">
           {/* 1. MULTIPLE CHOICE */}
           {currentExercise.type === 'multiple_choice' && (
-            <div className="space-y-4">
-              <div className="rounded-xl border border-border bg-secondary/40 px-4 py-5 text-center">
-                <p className="text-2xl font-bold tracking-tight text-primary">
-                  {currentExercise.payload.question}
-                </p>
+            <div className="space-y-5">
+              {/* Character + Speech Bubble */}
+              <div className="flex items-center gap-3">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border-b-4 border-[#46a302] bg-primary text-lg font-black text-primary-foreground">
+                  ЛӀ
+                </div>
+                <div className="flex flex-1 items-center justify-between gap-3 rounded-2xl border-2 border-b-4 border-border bg-card px-4 py-3.5">
+                  <span className="text-xl font-black text-foreground">
+                    {currentExercise.payload.question}
+                  </span>
+                  <AudioPlayerButton
+                    textLez={currentExercise.payload.question}
+                  />
+                </div>
               </div>
 
-              <div className="grid grid-cols-1 gap-2.5">
+              {/* 3D Option Cards */}
+              <div className="space-y-3">
                 {currentExercise.payload.options.map((option, idx) => {
                   const isSelected = selectedOption === idx;
                   const isCorrectOption =
@@ -276,24 +281,31 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
                       disabled={checkResult !== null}
                       onClick={() => setSelectedOption(idx)}
                       className={cn(
-                        'flex min-h-12 w-full items-center justify-between rounded-xl border px-4 py-3 text-left text-sm font-medium transition-all',
+                        'flex min-h-14 w-full items-center justify-between rounded-2xl border-2 border-b-4 px-4 py-3 text-left text-base font-extrabold transition-all active:translate-y-[2px]',
                         checkResult === null &&
                           !isSelected &&
-                          'border-border bg-background/60 hover:border-primary/50 hover:bg-secondary/50',
+                          'border-border bg-card text-foreground hover:bg-secondary',
                         checkResult === null &&
                           isSelected &&
-                          'border-primary bg-primary/15 text-primary ring-1 ring-primary',
+                          'border-accent bg-accent/15 text-accent',
                         checkResult !== null &&
                           isCorrectOption &&
-                          'border-emerald-500/60 bg-emerald-500/15 text-emerald-200',
+                          'border-primary bg-primary/20 text-primary',
                         checkResult === 'wrong' &&
                           isSelected &&
                           !isCorrectOption &&
-                          'border-destructive/60 bg-destructive/15 text-destructive'
+                          'border-destructive bg-destructive/20 text-destructive'
                       )}
                     >
                       <span>{option}</span>
-                      <span className="flex h-6 w-6 items-center justify-center rounded-md border border-border/80 bg-background/60 text-xs text-muted-foreground">
+                      <span
+                        className={cn(
+                          'flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border-2 text-xs font-black',
+                          isSelected
+                            ? 'border-accent text-accent'
+                            : 'border-border text-muted-foreground'
+                        )}
+                      >
                         {idx + 1}
                       </span>
                     </button>
@@ -305,14 +317,14 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
 
           {/* 2. MATCHING */}
           {currentExercise.type === 'matching' && (
-            <div className="space-y-3">
-              <p className="text-xs text-muted-foreground">
+            <div className="space-y-4">
+              <p className="text-sm font-bold text-muted-foreground">
                 {t('matchingInstruction')}
               </p>
 
               <div className="grid grid-cols-2 gap-3">
                 {/* Left column: Lezgi */}
-                <div className="space-y-2">
+                <div className="space-y-2.5">
                   {currentExercise.payload.pairs.map((pair) => {
                     const isMatched = matchedLefts.includes(pair.left);
                     const isSelected = selectedLeft === pair.left;
@@ -324,15 +336,15 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
                         disabled={isMatched}
                         onClick={() => setSelectedLeft(pair.left)}
                         className={cn(
-                          'flex min-h-12 w-full items-center justify-center rounded-xl border px-3 py-2.5 text-center text-sm font-semibold transition-all',
+                          'flex min-h-14 w-full items-center justify-center rounded-2xl border-2 border-b-4 px-3 py-2.5 text-center text-base font-black transition-all active:translate-y-[2px]',
                           isMatched &&
-                            'border-emerald-500/40 bg-emerald-500/15 text-emerald-300 opacity-75',
+                            'border-border/40 bg-card/30 text-muted-foreground/40',
                           !isMatched &&
                             isSelected &&
-                            'border-primary bg-primary/15 text-primary ring-1 ring-primary',
+                            'border-accent bg-accent/15 text-accent',
                           !isMatched &&
                             !isSelected &&
-                            'border-border bg-background/70 hover:border-primary/40'
+                            'border-border bg-card text-foreground hover:bg-secondary'
                         )}
                       >
                         {pair.left}
@@ -342,7 +354,7 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
                 </div>
 
                 {/* Right column: Russian */}
-                <div className="space-y-2">
+                <div className="space-y-2.5">
                   {shuffledRightOptions.map((rightText) => {
                     const matchedPair = currentExercise.payload.pairs.find(
                       (p) =>
@@ -358,14 +370,14 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
                         disabled={isMatched || !selectedLeft}
                         onClick={() => handleSelectRightPair(rightText)}
                         className={cn(
-                          'flex min-h-12 w-full items-center justify-center rounded-xl border px-3 py-2.5 text-center text-sm font-medium transition-all',
+                          'flex min-h-14 w-full items-center justify-center rounded-2xl border-2 border-b-4 px-3 py-2.5 text-center text-sm font-extrabold transition-all active:translate-y-[2px]',
                           isMatched &&
-                            'border-emerald-500/40 bg-emerald-500/15 text-emerald-300 opacity-75',
+                            'border-border/40 bg-card/30 text-muted-foreground/40',
                           isMismatch &&
                             'border-destructive bg-destructive/20 text-destructive',
                           !isMatched &&
                             !isMismatch &&
-                            'border-border bg-background/70 hover:border-primary/40 disabled:opacity-60'
+                            'border-border bg-card text-foreground hover:bg-secondary'
                         )}
                       >
                         {rightText}
@@ -379,7 +391,7 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
 
           {/* 3. WORD INPUT */}
           {currentExercise.type === 'word_input' && (
-            <div className="space-y-3">
+            <div className="space-y-4">
               <Input
                 value={textAnswer}
                 disabled={checkResult !== null}
@@ -391,24 +403,24 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
                   }
                 }}
                 placeholder={t('inputPlaceholder')}
-                className="h-12 text-base font-medium"
+                className="h-14 text-lg font-extrabold"
                 autoComplete="off"
                 autoCorrect="off"
                 spellCheck={false}
               />
 
-              <div className="space-y-1.5">
-                <p className="text-[11px] text-muted-foreground">
+              <div className="space-y-2">
+                <p className="text-xs font-bold text-muted-foreground">
                   {t('palochkaHelper')}
                 </p>
-                <div className="flex flex-wrap gap-1.5">
+                <div className="flex flex-wrap gap-2">
                   {LEZGI_HELPER_KEYS.map((char) => (
                     <button
                       key={char}
                       type="button"
                       disabled={checkResult !== null}
                       onClick={() => setTextAnswer((prev) => `${prev}${char}`)}
-                      className="rounded-lg border border-border bg-secondary/70 px-2.5 py-1.5 text-xs font-semibold text-foreground transition-colors hover:border-primary/50 hover:bg-primary/15 active:scale-95 disabled:opacity-50"
+                      className="rounded-xl border-2 border-b-4 border-border bg-card px-3.5 py-2 text-sm font-black text-foreground transition-all hover:border-accent active:translate-y-[2px] disabled:opacity-50"
                     >
                       {char}
                     </button>
@@ -417,86 +429,93 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
               </div>
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
-      {/* Bottom Check / Feedback Panel */}
-      {checkResult === null ? (
-        currentExercise.type !== 'matching' && (
-          <Button
-            type="button"
-            size="lg"
-            className="w-full font-semibold"
-            disabled={!canCheck}
-            onClick={handleCheckAnswer}
+      {/* Bottom Action Sheet */}
+      <div className="mt-8 pt-4">
+        {checkResult === null ? (
+          currentExercise.type !== 'matching' && (
+            <Button
+              type="button"
+              size="lg"
+              className="w-full"
+              disabled={!canCheck}
+              onClick={handleCheckAnswer}
+            >
+              {t('checkAnswer')}
+            </Button>
+          )
+        ) : (
+          <div
+            className={cn(
+              '-mx-4 -mb-4 space-y-4 rounded-t-3xl border-t-2 p-5',
+              checkResult === 'correct'
+                ? 'border-primary/40 bg-[#182B19]'
+                : 'border-destructive/40 bg-[#2C161B]'
+            )}
           >
-            {t('checkAnswer')}
-          </Button>
-        )
-      ) : (
-        <div
-          className={cn(
-            'space-y-3 rounded-xl border p-4',
-            checkResult === 'correct'
-              ? 'border-emerald-500/40 bg-emerald-500/10'
-              : 'border-destructive/50 bg-destructive/10'
-          )}
-        >
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex items-start gap-2.5">
-              {checkResult === 'correct' ? (
-                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-400" />
-              ) : (
-                <XCircle className="mt-0.5 h-5 w-5 shrink-0 text-destructive" />
-              )}
-              <div className="space-y-1">
-                <p
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div
                   className={cn(
-                    'text-sm font-bold',
-                    checkResult === 'correct'
-                      ? 'text-emerald-300'
-                      : 'text-destructive'
+                    'flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-primary-foreground',
+                    checkResult === 'correct' ? 'bg-primary' : 'bg-destructive'
                   )}
                 >
-                  {checkResult === 'correct'
-                    ? t('correctHeader')
-                    : t('wrongHeader')}
-                </p>
-                {checkResult === 'wrong' && correctReferenceText && (
-                  <p className="text-xs text-foreground/90">
-                    {t('correctAnswerLabel')}{' '}
-                    <strong className="font-semibold text-emerald-300">
-                      {correctReferenceText}
-                    </strong>
+                  {checkResult === 'correct' ? (
+                    <Check className="h-6 w-6 stroke-[3]" />
+                  ) : (
+                    <X className="h-6 w-6 stroke-[3]" />
+                  )}
+                </div>
+                <div>
+                  <p
+                    className={cn(
+                      'text-lg font-black',
+                      checkResult === 'correct'
+                        ? 'text-primary'
+                        : 'text-destructive'
+                    )}
+                  >
+                    {checkResult === 'correct'
+                      ? t('correctHeader')
+                      : t('wrongHeader')}
                   </p>
-                )}
+                  {checkResult === 'wrong' && correctReferenceText && (
+                    <p className="text-sm font-bold text-foreground">
+                      {t('correctAnswerLabel')}{' '}
+                      <span className="font-black text-primary">
+                        {correctReferenceText}
+                      </span>
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
 
-          <ReportMistakeTrigger
-            entityType="exercise"
-            entityId={currentExercise.id}
-          />
+            <ReportMistakeTrigger
+              entityType="exercise"
+              entityId={currentExercise.id}
+            />
 
-          <Button
-            type="button"
-            size="lg"
-            className="w-full font-semibold"
-            disabled={isPending}
-            onClick={handleNextOrFinish}
-          >
-            <BookOpenCheck className="h-4 w-4" />
-            <span>
+            <Button
+              type="button"
+              size="lg"
+              variant={checkResult === 'correct' ? 'default' : 'destructive'}
+              className="w-full"
+              disabled={isPending}
+              onClick={handleNextOrFinish}
+            >
               {isPending
-                ? 'Сохранение...'
+                ? 'СОХРАНЕНИЕ...'
                 : currentIndex + 1 < totalExercises
                   ? t('nextExercise')
                   : t('finishLesson')}
-            </span>
-          </Button>
-        </div>
-      )}
+            </Button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

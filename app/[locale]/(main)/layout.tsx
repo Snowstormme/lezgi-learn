@@ -12,6 +12,8 @@ export default async function MainAppLayout({
     <MobileShell
       isAuthenticated={session.isAuthenticated}
       displayName={session.displayName}
+      xp={session.xp}
+      streakDays={session.streakDays}
     >
       {children}
     </MobileShell>

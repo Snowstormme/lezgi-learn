@@ -3,9 +3,12 @@
 import {
   BookOpen,
   Brain,
+  Flame,
   GraduationCap,
   Languages,
   MessageSquare,
+  User,
+  Zap,
 } from 'lucide-react';
 import { Link, usePathname } from '@/lib/i18n/routing';
 import { useTranslations } from 'next-intl';
@@ -15,16 +18,23 @@ interface MobileShellProps {
   children: React.ReactNode;
   isAuthenticated: boolean;
   displayName: string | null;
+  xp?: number;
+  streakDays?: number;
 }
 
 export function MobileShell({
   children,
   isAuthenticated,
   displayName,
+  xp = 0,
+  streakDays = 0,
 }: MobileShellProps) {
   const pathname = usePathname();
-  const tApp = useTranslations('app');
   const tNav = useTranslations('nav');
+
+  // Hide shell chrome inside active lesson runner for distraction-free focus
+  const isInsideLessonRunner =
+    pathname.startsWith('/lesson/') && !pathname.endsWith('/result');
 
   const navItems = [
     { href: '/learn', label: tNav('learn'), icon: GraduationCap },
@@ -34,45 +44,66 @@ export function MobileShell({
     { href: '/translate', label: tNav('translate'), icon: Languages },
   ];
 
+  if (isInsideLessonRunner) {
+    return (
+      <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col bg-background px-4 py-4">
+        {children}
+      </div>
+    );
+  }
+
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col border-x border-border/60 bg-background">
-      <header className="sticky top-0 z-20 flex items-center justify-between border-b border-border/80 bg-background/95 px-4 py-3 backdrop-blur">
-        <Link href="/learn" className="flex items-center gap-2">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-sm font-bold text-primary-foreground">
+    <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col border-x-2 border-border bg-background">
+      {/* Top Stat Bar */}
+      <header className="sticky top-0 z-20 flex h-14 items-center justify-between border-b-2 border-border bg-background/95 px-4 backdrop-blur">
+        <Link
+          href="/learn"
+          className="flex items-center gap-2 rounded-xl px-1.5 py-1 transition-transform active:scale-95"
+        >
+          <span className="flex h-8 w-9 items-center justify-center rounded-lg border-b-2 border-[#46a302] bg-primary text-xs font-black text-primary-foreground">
             ЛӀ
           </span>
-          <div>
-            <p className="text-sm font-semibold leading-none">{tApp('name')}</p>
-            <p className="text-[11px] text-muted-foreground">Лезги чӀал • v0</p>
-          </div>
+          <span className="text-sm font-black uppercase tracking-wider text-muted-foreground">
+            Лезги
+          </span>
         </Link>
 
-        {isAuthenticated ? (
-          <Link
-            href="/profile"
-            className="rounded-full border border-border bg-secondary/60 px-3 py-1 text-xs font-medium text-foreground"
+        <div className="flex items-center gap-4">
+          <div
+            className="flex items-center gap-1.5 text-sm font-black text-[#FF9600]"
+            title="Ударный режим (дней подряд)"
           >
-            {displayName ?? 'Профиль'}
-          </Link>
-        ) : (
-          <Link
-            href="/login"
-            className="rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90"
-          >
-            {tApp('signInCta')}
-          </Link>
-        )}
-      </header>
+            <Flame className="h-5 w-5 fill-[#FF9600]" />
+            <span>{streakDays}</span>
+          </div>
 
-      {!isAuthenticated && (
-        <div className="border-b border-amber-500/20 bg-amber-500/10 px-4 py-2 text-xs text-amber-200/90">
-          {tApp('guestBanner')}
+          <div
+            className="flex items-center gap-1 text-sm font-black text-[#FFC800]"
+            title="Очки опыта (XP)"
+          >
+            <Zap className="h-5 w-5 fill-[#FFC800]" />
+            <span>{xp}</span>
+          </div>
         </div>
-      )}
+
+        <Link
+          href={isAuthenticated ? '/profile' : '/login'}
+          className={cn(
+            'flex h-9 items-center gap-1.5 rounded-xl border-2 border-b-4 px-3 text-xs font-extrabold uppercase tracking-wide transition-all active:translate-y-[1px]',
+            isAuthenticated
+              ? 'border-border bg-secondary text-foreground'
+              : 'border-[#1899D6] bg-accent text-primary-foreground'
+          )}
+        >
+          <User className="h-4 w-4" />
+          <span>{isAuthenticated ? (displayName ?? 'Профиль') : 'Войти'}</span>
+        </Link>
+      </header>
 
       <main className="flex-1 px-4 py-5 pb-24">{children}</main>
 
-      <nav className="fixed bottom-0 left-1/2 z-20 flex w-full max-w-md -translate-x-1/2 items-center justify-around border-t border-border/80 bg-background/95 px-2 py-2 backdrop-blur">
+      {/* Bottom Tab Bar */}
+      <nav className="fixed bottom-0 left-1/2 z-20 flex h-20 w-full max-w-md -translate-x-1/2 items-center justify-around border-t-2 border-border bg-background px-2">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive =
@@ -82,13 +113,13 @@ export function MobileShell({
               key={item.href}
               href={item.href}
               className={cn(
-                'flex flex-col items-center gap-1 rounded-lg px-3 py-1.5 text-xs transition-colors',
+                'flex flex-col items-center justify-center gap-1 rounded-2xl border-2 px-3 py-2 text-[11px] font-extrabold uppercase tracking-wide transition-all active:scale-95',
                 isActive
-                  ? 'font-semibold text-primary'
-                  : 'text-muted-foreground hover:text-foreground'
+                  ? 'border-accent bg-accent/15 text-accent'
+                  : 'border-transparent text-muted-foreground hover:text-foreground'
               )}
             >
-              <Icon className="h-5 w-5" />
+              <Icon className="h-5 w-5 stroke-[2.5]" />
               <span>{item.label}</span>
             </Link>
           );

@@ -223,8 +223,8 @@ export function TranslatorWorkspace({
         <Card
           className={
             result.isVerified
-              ? 'border-emerald-500/40 bg-gradient-to-b from-emerald-500/10 via-card to-card'
-              : 'border-amber-500/40 bg-gradient-to-b from-amber-500/10 via-card to-card'
+              ? 'border-primary bg-card'
+              : 'border-[#FF9600] bg-card'
           }
         >
           <CardHeader className="space-y-2 pb-3">
@@ -234,14 +234,14 @@ export function TranslatorWorkspace({
                   <ShieldCheck className="h-3.5 w-3.5" />
                   <span>
                     {result.matchTier === 'verified_phrase'
-                      ? 'Проверенная фраза (status = published)'
-                      : 'Проверенное слово из словаря'}
+                      ? 'Проверено носителем'
+                      : 'Из проверенного словаря'}
                   </span>
                 </Badge>
               ) : (
                 <Badge variant="warning">
                   <AlertTriangle className="h-3.5 w-3.5" />
-                  <span>Черновик • Требует проверки носителем</span>
+                  <span>Черновик • Требует проверки</span>
                 </Badge>
               )}
 
@@ -421,10 +421,8 @@ export function TranslatorWorkspace({
               {isReviewerOrAdmin ? `Роль: ${userRole}` : 'Только чтение своих'}
             </Badge>
           </div>
-          <p className="text-xs text-muted-foreground">
-            Предложенные пользователями переводы получают статус{' '}
-            <code>pending_review</code> и публикуются только после одобрения
-            носителем-модератором.
+          <p className="text-xs font-bold text-muted-foreground">
+            Предложенные пользователями переводы проходят проверку носителями языка перед публикацией.
           </p>
         </CardHeader>
 

@@ -7,12 +7,11 @@ export default async function SrsReviewPage() {
   return (
     <div className="space-y-4">
       <div className="space-y-1">
-        <h1 className="text-xl font-bold tracking-tight">
-          Интервальное повторение слов
+        <h1 className="text-2xl font-black tracking-tight">
+          Тренировка слов
         </h1>
-        <p className="text-xs text-muted-foreground">
-          Умные карточки по алгоритму FSRS (`ts-fsrs`) — слова показываются
-          именно тогда, когда вы начинаете их забывать.
+        <p className="text-sm font-bold text-muted-foreground">
+          Умные карточки показывают слова именно тогда, когда их пора освежить в памяти.
         </p>
       </div>
 

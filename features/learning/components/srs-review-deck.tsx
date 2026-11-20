@@ -127,35 +127,35 @@ export function SrsReviewDeck({
       grade: 1,
       label: 'Снова',
       colorClass:
-        'border-destructive/50 bg-destructive/15 text-destructive hover:bg-destructive/25',
+        'border-2 border-b-4 border-destructive bg-destructive/15 text-destructive',
     },
     {
       grade: 2,
       label: 'Трудно',
       colorClass:
-        'border-amber-500/40 bg-amber-500/15 text-amber-300 hover:bg-amber-500/25',
+        'border-2 border-b-4 border-[#FF9600] bg-[#FF9600]/15 text-[#FF9600]',
     },
     {
       grade: 3,
       label: 'Хорошо',
       colorClass:
-        'border-emerald-500/40 bg-emerald-500/15 text-emerald-300 hover:bg-emerald-500/25',
+        'border-2 border-b-4 border-primary bg-primary/15 text-primary',
     },
     {
       grade: 4,
       label: 'Легко',
       colorClass:
-        'border-primary/50 bg-primary/15 text-primary hover:bg-primary/25',
+        'border-2 border-b-4 border-accent bg-accent/15 text-accent',
     },
   ];
 
   return (
     <div className="space-y-4">
       {/* Progress & stats header */}
-      <div className="flex items-center justify-between text-xs text-muted-foreground">
-        <span className="inline-flex items-center gap-1.5 font-medium text-foreground">
+      <div className="flex items-center justify-between text-xs font-extrabold uppercase tracking-wider text-muted-foreground">
+        <span className="inline-flex items-center gap-1.5 text-foreground">
           <Brain className="h-4 w-4 text-primary" />
-          <span>Алгоритм FSRS • В колоде: {totalEnrolled || queue.length}</span>
+          <span>Карточек в тренировке: {totalEnrolled || queue.length}</span>
         </span>
         <span className="tabular-nums">
           {currentIndex + 1} / {queue.length}
