@@ -2,13 +2,21 @@
 
 import { useMemo, useState, useTransition } from 'react';
 import {
+  BookOpen,
   Check,
+  Keyboard,
+  LayoutGrid,
   Lightbulb,
+  RotateCcw,
   X,
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Link, useRouter } from '@/lib/i18n/routing';
-import type { LessonDetail, LessonExerciseItem } from '@/features/learning/queries';
+import type {
+  LessonDetail,
+  LessonExerciseItem,
+} from '@/features/learning/queries';
+import type { TeachWordItem } from '@/content/schema';
 import { completeLessonAction } from '@/features/learning/actions';
 import { isLezgiAnswerCorrect } from '@/lib/lezgi-utils';
 import { LessonProgressBar } from '@/components/ui/progress-bar';
@@ -35,21 +43,42 @@ interface LessonRunnerProps {
   lesson: LessonDetail;
 }
 
+function cleanTokenForLookup(token: string): string {
+  return token
+    .replace(/^[—«"'(,.:;!?]+|[»"'),.:;!?]+$/g, '')
+    .trim();
+}
+
 export function LessonRunner({ lesson }: LessonRunnerProps) {
   const t = useTranslations('lesson');
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
   const exercises = lesson.exercises;
-  const totalExercises = exercises.length;
+  const baseExerciseCount = exercises.length;
 
-  const [currentIndex, setCurrentIndex] = useState(0);
+  // Queue of exercise indices; wrong answers get pushed to the end for Duolingo-style mistake review
+  const [exerciseQueue, setExerciseQueue] = useState<number[]>(() =>
+    exercises.map((_, idx) => idx)
+  );
+  const [queueCursor, setQueueCursor] = useState(0);
+
+  // Track which exercises' `teach_words` intro cards have already been studied
+  const [dismissedTeachSlugs, setDismissedTeachSlugs] = useState<string[]>([]);
+
   const [showGrammarTip, setShowGrammarTip] = useState(false);
-  const [correctCount, setCorrectCount] = useState(0);
+  const [firstPassCorrectCount, setFirstPassCorrectCount] = useState(0);
 
   // Per-exercise state
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [textAnswer, setTextAnswer] = useState('');
+  const [selectedBankIndices, setSelectedBankIndices] = useState<number[]>([]);
+  const [useManualKeyboard, setUseManualKeyboard] = useState(false);
+  const [activeHintToken, setActiveHintToken] = useState<{
+    token: string;
+    meaning: string;
+  } | null>(null);
+
   const [selectedLeft, setSelectedLeft] = useState<string | null>(null);
   const [matchedLefts, setMatchedLefts] = useState<string[]>([]);
   const [mismatchRight, setMismatchRight] = useState<string | null>(null);
@@ -59,8 +88,47 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
     null
   );
 
+  const currentExerciseIndex = exerciseQueue[queueCursor] ?? 0;
   const currentExercise: LessonExerciseItem | undefined =
-    exercises[currentIndex];
+    exercises[currentExerciseIndex];
+  const isMistakeReviewPass = queueCursor >= baseExerciseCount;
+
+  const currentTeachWords: TeachWordItem[] =
+    currentExercise?.payload.teach_words ?? [];
+  const isShowingTeachCard =
+    !isMistakeReviewPass &&
+    currentTeachWords.length > 0 &&
+    Boolean(currentExercise) &&
+    !dismissedTeachSlugs.includes(currentExercise.slug);
+
+  // Build cumulative vocabulary hint dictionary from all taught words & explicit word_hints
+  const hintMap = useMemo(() => {
+    const map = new Map<string, string>();
+
+    for (const pw of lesson.practice_words) {
+      map.set(pw.lemma_lez.toLowerCase(), pw.translation_ru);
+    }
+
+    for (const ex of exercises) {
+      for (const tw of ex.payload.teach_words ?? []) {
+        map.set(tw.lez.toLowerCase(), tw.ru);
+        for (const part of tw.lez.split(/\s+/)) {
+          const cleaned = cleanTokenForLookup(part).toLowerCase();
+          if (cleaned.length >= 2 && !map.has(cleaned)) {
+            map.set(cleaned, `${tw.lez} — ${tw.ru}`);
+          }
+        }
+      }
+    }
+
+    if (currentExercise?.payload.word_hints) {
+      for (const [k, v] of Object.entries(currentExercise.payload.word_hints)) {
+        map.set(k.toLowerCase(), v);
+      }
+    }
+
+    return map;
+  }, [currentExercise, exercises, lesson.practice_words]);
 
   const shuffledRightOptions = useMemo(() => {
     if (!currentExercise || currentExercise.type !== 'matching') return [];
@@ -72,14 +140,48 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
     return null;
   }
 
+  const wordBankTiles =
+    currentExercise.type === 'word_input'
+      ? (currentExercise.payload.word_bank ?? [])
+      : [];
+  const isWordBankMode =
+    currentExercise.type === 'word_input' &&
+    wordBankTiles.length > 0 &&
+    !useManualKeyboard;
+
+  const activeAnswerText = isWordBankMode
+    ? selectedBankIndices.map((i) => wordBankTiles[i] ?? '').join(' ')
+    : textAnswer;
+
   function resetExerciseState() {
     setSelectedOption(null);
     setTextAnswer('');
+    setSelectedBankIndices([]);
+    setUseManualKeyboard(false);
+    setActiveHintToken(null);
     setSelectedLeft(null);
     setMatchedLefts([]);
     setMismatchRight(null);
     setHadMatchingMistake(false);
     setCheckResult(null);
+  }
+
+  function handleDismissTeachCard() {
+    if (!currentExercise) return;
+    setDismissedTeachSlugs((prev) =>
+      prev.includes(currentExercise.slug)
+        ? prev
+        : [...prev, currentExercise.slug]
+    );
+  }
+
+  function handleToggleBankTile(tileIdx: number) {
+    if (checkResult !== null) return;
+    setSelectedBankIndices((prev) =>
+      prev.includes(tileIdx)
+        ? prev.filter((i) => i !== tileIdx)
+        : [...prev, tileIdx]
+    );
   }
 
   function handleSelectRightPair(rightValue: string) {
@@ -105,8 +207,10 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
       if (nextMatched.length === currentExercise.payload.pairs.length) {
         const isCleanRun = !hadMatchingMistake;
         setCheckResult('correct');
-        if (isCleanRun) {
-          setCorrectCount((c) => c + 1);
+        if (isCleanRun && !isMistakeReviewPass) {
+          setFirstPassCorrectCount((c) => c + 1);
+        } else if (!isCleanRun) {
+          setExerciseQueue((q) => [...q, currentExerciseIndex]);
         }
       }
     } else {
@@ -127,32 +231,42 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
         selectedOption === currentExercise.payload.correct_index;
       setCheckResult(isRight ? 'correct' : 'wrong');
       if (isRight) {
-        setCorrectCount((c) => c + 1);
+        if (!isMistakeReviewPass) {
+          setFirstPassCorrectCount((c) => c + 1);
+        }
+      } else {
+        setExerciseQueue((q) => [...q, currentExerciseIndex]);
       }
       return;
     }
 
     if (currentExercise.type === 'word_input') {
-      if (!textAnswer.trim()) return;
+      if (!activeAnswerText.trim()) return;
       const isRight = isLezgiAnswerCorrect(
-        textAnswer,
+        activeAnswerText,
         currentExercise.payload.accepted_answers
       );
       setCheckResult(isRight ? 'correct' : 'wrong');
       if (isRight) {
-        setCorrectCount((c) => c + 1);
+        if (!isMistakeReviewPass) {
+          setFirstPassCorrectCount((c) => c + 1);
+        }
+      } else {
+        setExerciseQueue((q) => [...q, currentExerciseIndex]);
       }
     }
   }
 
   function handleNextOrFinish() {
-    if (currentIndex + 1 < totalExercises) {
-      setCurrentIndex((idx) => idx + 1);
+    if (queueCursor + 1 < exerciseQueue.length) {
+      setQueueCursor((idx) => idx + 1);
       resetExerciseState();
       return;
     }
 
-    const finalScore = Math.round((correctCount / totalExercises) * 100);
+    const finalScore = Math.round(
+      (firstPassCorrectCount / baseExerciseCount) * 100
+    );
 
     startTransition(async () => {
       const res = await completeLessonAction({
@@ -164,24 +278,80 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
       const saved = res.ok && res.data.savedToAccount ? '1' : '0';
 
       router.push(
-        `/lesson/${lesson.slug}/result?score=${finalScore}&correct=${correctCount}&total=${totalExercises}&xp=${xp}&saved=${saved}`
+        `/lesson/${lesson.slug}/result?score=${finalScore}&correct=${firstPassCorrectCount}&total=${baseExerciseCount}&xp=${xp}&saved=${saved}`
       );
     });
   }
 
   const canCheck =
+    !isShowingTeachCard &&
     checkResult === null &&
     ((currentExercise.type === 'multiple_choice' &&
       selectedOption !== null) ||
       (currentExercise.type === 'word_input' &&
-        textAnswer.trim().length > 0));
+        activeAnswerText.trim().length > 0));
 
   const correctReferenceText =
     currentExercise.type === 'multiple_choice'
       ? currentExercise.payload.options[currentExercise.payload.correct_index]
       : currentExercise.type === 'word_input'
-        ? currentExercise.payload.accepted_answers.join(' / ')
+        ? currentExercise.payload.accepted_answers[0] ?? ''
         : '';
+
+  function renderInteractiveBubbleText(text: string) {
+    const tokens = text.split(/(\s+)/);
+
+    return (
+      <div className="space-y-2">
+        <div className="flex flex-wrap items-baseline gap-x-1.5 gap-y-1 text-xl font-black leading-snug">
+          {tokens.map((part, idx) => {
+            if (/^\s+$/.test(part)) {
+              return <span key={idx}> </span>;
+            }
+            const lookupKey = cleanTokenForLookup(part).toLowerCase();
+            const hint =
+              hintMap.get(lookupKey) ?? hintMap.get(text.trim().toLowerCase());
+
+            if (!hint) {
+              return <span key={idx}>{part}</span>;
+            }
+
+            const isActive = activeHintToken?.token === part;
+
+            return (
+              <button
+                key={`${part}-${idx}`}
+                type="button"
+                onClick={() =>
+                  setActiveHintToken((prev) =>
+                    prev?.token === part ? null : { token: part, meaning: hint }
+                  )
+                }
+                title={`Нажмите для подсказки: ${hint}`}
+                className={cn(
+                  'cursor-pointer border-b-2 border-dotted transition-colors',
+                  isActive
+                    ? 'border-primary text-primary'
+                    : 'border-[#0B132B]/55 text-[#0B132B] hover:border-primary hover:text-primary'
+                )}
+              >
+                {part}
+              </button>
+            );
+          })}
+        </div>
+
+        {activeHintToken && (
+          <div className="inline-flex items-center gap-2 rounded-xl border-2 border-[#0B132B] bg-[#0B132B] px-3 py-1.5 text-xs font-bold text-[#F8FAFC]">
+            <span className="text-primary">
+              {cleanTokenForLookup(activeHintToken.token)}:
+            </span>
+            <span>{activeHintToken.meaning}</span>
+          </div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-[calc(100dvh-2rem)] flex-col justify-between">
@@ -197,236 +367,451 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
           </Link>
 
           <LessonProgressBar
-            current={checkResult !== null ? currentIndex + 1 : currentIndex}
-            total={totalExercises}
+            current={
+              isShowingTeachCard
+                ? queueCursor
+                : checkResult !== null
+                  ? queueCursor + 1
+                  : queueCursor
+            }
+            total={exerciseQueue.length}
             className="flex-1"
           />
 
           <span className="shrink-0 rounded-xl border-2 border-border bg-card px-2.5 py-1 text-xs font-black tabular-nums text-[#F8FAFC]">
-            {currentIndex + 1} / {totalExercises}
+            {Math.min(queueCursor + 1, exerciseQueue.length)} /{' '}
+            {exerciseQueue.length}
           </span>
         </div>
 
-        {/* Prompt Header + Theory Toggle */}
-        <div className="space-y-3 pt-2">
-          <div className="flex items-start justify-between gap-2.5">
-            <h1 className="text-2xl font-black leading-tight text-[#F8FAFC]">
-              {currentExercise.prompt_ru}
-            </h1>
-
-            {lesson.grammar_tip_ru && (
-              <button
-                type="button"
-                onClick={() => setShowGrammarTip((v) => !v)}
-                title="Показать подсказку к уроку"
-                className={cn(
-                  'flex h-10 shrink-0 items-center gap-1.5 rounded-xl border-2 border-b-4 px-3 text-xs font-black uppercase tracking-wider transition-all active:translate-y-[1px] active:border-b-2',
-                  showGrammarTip
-                    ? 'border-[#CBD5E1] bg-[#F8FAFC] text-[#0B132B]'
-                    : 'border-border bg-card text-[#F8FAFC] hover:border-primary'
-                )}
-              >
-                <Lightbulb className="h-4 w-4 stroke-[2.5] text-primary" />
-                <span>Подсказка</span>
-              </button>
-            )}
-          </div>
-
-          {showGrammarTip && lesson.grammar_tip_ru && (
-            <div className="rounded-2xl border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC] p-4 text-sm font-bold leading-relaxed text-[#0B132B]">
-              {lesson.grammar_tip_ru}
-            </div>
-          )}
-        </div>
-
-        {/* Exercise Workspace */}
-        <div className="pt-2">
-          {/* 1. MULTIPLE CHOICE */}
-          {currentExercise.type === 'multiple_choice' && (
-            <div className="space-y-5">
-              {/* Emblem + Speech Bubble */}
-              <div className="flex items-center gap-3">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border-2 border-b-4 border-[#B92B1C] bg-primary text-lg font-black text-[#F8FAFC]">
-                  ЛӀ
-                </div>
-                <div className="flex min-w-0 flex-1 items-center justify-between gap-3 rounded-2xl border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC] px-4 py-3.5 text-[#0B132B]">
-                  <span className="text-xl font-black leading-snug">
-                    {currentExercise.payload.question}
-                  </span>
-                  <AudioPlayerButton
-                    textLez={currentExercise.payload.question}
-                  />
-                </div>
+        {/* TEACHING STEP: Introduce new words BEFORE testing them */}
+        {isShowingTeachCard ? (
+          <div className="space-y-5 pt-2">
+            <div className="space-y-2">
+              <div className="inline-flex items-center gap-1.5 rounded-xl border-2 border-[#B92B1C] bg-primary px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-[#F8FAFC]">
+                <BookOpen className="h-3.5 w-3.5 stroke-[2.5]" />
+                <span>Новые слова перед практикой</span>
               </div>
 
-              {/* 3D Option Cards */}
-              <div className="space-y-3">
-                {currentExercise.payload.options.map((option, idx) => {
-                  const isSelected = selectedOption === idx;
-                  const isCorrectOption =
-                    idx === currentExercise.payload.correct_index;
+              <h1 className="text-balance text-2xl font-black leading-tight text-[#F8FAFC]">
+                {currentExercise.payload.teach_title_ru ??
+                  'Изучите слова для следующих заданий'}
+              </h1>
 
-                  return (
-                    <button
-                      key={option}
-                      type="button"
-                      disabled={checkResult !== null}
-                      onClick={() => setSelectedOption(idx)}
-                      className={cn(
-                        'flex min-h-[56px] w-full items-center justify-between gap-3 rounded-2xl border-2 border-b-4 px-4 py-3 text-left text-base font-extrabold transition-all active:translate-y-[2px]',
-                        checkResult === null &&
-                          !isSelected &&
-                          'border-border bg-card text-[#F8FAFC] hover:bg-secondary',
-                        checkResult === null &&
-                          isSelected &&
-                          'border-[#CBD5E1] bg-[#F8FAFC] text-[#0B132B]',
-                        checkResult !== null &&
-                          isCorrectOption &&
-                          'border-emerald-500 bg-emerald-500/20 text-emerald-200',
-                        checkResult === 'wrong' &&
-                          isSelected &&
-                          !isCorrectOption &&
-                          'border-primary bg-primary/20 text-primary'
-                      )}
-                    >
-                      <span className="leading-snug">{option}</span>
-                      <span
-                        className={cn(
-                          'flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border-2 text-xs font-black',
-                          isSelected && checkResult === null
-                            ? 'border-[#0B132B]/30 text-[#0B132B]'
-                            : 'border-border text-muted-foreground'
-                        )}
-                      >
-                        {idx + 1}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* 2. MATCHING */}
-          {currentExercise.type === 'matching' && (
-            <div className="space-y-4">
-              <p className="text-sm font-bold text-muted-foreground">
-                {t('matchingInstruction')}
-              </p>
-
-              <div className="grid grid-cols-2 gap-3">
-                {/* Left column: Lezgi */}
-                <div className="space-y-2.5">
-                  {currentExercise.payload.pairs.map((pair) => {
-                    const isMatched = matchedLefts.includes(pair.left);
-                    const isSelected = selectedLeft === pair.left;
-
-                    return (
-                      <button
-                        key={pair.left}
-                        type="button"
-                        disabled={isMatched}
-                        onClick={() => setSelectedLeft(pair.left)}
-                        className={cn(
-                          'flex min-h-[58px] w-full items-center justify-center rounded-2xl border-2 border-b-4 px-3 py-2.5 text-center text-base font-black transition-all active:translate-y-[2px]',
-                          isMatched &&
-                            'border-border/40 bg-card/30 text-muted-foreground/40',
-                          !isMatched &&
-                            isSelected &&
-                            'border-[#CBD5E1] bg-[#F8FAFC] text-[#0B132B]',
-                          !isMatched &&
-                            !isSelected &&
-                            'border-border bg-card text-[#F8FAFC] hover:bg-secondary'
-                        )}
-                      >
-                        {pair.left}
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {/* Right column: Russian */}
-                <div className="space-y-2.5">
-                  {shuffledRightOptions.map((rightText) => {
-                    const matchedPair = currentExercise.payload.pairs.find(
-                      (p) =>
-                        p.right === rightText && matchedLefts.includes(p.left)
-                    );
-                    const isMatched = Boolean(matchedPair);
-                    const isMismatch = mismatchRight === rightText;
-
-                    return (
-                      <button
-                        key={rightText}
-                        type="button"
-                        disabled={isMatched || !selectedLeft}
-                        onClick={() => handleSelectRightPair(rightText)}
-                        className={cn(
-                          'flex min-h-[58px] w-full items-center justify-center rounded-2xl border-2 border-b-4 px-3 py-2.5 text-center text-sm font-extrabold transition-all active:translate-y-[2px]',
-                          isMatched &&
-                            'border-border/40 bg-card/30 text-muted-foreground/40',
-                          isMismatch &&
-                            'border-primary bg-primary/25 text-primary',
-                          !isMatched &&
-                            !isMismatch &&
-                            'border-border bg-card text-[#F8FAFC] hover:bg-secondary'
-                        )}
-                      >
-                        {rightText}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* 3. WORD INPUT */}
-          {currentExercise.type === 'word_input' && (
-            <div className="space-y-4">
-              <Input
-                value={textAnswer}
-                disabled={checkResult !== null}
-                onChange={(e) => setTextAnswer(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && canCheck) {
-                    e.preventDefault();
-                    handleCheckAnswer();
-                  }
-                }}
-                placeholder={t('inputPlaceholder')}
-                className="h-14 text-lg font-extrabold"
-                autoComplete="off"
-                autoCorrect="off"
-                spellCheck={false}
-              />
-
-              <div className="space-y-2">
-                <p className="text-xs font-bold text-muted-foreground">
-                  {t('palochkaHelper')}
+              {currentExercise.payload.teach_note_ru && (
+                <p className="text-balance text-sm leading-relaxed text-[#C1D0E4]">
+                  {currentExercise.payload.teach_note_ru}
                 </p>
-                <div className="flex flex-wrap gap-2">
-                  {LEZGI_HELPER_KEYS.map((char) => (
-                    <button
-                      key={char}
-                      type="button"
-                      disabled={checkResult !== null}
-                      onClick={() => setTextAnswer((prev) => `${prev}${char}`)}
-                      className="flex h-11 min-w-[44px] items-center justify-center rounded-xl border-2 border-b-4 border-border bg-card px-3 text-sm font-black text-[#F8FAFC] transition-all hover:border-primary active:translate-y-[2px] disabled:opacity-50"
-                    >
-                      {char}
-                    </button>
-                  ))}
-                </div>
-              </div>
+              )}
             </div>
-          )}
-        </div>
+
+            <div className="space-y-3">
+              {currentTeachWords.map((item) => (
+                <div
+                  key={item.lez}
+                  className="rounded-2xl border-2 border-b-4 border-border bg-card p-4"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="space-y-1">
+                      <div className="flex flex-wrap items-baseline gap-2">
+                        <span className="text-xl font-black text-[#F8FAFC]">
+                          {item.lez}
+                        </span>
+                        {item.transcription_ru && (
+                          <span className="text-xs font-bold text-[#94A3B8]">
+                            [{item.transcription_ru}]
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-base font-extrabold text-primary">
+                        {item.ru}
+                      </p>
+                    </div>
+
+                    <AudioPlayerButton textLez={item.lez} />
+                  </div>
+
+                  {item.example_lez && (
+                    <div className="mt-3 flex items-center justify-between gap-2 rounded-xl border border-border bg-background/60 px-3 py-2 text-xs">
+                      <div className="space-y-0.5">
+                        <p className="font-extrabold text-[#F8FAFC]">
+                          «{item.example_lez}»
+                        </p>
+                        {item.example_ru && (
+                          <p className="text-[#C1D0E4]">— {item.example_ru}</p>
+                        )}
+                      </div>
+                      <AudioPlayerButton textLez={item.example_lez} />
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <>
+            {/* Prompt Header + Theory Toggle */}
+            <div className="space-y-3 pt-2">
+              {isMistakeReviewPass && (
+                <div className="inline-flex items-center gap-1.5 rounded-xl border-2 border-[#B92B1C] bg-primary/20 px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-primary">
+                  <RotateCcw className="h-3.5 w-3.5 stroke-[2.5]" />
+                  <span>Работа над ошибками</span>
+                </div>
+              )}
+
+              <div className="flex items-start justify-between gap-2.5">
+                <h1 className="text-balance text-2xl font-black leading-tight text-[#F8FAFC]">
+                  {currentExercise.prompt_ru}
+                </h1>
+
+                {(lesson.grammar_tip_ru ||
+                  currentTeachWords.length > 0) && (
+                  <button
+                    type="button"
+                    onClick={() => setShowGrammarTip((v) => !v)}
+                    title="Показать шпаргалку к уроку"
+                    className={cn(
+                      'flex h-10 shrink-0 items-center gap-1.5 rounded-xl border-2 border-b-4 px-3 text-xs font-black uppercase tracking-wider transition-all active:translate-y-[1px] active:border-b-2',
+                      showGrammarTip
+                        ? 'border-[#CBD5E1] bg-[#F8FAFC] text-[#0B132B]'
+                        : 'border-border bg-card text-[#F8FAFC] hover:border-primary'
+                    )}
+                  >
+                    <Lightbulb className="h-4 w-4 stroke-[2.5] text-primary" />
+                    <span>Шпаргалка</span>
+                  </button>
+                )}
+              </div>
+
+              {showGrammarTip && (
+                <div className="space-y-2 rounded-2xl border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC] p-4 text-sm font-bold leading-relaxed text-[#0B132B]">
+                  {lesson.grammar_tip_ru && <p>{lesson.grammar_tip_ru}</p>}
+                  {currentTeachWords.length > 0 && (
+                    <div className="grid grid-cols-1 gap-1.5 border-t border-[#CBD5E1] pt-2 text-xs">
+                      {currentTeachWords.map((tw) => (
+                        <div
+                          key={tw.lez}
+                          className="flex items-baseline justify-between gap-2"
+                        >
+                          <span className="font-black text-[#0B132B]">
+                            {tw.lez}
+                          </span>
+                          <span className="text-[#334155]">{tw.ru}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Exercise Workspace */}
+            <div className="pt-2">
+              {/* 1. MULTIPLE CHOICE */}
+              {currentExercise.type === 'multiple_choice' && (
+                <div className="space-y-5">
+                  {/* Emblem + Speech Bubble with Tappable Dotted Hints */}
+                  <div className="space-y-1.5">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border-2 border-b-4 border-[#B92B1C] bg-primary text-lg font-black text-[#F8FAFC]">
+                        ЛӀ
+                      </div>
+                      <div className="flex min-w-0 flex-1 items-center justify-between gap-3 rounded-2xl border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC] px-4 py-3.5 text-[#0B132B]">
+                        {renderInteractiveBubbleText(
+                          currentExercise.payload.question
+                        )}
+                        <AudioPlayerButton
+                          textLez={currentExercise.payload.question}
+                        />
+                      </div>
+                    </div>
+                    <p className="pl-[68px] text-[11px] font-bold text-[#94A3B8]">
+                      Нажмите на подчёркнутое слово, чтобы подсмотреть перевод
+                    </p>
+                  </div>
+
+                  {/* 3D Option Cards */}
+                  <div className="space-y-3">
+                    {currentExercise.payload.options.map((option, idx) => {
+                      const isSelected = selectedOption === idx;
+                      const isCorrectOption =
+                        idx === currentExercise.payload.correct_index;
+
+                      return (
+                        <button
+                          key={option}
+                          type="button"
+                          disabled={checkResult !== null}
+                          onClick={() => setSelectedOption(idx)}
+                          className={cn(
+                            'flex min-h-[56px] w-full items-center justify-between gap-3 rounded-2xl border-2 border-b-4 px-4 py-3 text-left text-base font-extrabold transition-all active:translate-y-[2px]',
+                            checkResult === null &&
+                              !isSelected &&
+                              'border-border bg-card text-[#F8FAFC] hover:bg-secondary',
+                            checkResult === null &&
+                              isSelected &&
+                              'border-[#CBD5E1] bg-[#F8FAFC] text-[#0B132B]',
+                            checkResult !== null &&
+                              isCorrectOption &&
+                              'border-emerald-500 bg-emerald-500/20 text-emerald-200',
+                            checkResult === 'wrong' &&
+                              isSelected &&
+                              !isCorrectOption &&
+                              'border-primary bg-primary/20 text-primary'
+                          )}
+                        >
+                          <span className="leading-snug">{option}</span>
+                          <span
+                            className={cn(
+                              'flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border-2 text-xs font-black',
+                              isSelected && checkResult === null
+                                ? 'border-[#0B132B]/30 text-[#0B132B]'
+                                : 'border-border text-muted-foreground'
+                            )}
+                          >
+                            {idx + 1}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* 2. MATCHING */}
+              {currentExercise.type === 'matching' && (
+                <div className="space-y-4">
+                  <p className="text-sm font-bold text-muted-foreground">
+                    {t('matchingInstruction')}
+                  </p>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    {/* Left column: Lezgi */}
+                    <div className="space-y-2.5">
+                      {currentExercise.payload.pairs.map((pair) => {
+                        const isMatched = matchedLefts.includes(pair.left);
+                        const isSelected = selectedLeft === pair.left;
+
+                        return (
+                          <button
+                            key={pair.left}
+                            type="button"
+                            disabled={isMatched}
+                            onClick={() => setSelectedLeft(pair.left)}
+                            className={cn(
+                              'flex min-h-[58px] w-full items-center justify-center rounded-2xl border-2 border-b-4 px-3 py-2.5 text-center text-base font-black transition-all active:translate-y-[2px]',
+                              isMatched &&
+                                'border-border/40 bg-card/30 text-muted-foreground/40',
+                              !isMatched &&
+                                isSelected &&
+                                'border-[#CBD5E1] bg-[#F8FAFC] text-[#0B132B]',
+                              !isMatched &&
+                                !isSelected &&
+                                'border-border bg-card text-[#F8FAFC] hover:bg-secondary'
+                            )}
+                          >
+                            {pair.left}
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {/* Right column: Russian */}
+                    <div className="space-y-2.5">
+                      {shuffledRightOptions.map((rightText) => {
+                        const matchedPair =
+                          currentExercise.payload.pairs.find(
+                            (p) =>
+                              p.right === rightText &&
+                              matchedLefts.includes(p.left)
+                          );
+                        const isMatched = Boolean(matchedPair);
+                        const isMismatch = mismatchRight === rightText;
+
+                        return (
+                          <button
+                            key={rightText}
+                            type="button"
+                            disabled={isMatched || !selectedLeft}
+                            onClick={() => handleSelectRightPair(rightText)}
+                            className={cn(
+                              'flex min-h-[58px] w-full items-center justify-center rounded-2xl border-2 border-b-4 px-3 py-2.5 text-center text-sm font-extrabold transition-all active:translate-y-[2px]',
+                              isMatched &&
+                                'border-border/40 bg-card/30 text-muted-foreground/40',
+                              isMismatch &&
+                                'border-primary bg-primary/25 text-primary',
+                              !isMatched &&
+                                !isMismatch &&
+                                'border-border bg-card text-[#F8FAFC] hover:bg-secondary'
+                            )}
+                          >
+                            {rightText}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* 3. WORD INPUT (Duolingo Word Bank Tiles OR Keyboard Input) */}
+              {currentExercise.type === 'word_input' && (
+                <div className="space-y-5">
+                  {currentExercise.payload.question_ru && (
+                    <div className="space-y-1.5">
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border-2 border-b-4 border-[#B92B1C] bg-primary text-lg font-black text-[#F8FAFC]">
+                          ЛӀ
+                        </div>
+                        <div className="flex min-w-0 flex-1 items-center justify-between gap-3 rounded-2xl border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC] px-4 py-3.5 text-[#0B132B]">
+                          {renderInteractiveBubbleText(
+                            currentExercise.payload.question_ru
+                          )}
+                        </div>
+                      </div>
+                      <p className="pl-[68px] text-[11px] font-bold text-[#94A3B8]">
+                        Нажмите на слово в облачке, чтобы подсмотреть подсказку
+                      </p>
+                    </div>
+                  )}
+
+                  {isWordBankMode ? (
+                    <div className="space-y-4">
+                      {/* Assembly Tray */}
+                      <div className="min-h-[68px] rounded-2xl border-2 border-dashed border-border bg-card/60 p-3">
+                        {selectedBankIndices.length === 0 ? (
+                          <p className="py-2 text-center text-xs font-bold text-[#94A3B8]">
+                            Нажимайте на плашки со словами ниже, чтобы собрать ответ
+                          </p>
+                        ) : (
+                          <div className="flex flex-wrap gap-2">
+                            {selectedBankIndices.map((tileIdx) => (
+                              <button
+                                key={`selected-${tileIdx}`}
+                                type="button"
+                                disabled={checkResult !== null}
+                                onClick={() => handleToggleBankTile(tileIdx)}
+                                className="flex h-11 items-center justify-center rounded-xl border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC] px-3.5 pt-[1px] text-base font-extrabold text-[#0B132B] transition-all active:translate-y-[2px]"
+                              >
+                                {wordBankTiles[tileIdx]}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Word Bank Tiles */}
+                      <div className="flex flex-wrap justify-center gap-2.5 pt-1">
+                        {wordBankTiles.map((tile, tileIdx) => {
+                          const isUsed =
+                            selectedBankIndices.includes(tileIdx);
+                          return (
+                            <button
+                              key={`bank-${tile}-${tileIdx}`}
+                              type="button"
+                              disabled={isUsed || checkResult !== null}
+                              onClick={() => handleToggleBankTile(tileIdx)}
+                              className={cn(
+                                'flex h-12 min-w-[64px] items-center justify-center rounded-xl border-2 border-b-4 px-4 pt-[1px] text-base font-extrabold transition-all',
+                                isUsed
+                                  ? 'border-border/30 bg-card/20 text-transparent'
+                                  : 'border-border bg-card text-[#F8FAFC] hover:border-[#F8FAFC]/60 active:translate-y-[2px]'
+                              )}
+                            >
+                              {tile}
+                            </button>
+                          );
+                        })}
+                      </div>
+
+                      <div className="flex justify-end pt-1">
+                        <button
+                          type="button"
+                          disabled={checkResult !== null}
+                          onClick={() => {
+                            setTextAnswer(activeAnswerText);
+                            setUseManualKeyboard(true);
+                          }}
+                          className="inline-flex items-center gap-1.5 text-xs font-bold text-[#94A3B8] transition-colors hover:text-[#F8FAFC]"
+                        >
+                          <Keyboard className="h-3.5 w-3.5" />
+                          <span>Ввести вручную с клавиатуры</span>
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      <Input
+                        value={textAnswer}
+                        disabled={checkResult !== null}
+                        onChange={(e) => setTextAnswer(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' && canCheck) {
+                            e.preventDefault();
+                            handleCheckAnswer();
+                          }
+                        }}
+                        placeholder={t('inputPlaceholder')}
+                        className="h-14 text-lg font-extrabold"
+                        autoComplete="off"
+                        autoCorrect="off"
+                        spellCheck={false}
+                      />
+
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <p className="text-xs font-bold text-muted-foreground">
+                            {t('palochkaHelper')}
+                          </p>
+                          {wordBankTiles.length > 0 && (
+                            <button
+                              type="button"
+                              disabled={checkResult !== null}
+                              onClick={() => setUseManualKeyboard(false)}
+                              className="inline-flex items-center gap-1.5 text-xs font-bold text-primary transition-colors hover:underline"
+                            >
+                              <LayoutGrid className="h-3.5 w-3.5" />
+                              <span>Собрать из готовых слов</span>
+                            </button>
+                          )}
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                          {LEZGI_HELPER_KEYS.map((char) => (
+                            <button
+                              key={char}
+                              type="button"
+                              disabled={checkResult !== null}
+                              onClick={() =>
+                                setTextAnswer((prev) => `${prev}${char}`)
+                              }
+                              className="flex h-11 min-w-[44px] items-center justify-center rounded-xl border-2 border-b-4 border-border bg-card px-3 text-sm font-black text-[#F8FAFC] transition-all hover:border-primary active:translate-y-[2px] disabled:opacity-50"
+                            >
+                              {char}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </>
+        )}
       </div>
 
       {/* Bottom Action Sheet */}
       <div className="mt-8 pt-4">
-        {checkResult === null ? (
+        {isShowingTeachCard ? (
+          <Button
+            type="button"
+            size="lg"
+            className="w-full"
+            onClick={handleDismissTeachCard}
+          >
+            ПОНЯТНО, К ПРАКТИКЕ
+          </Button>
+        ) : checkResult === null ? (
           currentExercise.type !== 'matching' && (
             <Button
               type="button"
@@ -501,7 +886,7 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
             >
               {isPending
                 ? 'СОХРАНЕНИЕ...'
-                : currentIndex + 1 < totalExercises
+                : queueCursor + 1 < exerciseQueue.length
                   ? t('nextExercise')
                   : t('finishLesson')}
             </Button>

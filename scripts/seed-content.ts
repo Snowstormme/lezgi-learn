@@ -155,6 +155,14 @@ async function main() {
   );
 
   console.log('🚀 Upserting exercises...');
+  const activeExerciseSlugs = bundle.lessons.flatMap((l) =>
+    l.exercises.map((ex) => ex.slug)
+  );
+  await supabase
+    .from('exercises')
+    .delete()
+    .not('slug', 'in', `(${activeExerciseSlugs.join(',')})`);
+
   const exerciseRows = bundle.lessons.flatMap((l) => {
     const lessonId = lessonIdBySlug.get(l.slug);
     if (!lessonId) throw new Error(`Missing lesson ID for slug ${l.slug}`);

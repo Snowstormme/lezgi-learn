@@ -59,8 +59,26 @@ export const wordSeedSchema = z.object({
 
 export const dictionaryFileSchema = z.array(wordSeedSchema).min(1);
 
+export const teachWordItemSchema = z.object({
+  lez: lezgiTextSchema,
+  ru: z.string().min(1),
+  transcription_ru: z.string().optional(),
+  example_lez: lezgiTextSchema.optional(),
+  example_ru: z.string().optional(),
+});
+
+export type TeachWordItem = z.infer<typeof teachWordItemSchema>;
+
+const pedagogicalPayloadFields = {
+  teach_title_ru: z.string().optional(),
+  teach_note_ru: z.string().optional(),
+  teach_words: z.array(teachWordItemSchema).min(1).max(6).optional(),
+  word_hints: z.record(z.string(), z.string()).optional(),
+};
+
 export const multipleChoicePayloadSchema = z
   .object({
+    ...pedagogicalPayloadFields,
     question: z.string().min(1),
     options: z.array(z.string().min(1)).min(2).max(6),
     correct_index: z.number().int().nonnegative(),
@@ -71,6 +89,7 @@ export const multipleChoicePayloadSchema = z
   });
 
 export const matchingPayloadSchema = z.object({
+  ...pedagogicalPayloadFields,
   pairs: z
     .array(
       z.object({
@@ -83,8 +102,11 @@ export const matchingPayloadSchema = z.object({
 });
 
 export const wordInputPayloadSchema = z.object({
+  ...pedagogicalPayloadFields,
   accepted_answers: z.array(lezgiTextSchema).min(1),
   hint_lez: z.string().optional(),
+  question_ru: z.string().optional(),
+  word_bank: z.array(lezgiTextSchema).min(2).max(10).optional(),
 });
 
 const baseExerciseFields = {
