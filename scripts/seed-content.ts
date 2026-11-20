@@ -120,6 +120,12 @@ async function main() {
   );
 
   console.log('🚀 Upserting lessons...');
+  const activeLessonSlugs = bundle.lessons.map((l) => l.slug);
+  await supabase
+    .from('lessons')
+    .delete()
+    .not('slug', 'in', `(${activeLessonSlugs.join(',')})`);
+
   const lessonRows = bundle.lessons.map((l) => {
     const unitId = unitIdBySlug.get(l.unit_slug);
     if (!unitId) throw new Error(`Missing unit ID for slug ${l.unit_slug}`);

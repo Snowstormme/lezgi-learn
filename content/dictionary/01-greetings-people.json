@@ -1,0 +1,512 @@
+[
+  {
+    "slug": "salam",
+    "lemma_lez": "салам",
+    "translation_ru": "привет / здравствуй",
+    "transcription_ru": "сала́м",
+    "part_of_speech": "phrase",
+    "grammar_notes_ru": "Универсальное приветствие при встрече.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "salam-ex-1",
+        "sentence_lez": "Салам, стха!",
+        "translation_ru": "Привет, брат!",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "salam-aleikum",
+    "lemma_lez": "салам алейкум",
+    "translation_ru": "здравствуйте (традиционное приветствие: мир вам)",
+    "transcription_ru": "сала́м але́йкум",
+    "part_of_speech": "phrase",
+    "grammar_notes_ru": "Полная уважительная форма приветствия.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "salam-aleikum-ex-1",
+        "sentence_lez": "Салам алейкум, играми мугьман!",
+        "translation_ru": "Здравствуйте, дорогой гость!",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "aleikum-salam",
+    "lemma_lez": "алейкум салам",
+    "translation_ru": "ответ на приветствие (и вам мир)",
+    "transcription_ru": "але́йкум сала́м",
+    "part_of_speech": "phrase",
+    "grammar_notes_ru": "Обязательный вежливый ответ на «салам алейкум».",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "aleikum-salam-ex-1",
+        "sentence_lez": "Алейкум салам, къунши!",
+        "translation_ru": "Здравствуй (и тебе мир), сосед!",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "stxa",
+    "lemma_lez": "стха",
+    "translation_ru": "брат",
+    "transcription_ru": "стха",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Мн. ч.: стхаяр. Часто используется как тёплое обращение к ровеснику.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "stxa-ex-1",
+        "sentence_lez": "Им зи стха я.",
+        "translation_ru": "Это мой брат.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "vax",
+    "lemma_lez": "вах",
+    "translation_ru": "сестра",
+    "transcription_ru": "вах",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Мн. ч.: вахар. Дружеское и уважительное обращение к девушке или женщине.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "vax-ex-1",
+        "sentence_lez": "Салам, зи играми вах!",
+        "translation_ru": "Здравствуй, моя дорогая сестра!",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "dust",
+    "lemma_lez": "дуст",
+    "translation_ru": "друг",
+    "transcription_ru": "дуст",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Мн. ч.: дустар (друзья).",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "dust-ex-1",
+        "sentence_lez": "Вун зи хъсан дуст я.",
+        "translation_ru": "Ты мой хороший друг.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "aziz",
+    "lemma_lez": "азиз",
+    "translation_ru": "дорогой / милый / родной",
+    "transcription_ru": "ази́з",
+    "part_of_speech": "adjective",
+    "grammar_notes_ru": "Употребляется перед существительным в обращениях: азиз диде, азиз дуст.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "aziz-ex-1",
+        "sentence_lez": "Салам, азиз дуст!",
+        "translation_ru": "Привет, дорогой друг!",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "igrami",
+    "lemma_lez": "играми",
+    "translation_ru": "дорогой / уважаемый / любимый",
+    "transcription_ru": "играми́",
+    "part_of_speech": "adjective",
+    "grammar_notes_ru": "Исконно лезгинское вежливое эпитетное обращение.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "igrami-ex-1",
+        "sentence_lez": "Играми дустар, куьн гьикӀ я?",
+        "translation_ru": "Дорогие друзья, как вы?",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "muhman",
+    "lemma_lez": "мугьман",
+    "translation_ru": "гость",
+    "transcription_ru": "мугьма́н",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Мн. ч.: мугьманар (гости).",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "muhman-ex-1",
+        "sentence_lez": "Чи кӀвализ мугьман атана.",
+        "translation_ru": "В наш дом пришёл гость.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "qunshi",
+    "lemma_lez": "къунши",
+    "translation_ru": "сосед / соседка",
+    "transcription_ru": "къунши́",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Мн. ч.: къуншияр (соседи).",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "qunshi-ex-1",
+        "sentence_lez": "Ам чи къунши я.",
+        "translation_ru": "Он наш сосед.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "insan",
+    "lemma_lez": "инсан",
+    "translation_ru": "человек",
+    "transcription_ru": "инса́н",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Мн. ч.: инсанар (люди).",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "insan-ex-1",
+        "sentence_lez": "Ам гзаф хъсан инсан я.",
+        "translation_ru": "Он очень хороший человек.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "xalu",
+    "lemma_lez": "халу",
+    "translation_ru": "дядя (по матери) / уважительное обращение к старшему мужчине",
+    "transcription_ru": "халу́",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Используется также при вежливом обращении к любому мужчине старшего возраста.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "xalu-ex-1",
+        "sentence_lez": "Салам алейкум, халу!",
+        "translation_ru": "Здравствуйте, дядя!",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "xala",
+    "lemma_lez": "хала",
+    "translation_ru": "тётя (по матери) / уважительное обращение к старшей женщине",
+    "transcription_ru": "хала́",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Вежливое обращение к женщине старшего возраста.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "xala-ex-1",
+        "sentence_lez": "Хала, вун гьикӀ я?",
+        "translation_ru": "Тётя, как у тебя дела?",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "ami",
+    "lemma_lez": "ами",
+    "translation_ru": "дядя (брат отца)",
+    "transcription_ru": "ами́",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Различается с «халу» (брат матери).",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "ami-ex-1",
+        "sentence_lez": "Зи ами хуьре яшамиш жезва.",
+        "translation_ru": "Мой дядя (по отцу) живёт в селе.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "eme",
+    "lemma_lez": "эме",
+    "translation_ru": "тётя (сестра отца)",
+    "transcription_ru": "эме́",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Различается с «хала» (сестра матери).",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "eme-ex-1",
+        "sentence_lez": "Им зи эме я.",
+        "translation_ru": "Это моя тётя (по отцу).",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "pakaman-xiyirar",
+    "lemma_lez": "пакаман хийирар",
+    "translation_ru": "доброе утро",
+    "transcription_ru": "пакама́н хийира́р",
+    "part_of_speech": "phrase",
+    "grammar_notes_ru": "Буквально: «утренние блага».",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "pakaman-xiyirar-ex-1",
+        "sentence_lez": "Пакаман хийирар, диде!",
+        "translation_ru": "Доброе утро, мама!",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "nisinin-xiyirar",
+    "lemma_lez": "нисинин хийирар",
+    "translation_ru": "добрый день",
+    "transcription_ru": "нисини́н хийира́р",
+    "part_of_speech": "phrase",
+    "grammar_notes_ru": "Буквально: «полуденные (дневные) блага».",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "nisinin-xiyirar-ex-1",
+        "sentence_lez": "Нисинин хийирар, дустар!",
+        "translation_ru": "Добрый день, друзья!",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "nyanin-xiyirar",
+    "lemma_lez": "нянин хийирар",
+    "translation_ru": "добрый вечер",
+    "transcription_ru": "няни́н хийира́р",
+    "part_of_speech": "phrase",
+    "grammar_notes_ru": "Буквально: «вечерние блага».",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "nyanin-xiyirar-ex-1",
+        "sentence_lez": "Нянин хийирар, стха!",
+        "translation_ru": "Добрый вечер, брат!",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "yifen-xiyirar",
+    "lemma_lez": "йифен хийирар",
+    "translation_ru": "доброй ночи / спокойной ночи",
+    "transcription_ru": "йифе́н хийира́р",
+    "part_of_speech": "phrase",
+    "grammar_notes_ru": "Пожелание перед сном или поздно ночью.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "yifen-xiyirar-ex-1",
+        "sentence_lez": "Йифен хийирар, азиз вах!",
+        "translation_ru": "Спокойной ночи, дорогая сестра!",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "xiyirar-xhuy",
+    "lemma_lez": "хийирар хьуй",
+    "translation_ru": "ответ на «доброе утро / день / вечер» (пусть будут блага)",
+    "transcription_ru": "хийира́р хьуй",
+    "part_of_speech": "phrase",
+    "grammar_notes_ru": "Традиционный ответ на любое приветствие со словом «хийирар».",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "xiyirar-xhuy-ex-1",
+        "sentence_lez": "— Пакаман хийирар! — Хийирар хьуй!",
+        "translation_ru": "— Доброе утро! — Доброе утро (пусть будут блага)!",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "pakama",
+    "lemma_lez": "пакама",
+    "translation_ru": "утро / утром",
+    "transcription_ru": "пакама́",
+    "part_of_speech": "adverb",
+    "grammar_notes_ru": "Пакама фад — рано утром.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "pakama-ex-1",
+        "sentence_lez": "Пакама зун фад къарагъна.",
+        "translation_ru": "Утром я рано встал.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "nisini",
+    "lemma_lez": "нисини",
+    "translation_ru": "полдень / днём",
+    "transcription_ru": "нисини́",
+    "part_of_speech": "adverb",
+    "grammar_notes_ru": "Родительный падеж: нисинин.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "nisini-ex-1",
+        "sentence_lez": "Нисини чун кӀвале жеда.",
+        "translation_ru": "Днём (в полдень) мы будем дома.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "nyani",
+    "lemma_lez": "няни",
+    "translation_ru": "вечер / вечером",
+    "transcription_ru": "няни́",
+    "part_of_speech": "adverb",
+    "grammar_notes_ru": "Нянихъ — под вечер / вечером.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "nyani-ex-1",
+        "sentence_lez": "Няни мугьманар къведа.",
+        "translation_ru": "Вечером придут гости.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "yif",
+    "lemma_lez": "йиф",
+    "translation_ru": "ночь",
+    "transcription_ru": "йиф",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Мн. ч.: йифер (ночи).",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "yif-ex-1",
+        "sentence_lez": "Йиф секин я.",
+        "translation_ru": "Ночь спокойная.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "yugh",
+    "lemma_lez": "югъ",
+    "translation_ru": "день",
+    "transcription_ru": "югъ",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Мн. ч.: йикъар (дни).",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "yugh-ex-1",
+        "sentence_lez": "Къе хъсан югъ я.",
+        "translation_ru": "Сегодня хороший день.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "qe",
+    "lemma_lez": "къе",
+    "translation_ru": "сегодня",
+    "transcription_ru": "къе",
+    "part_of_speech": "adverb",
+    "grammar_notes_ru": "Начальный звук къ — увулярный смычный.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "qe-ex-1",
+        "sentence_lez": "Къе чи тарс ава.",
+        "translation_ru": "Сегодня у нас есть урок.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "paka",
+    "lemma_lez": "пака",
+    "translation_ru": "завтра",
+    "transcription_ru": "пака́",
+    "part_of_speech": "adverb",
+    "grammar_notes_ru": "Пакадалди — до завтра.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "paka-ex-1",
+        "sentence_lez": "Пака чун гуьруьшмиш жеда.",
+        "translation_ru": "Завтра мы увидимся.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "naq",
+    "lemma_lez": "накь",
+    "translation_ru": "вчера",
+    "transcription_ru": "накь",
+    "part_of_speech": "adverb",
+    "grammar_notes_ru": "Конечный звук кь — увулярный абруптив.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "naq-ex-1",
+        "sentence_lez": "Накь зун хуьре тир.",
+        "translation_ru": "Вчера я был в селе.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "vaxt",
+    "lemma_lez": "вахт",
+    "translation_ru": "время",
+    "transcription_ru": "вахт",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Не путать со словом «вах» (сестра).",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "vaxt-ex-1",
+        "sentence_lez": "Заз вахт ава.",
+        "translation_ru": "У меня есть время.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "syat",
+    "lemma_lez": "сят",
+    "translation_ru": "час / часы",
+    "transcription_ru": "сят",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Мн. ч.: сятер.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "syat-ex-1",
+        "sentence_lez": "Сят шумуд я?",
+        "translation_ru": "Который час?",
+        "status": "published"
+      }
+    ]
+  }
+]

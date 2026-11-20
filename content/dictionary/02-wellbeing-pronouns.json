@@ -1,0 +1,512 @@
+[
+  {
+    "slug": "hik-zawa",
+    "lemma_lez": "гьикӀ я?",
+    "translation_ru": "как дела? / каково?",
+    "transcription_ru": "гьикӀ я",
+    "part_of_speech": "phrase",
+    "grammar_notes_ru": "Обратите внимание на палочку (Ӏ) после к: кӀ — абруптивный звук.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "hik-zawa-ex-1",
+        "sentence_lez": "Вун гьикӀ я?",
+        "translation_ru": "Как ты? (Как у тебя дела?)",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "hik-ava",
+    "lemma_lez": "гьикӀ ава?",
+    "translation_ru": "как поживаешь? / как обстановка?",
+    "transcription_ru": "гьикӀ ава́",
+    "part_of_speech": "phrase",
+    "grammar_notes_ru": "Глагол-связка «ава» означает нахождение / пребывание в состоянии.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "hik-ava-ex-1",
+        "sentence_lez": "Вун гьикӀ ава, дуст?",
+        "translation_ru": "Как поживаешь, друг?",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "kefiyar-hik-ya",
+    "lemma_lez": "кефияр гьикӀ я?",
+    "translation_ru": "как настроение? / как самочувствие?",
+    "transcription_ru": "кефия́р гьикӀ я",
+    "part_of_speech": "phrase",
+    "grammar_notes_ru": "Очень частый вопрос при встрече после «салам».",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "kefiyar-hik-ya-ex-1",
+        "sentence_lez": "Ви кефияр гьикӀ я?",
+        "translation_ru": "Как твоё настроение (самочувствие)?",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "kefi",
+    "lemma_lez": "кефи",
+    "translation_ru": "настроение / самочувствие",
+    "transcription_ru": "кефи́",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Чаще употребляется во мн. ч.: кефияр.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "kefi-ex-1",
+        "sentence_lez": "Зи кефияр хъсан я.",
+        "translation_ru": "У меня хорошее настроение.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "xiz",
+    "lemma_lez": "хъсан",
+    "translation_ru": "хорошо / хороший",
+    "transcription_ru": "хъсан",
+    "part_of_speech": "adverb",
+    "grammar_notes_ru": "Предикативная форма («всё хорошо»): хъсан я.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "xiz-ex-1",
+        "sentence_lez": "Хъсан я, чухсагъул!",
+        "translation_ru": "Хорошо, спасибо!",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "xsandiz",
+    "lemma_lez": "хъсандиз",
+    "translation_ru": "хорошо (наречие образа действия)",
+    "transcription_ru": "хъса́ндиз",
+    "part_of_speech": "adverb",
+    "grammar_notes_ru": "Образуется от «хъсан» с помощью суффикса наречия -диз.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "xsandiz-ex-1",
+        "sentence_lez": "Ам лезгидалди хъсандиз рахазва.",
+        "translation_ru": "Он хорошо говорит по-лезгински.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "pis",
+    "lemma_lez": "пис",
+    "translation_ru": "плохо / плохой",
+    "transcription_ru": "пис",
+    "part_of_speech": "adjective",
+    "grammar_notes_ru": "Пис туш — неплохо (букв. «плохо не есть»).",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "pis-ex-1",
+        "sentence_lez": "КӀвалахар пис туш.",
+        "translation_ru": "Дела неплохо.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "yavash-yavash",
+    "lemma_lez": "яваш-яваш",
+    "translation_ru": "потихоньку / помаленьку / медленно",
+    "transcription_ru": "ява́ш-ява́ш",
+    "part_of_speech": "adverb",
+    "grammar_notes_ru": "Скромный ответ на вопрос «как дела?».",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "yavash-yavash-ex-1",
+        "sentence_lez": "Яваш-яваш лезги чӀал чирзава.",
+        "translation_ru": "Потихоньку учу лезгинский язык.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "saghlamval",
+    "lemma_lez": "сагъламвал",
+    "translation_ru": "здоровье",
+    "transcription_ru": "сагъламва́л",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Суффикс -вал образует абстрактные существительные.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "saghlamval-ex-1",
+        "sentence_lez": "Ви сагъламвал гьикӀ я?",
+        "translation_ru": "Как твоё здоровье?",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "saghlam",
+    "lemma_lez": "сагълам",
+    "translation_ru": "здоровый",
+    "transcription_ru": "сагъла́м",
+    "part_of_speech": "adjective",
+    "grammar_notes_ru": "Сагълам хьухь — будь здоров.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "saghlam-ex-1",
+        "sentence_lez": "Сагълам инсан бахтлу я.",
+        "translation_ru": "Здоровый человек счастлив.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "kvalax",
+    "lemma_lez": "кӀвалах",
+    "translation_ru": "работа / дело",
+    "transcription_ru": "кӀвала́х",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Начинается с абруптивного кӀ.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "kvalax-ex-1",
+        "sentence_lez": "Зун кӀвалахал физва.",
+        "translation_ru": "Я иду на работу.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "kvalaxar",
+    "lemma_lez": "кӀвалахар",
+    "translation_ru": "дела / работы",
+    "transcription_ru": "кӀвалаха́р",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Форма мн. ч. от «кӀвалах». КӀвалахар гьикӀ я? — Как дела?",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "kvalaxar-ex-1",
+        "sentence_lez": "Ви кӀвалахар гьикӀ я?",
+        "translation_ru": "Как твои дела?",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "umur",
+    "lemma_lez": "уьмуьр",
+    "translation_ru": "жизнь",
+    "transcription_ru": "уьмуь́р",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Диграф «уь» обозначает переднерядный огубленный гласный (как немецкое ü).",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "umur-ex-1",
+        "sentence_lez": "Уьмуьр гьикӀ физва?",
+        "translation_ru": "Как идёт жизнь?",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "shad",
+    "lemma_lez": "шад",
+    "translation_ru": "радостный / рад",
+    "transcription_ru": "шад",
+    "part_of_speech": "adjective",
+    "grammar_notes_ru": "Шад я — рад; шад хьун — обрадоваться.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "shad-ex-1",
+        "sentence_lez": "Вун акуна зун шад я.",
+        "translation_ru": "Я рад тебя видеть.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "sekin",
+    "lemma_lez": "секин",
+    "translation_ru": "спокойный / тихий",
+    "transcription_ru": "секи́н",
+    "part_of_speech": "adjective",
+    "grammar_notes_ru": "Секинвал — спокойствие, тишина.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "sekin-ex-1",
+        "sentence_lez": "КӀвале вири секин я.",
+        "translation_ru": "Дома всё спокойно.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "zun",
+    "lemma_lez": "зун",
+    "translation_ru": "я (абсолютный падеж)",
+    "transcription_ru": "зун",
+    "part_of_speech": "pronoun",
+    "grammar_notes_ru": "Используется с непереходными глаголами и именным сказуемым: Зун стха я.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "zun-ex-1",
+        "sentence_lez": "Зун лезги я.",
+        "translation_ru": "Я лезгин / лезгинка.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "za",
+    "lemma_lez": "за",
+    "translation_ru": "я (эргативный падеж)",
+    "transcription_ru": "за",
+    "part_of_speech": "pronoun",
+    "grammar_notes_ru": "Используется как подлежащее при переходных глаголах (За чирзава — Я учу).",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "za-ex-1",
+        "sentence_lez": "За ктаб кӀелзава.",
+        "translation_ru": "Я читаю книгу.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "zi",
+    "lemma_lez": "зи",
+    "translation_ru": "мой / моя / моё / мои",
+    "transcription_ru": "зи",
+    "part_of_speech": "pronoun",
+    "grammar_notes_ru": "Родительный падеж от «зун». Не изменяется по родам и числам.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "zi-ex-1",
+        "sentence_lez": "Им зи кӀвал я.",
+        "translation_ru": "Это мой дом.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "zaz",
+    "lemma_lez": "заз",
+    "translation_ru": "мне (дательный падеж)",
+    "transcription_ru": "заз",
+    "part_of_speech": "pronoun",
+    "grammar_notes_ru": "Используется также с глаголами чувств и знания: Заз чида (Я знаю / Мне известно).",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "zaz-ex-1",
+        "sentence_lez": "Заз лезги чӀал кӀанзава.",
+        "translation_ru": "Я люблю лезгинский язык (мне нравится).",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "vun",
+    "lemma_lez": "вун",
+    "translation_ru": "ты (абсолютный падеж)",
+    "transcription_ru": "вун",
+    "part_of_speech": "pronoun",
+    "grammar_notes_ru": "Абсолютив: вун; эргатив: на; родительный: ви; дательный: ваз.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "vun-ex-1",
+        "sentence_lez": "Вун гьинай я?",
+        "translation_ru": "Ты откуда?",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "na",
+    "lemma_lez": "на",
+    "translation_ru": "ты (эргативный падеж)",
+    "transcription_ru": "на",
+    "part_of_speech": "pronoun",
+    "grammar_notes_ru": "Подлежащее при переходных глаголах: На вуч ийизва? (Что ты делаешь?)",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "na-ex-1",
+        "sentence_lez": "На хъсан гаф лагьана.",
+        "translation_ru": "Ты сказал хорошее слово.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "vi",
+    "lemma_lez": "ви",
+    "translation_ru": "твой / твоя / твоё / твои",
+    "transcription_ru": "ви",
+    "part_of_speech": "pronoun",
+    "grammar_notes_ru": "Родительный падеж от «вун».",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "vi-ex-1",
+        "sentence_lez": "Ви тӀвар вуж я?",
+        "translation_ru": "Как тебя зовут (кто твоё имя)?",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "vaz",
+    "lemma_lez": "ваз",
+    "translation_ru": "тебе (дательный падеж)",
+    "transcription_ru": "ваз",
+    "part_of_speech": "pronoun",
+    "grammar_notes_ru": "Дательный падеж от «вун»: Ваз чухсагъул! (Спасибо тебе!)",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "vaz-ex-1",
+        "sentence_lez": "Ваз лезги чӀал чидани?",
+        "translation_ru": "Ты знаешь лезгинский язык?",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "am",
+    "lemma_lez": "ам",
+    "translation_ru": "он / она / оно / тот",
+    "transcription_ru": "ам",
+    "part_of_speech": "pronoun",
+    "grammar_notes_ru": "В лезгинском языке нет грамматического рода: «ам» означает и «он», и «она».",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "am-ex-1",
+        "sentence_lez": "Ам зи дуст я.",
+        "translation_ru": "Он (или она) — мой друг.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "im",
+    "lemma_lez": "им",
+    "translation_ru": "это / этот / эта",
+    "transcription_ru": "им",
+    "part_of_speech": "pronoun",
+    "grammar_notes_ru": "Указательное местоимение для близкого предмета или человека.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "im-ex-1",
+        "sentence_lez": "Им вуч я?",
+        "translation_ru": "Что это?",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "chun",
+    "lemma_lez": "чун",
+    "translation_ru": "мы",
+    "transcription_ru": "чун",
+    "part_of_speech": "pronoun",
+    "grammar_notes_ru": "Абсолютный падеж мн. ч. 1-го лица.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "chun-ex-1",
+        "sentence_lez": "Чун стхаяр я.",
+        "translation_ru": "Мы братья.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "chi",
+    "lemma_lez": "чи",
+    "translation_ru": "наш / наша / наше / наши",
+    "transcription_ru": "чи",
+    "part_of_speech": "pronoun",
+    "grammar_notes_ru": "Родительный падеж от «чун».",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "chi-ex-1",
+        "sentence_lez": "Чи хуьр дагълара ава.",
+        "translation_ru": "Наше село находится в горах.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "kun",
+    "lemma_lez": "куьн",
+    "translation_ru": "вы",
+    "transcription_ru": "куьн",
+    "part_of_speech": "pronoun",
+    "grammar_notes_ru": "Используется при обращении к группе людей или вежливо к старшему.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "kun-ex-1",
+        "sentence_lez": "Куьн гьинай я?",
+        "translation_ru": "Откуда вы?",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "ku",
+    "lemma_lez": "куь",
+    "translation_ru": "ваш / ваша / ваше / ваши",
+    "transcription_ru": "куь",
+    "part_of_speech": "pronoun",
+    "grammar_notes_ru": "Родительный падеж от «куьн».",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "ku-ex-1",
+        "sentence_lez": "Куь кӀвал гьина ава?",
+        "translation_ru": "Где находится ваш дом?",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "abur",
+    "lemma_lez": "абур",
+    "translation_ru": "они",
+    "transcription_ru": "абу́р",
+    "part_of_speech": "pronoun",
+    "grammar_notes_ru": "Родительный падеж (их): абурун.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "abur-ex-1",
+        "sentence_lez": "Абур чи мугьманар я.",
+        "translation_ru": "Они — наши гости.",
+        "status": "published"
+      }
+    ]
+  }
+]

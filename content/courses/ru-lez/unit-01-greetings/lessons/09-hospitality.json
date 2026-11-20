@@ -1,0 +1,93 @@
+{
+  "slug": "u1-l9-hospitality",
+  "unit_slug": "unit-01-greetings",
+  "order_index": 9,
+  "title_ru": "В гостях и в кругу семьи: приглашение к столу",
+  "grammar_tip_ru": "Гостеприимство — основа лезгинского этикета. Встречая гостя (**мугьман**), хозяева говорят: **Ша, илифа!** («Заходи, будь гостем!») и приглашают сесть: **Буюр, ацукьа!** («Пожалуйста, присаживайтесь!»). Также принято с уважением расспрашивать о семье (**хизан**): родителях (**буба**, **диде**) и старших (**чӀехи буба**, **чӀехи диде**).",
+  "status": "published",
+  "exercises": [
+    {
+      "slug": "u1-l9-ex1",
+      "order_index": 1,
+      "type": "multiple_choice",
+      "word_slug": "sha-ilifa",
+      "prompt_ru": "Что означает приглашение «Ша, илифа!»?",
+      "status": "published",
+      "payload": {
+        "question": "Ша, илифа!",
+        "options": [
+          "Заходи, будь гостем! (Добро пожаловать!)",
+          "До скорой встречи!",
+          "Который сейчас час?",
+          "Спокойной ночи!"
+        ],
+        "correct_index": 0
+      }
+    },
+    {
+      "slug": "u1-l9-ex2",
+      "order_index": 2,
+      "type": "multiple_choice",
+      "word_slug": "atsuqa",
+      "prompt_ru": "Как по-лезгински пригласить гостя сесть: «Присаживайтесь»?",
+      "status": "published",
+      "payload": {
+        "question": "Садись / присаживайтесь",
+        "options": ["ацукьа", "рахух", "чирзава", "илифун"],
+        "correct_index": 0
+      }
+    },
+    {
+      "slug": "u1-l9-ex3",
+      "order_index": 3,
+      "type": "matching",
+      "prompt_ru": "Сопоставьте членов семьи с переводом",
+      "status": "published",
+      "payload": {
+        "pairs": [
+          { "left": "хизан", "right": "семья" },
+          { "left": "буба", "right": "отец / папа" },
+          { "left": "диде", "right": "мать / мама" },
+          { "left": "чӀехи буба", "right": "дедушка" }
+        ]
+      }
+    },
+    {
+      "slug": "u1-l9-ex4",
+      "order_index": 4,
+      "type": "matching",
+      "prompt_ru": "Сопоставьте слова о детях и угощении",
+      "status": "published",
+      "payload": {
+        "pairs": [
+          { "left": "хва", "right": "сын" },
+          { "left": "руш", "right": "дочь / девушка" },
+          { "left": "фу", "right": "хлеб" },
+          { "left": "яд", "right": "вода" }
+        ]
+      }
+    },
+    {
+      "slug": "u1-l9-ex5",
+      "order_index": 5,
+      "type": "word_input",
+      "word_slug": "dide",
+      "prompt_ru": "Напишите по-лезгински слово «мать / мама»",
+      "status": "published",
+      "payload": {
+        "accepted_answers": ["диде"]
+      }
+    },
+    {
+      "slug": "u1-l9-ex6",
+      "order_index": 6,
+      "type": "word_input",
+      "word_slug": "fu",
+      "prompt_ru": "Напишите по-лезгински слово «хлеб»",
+      "status": "published",
+      "payload": {
+        "accepted_answers": ["фу"]
+      }
+    }
+  ]
+}

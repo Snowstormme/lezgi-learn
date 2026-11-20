@@ -1,0 +1,569 @@
+[
+  {
+    "slug": "sha-ilifa",
+    "lemma_lez": "ша, илифа!",
+    "translation_ru": "заходи, будь гостем! (добро пожаловать!)",
+    "transcription_ru": "ша, или́фа",
+    "part_of_speech": "phrase",
+    "grammar_notes_ru": "Традиционное лезгинское приглашение войти в дом.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "sha-ilifa-ex-1",
+        "sentence_lez": "Ша, илифа чи кӀвализ!",
+        "translation_ru": "Заходи, будь гостем в нашем доме!",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "ilifun",
+    "lemma_lez": "илифун",
+    "translation_ru": "гостить / заходить в гости",
+    "transcription_ru": "илифу́н",
+    "part_of_speech": "verb",
+    "grammar_notes_ru": "Повелительная форма: илифа (заходи в гости).",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "ilifun-ex-1",
+        "sentence_lez": "Мугьманар чи кӀвализ илифна.",
+        "translation_ru": "Гости зашли в наш дом.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "atsuqa",
+    "lemma_lez": "ацукьа",
+    "translation_ru": "садись / присаживайтесь",
+    "transcription_ru": "ацу́кьа",
+    "part_of_speech": "verb",
+    "grammar_notes_ru": "Повелительное наклонение от «ацукьун» (сидеть, садиться).",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "atsuqa-ex-1",
+        "sentence_lez": "Буюр, суфрадихъ ацукьа!",
+        "translation_ru": "Пожалуйста, садитесь за стол!",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "xizan",
+    "lemma_lez": "хизан",
+    "translation_ru": "семья",
+    "transcription_ru": "хиза́н",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Мн. ч.: хизанар (семьи).",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "xizan-ex-1",
+        "sentence_lez": "Ви хизан гьикӀ я?",
+        "translation_ru": "Как твоя семья?",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "buba",
+    "lemma_lez": "буба",
+    "translation_ru": "отец / папа",
+    "transcription_ru": "буба́",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "В ряде диалектов также означает «дедушка» (литер. «чӀехи буба»).",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "buba-ex-1",
+        "sentence_lez": "Зи буба кӀвале ава.",
+        "translation_ru": "Мой отец дома.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "dide",
+    "lemma_lez": "диде",
+    "translation_ru": "мать / мама",
+    "transcription_ru": "диде́",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Дидед чӀал — родной (материнский) язык.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "dide-ex-1",
+        "sentence_lez": "Азиз диде, ваз пара чухсагъул!",
+        "translation_ru": "Дорогая мама, большое тебе спасибо!",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "xva",
+    "lemma_lez": "хва",
+    "translation_ru": "сын",
+    "transcription_ru": "хва",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Эргатив: хци; мн. ч.: рухваяр (сыновья).",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "xva-ex-1",
+        "sentence_lez": "Ам зи чӀехи хва я.",
+        "translation_ru": "Он мой старший сын.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "rush",
+    "lemma_lez": "руш",
+    "translation_ru": "дочь / девушка / девочка",
+    "transcription_ru": "руш",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Мн. ч.: рушар (девушки, дочери).",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "rush-ex-1",
+        "sentence_lez": "И руш хъсандиз кӀелзава.",
+        "translation_ru": "Эта девочка (девушка) хорошо учится.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "gada",
+    "lemma_lez": "гада",
+    "translation_ru": "парень / мальчик",
+    "transcription_ru": "гада́",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Мн. ч.: гадаяр (ребята, парни).",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "gada-ex-1",
+        "sentence_lez": "Жегьил гада дагъдиз фена.",
+        "translation_ru": "Молодой парень пошёл в горы.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "chexi-buba",
+    "lemma_lez": "чӀехи буба",
+    "translation_ru": "дедушка",
+    "transcription_ru": "чӀехи́ буба́",
+    "part_of_speech": "phrase",
+    "grammar_notes_ru": "Буквально: «старший отец».",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "chexi-buba-ex-1",
+        "sentence_lez": "ЧӀехи буба хуьре яшамиш жезва.",
+        "translation_ru": "Дедушка живёт в селе.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "chexi-dide",
+    "lemma_lez": "чӀехи диде",
+    "translation_ru": "бабушка",
+    "transcription_ru": "чӀехи́ диде́",
+    "part_of_speech": "phrase",
+    "grammar_notes_ru": "Буквально: «старшая мать».",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "chexi-dide-ex-1",
+        "sentence_lez": "ЧӀехи дидеди тӀямлу фу чразва.",
+        "translation_ru": "Бабушка печёт вкусный хлеб.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "chay",
+    "lemma_lez": "чай",
+    "translation_ru": "чай",
+    "transcription_ru": "чай",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Чай хъун — пить чай; чай хъухь — пей чай.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "chay-ex-1",
+        "sentence_lez": "Ша чна чими чай хъван!",
+        "translation_ru": "Давай выпьем горячего чаю!",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "fu",
+    "lemma_lez": "фу",
+    "translation_ru": "хлеб",
+    "transcription_ru": "фу",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Эргатив/косвенная основа: фа (хлебом). Хъуьруьн фу — традиционный лезгинский хлеб.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "fu-ex-1",
+        "sentence_lez": "Суфрадал чими фу ала.",
+        "translation_ru": "На столе (скатерти) лежит горячий хлеб.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "yad",
+    "lemma_lez": "яд",
+    "translation_ru": "вода",
+    "transcription_ru": "яд",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Косвенная основа: ци (водой); род. п.: цин (водный). Булахдин яд — родниковая вода.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "yad-ex-1",
+        "sentence_lez": "Заз къайи яд це, минет я.",
+        "translation_ru": "Дай мне холодной воды, пожалуйста.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "sufra",
+    "lemma_lez": "суфра",
+    "translation_ru": "скатерть / накрытый стол",
+    "transcription_ru": "суфра́",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Символ кавказского и лезгинского гостеприимства.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "sufra-ex-1",
+        "sentence_lez": "Мугьман патал суфра ахъая.",
+        "translation_ru": "Накрой стол для гостя.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "sagh-xhuxh",
+    "lemma_lez": "сагъ хьухь",
+    "translation_ru": "до свидания / будь здоров!",
+    "transcription_ru": "сагъ хьухь",
+    "part_of_speech": "phrase",
+    "grammar_notes_ru": "Употребляется при прощании и как благодарность.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "sagh-xhuxh-ex-1",
+        "sentence_lez": "Сагъ хьухь, пакадалди!",
+        "translation_ru": "Будь здоров (до свидания), до завтра!",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "axpa-gurushmish-zheda",
+    "lemma_lez": "ахпа гуьруьшмиш жеда",
+    "translation_ru": "до встречи! (потом увидимся)",
+    "transcription_ru": "ахпа́ гуьруьшми́ш жеда́",
+    "part_of_speech": "phrase",
+    "grammar_notes_ru": "Дружеское прощание до следующей встречи.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "axpa-gurushmish-zheda-ex-1",
+        "sentence_lez": "Сагърай, дуст, ахпа гуьруьшмиш жеда!",
+        "translation_ru": "Пока, друг, потом увидимся!",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "gurushmish-xhun",
+    "lemma_lez": "гуьруьшмиш хьун",
+    "translation_ru": "встречаться / видеться",
+    "transcription_ru": "гуьруьшми́ш хьун",
+    "part_of_speech": "verb",
+    "grammar_notes_ru": "Будущее время: гуьруьшмиш жеда (увидимся).",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "gurushmish-xhun-ex-1",
+        "sentence_lez": "Чун фад-фад гуьруьшмиш жезва.",
+        "translation_ru": "Мы часто встречаемся.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "axpa",
+    "lemma_lez": "ахпа",
+    "translation_ru": "потом / позже / затем",
+    "transcription_ru": "ахпа́",
+    "part_of_speech": "adverb",
+    "grammar_notes_ru": "Ахпа лугьуда — потом скажу.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "axpa-ex-1",
+        "sentence_lez": "Ахпа за ваз зенг ийида.",
+        "translation_ru": "Потом я тебе позвоню.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "salamatdiz",
+    "lemma_lez": "саламатдиз",
+    "translation_ru": "счастливо / благополучно",
+    "transcription_ru": "салама́тдиз",
+    "part_of_speech": "adverb",
+    "grammar_notes_ru": "Саламатдиз амукьа! — Счастливо оставаться!",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "salamatdiz-ex-1",
+        "sentence_lez": "Саламатдиз хъша!",
+        "translation_ru": "Благополучно возвращайся!",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "ughur-xhuy",
+    "lemma_lez": "угъур хьуй",
+    "translation_ru": "удачи! / в добрый час!",
+    "transcription_ru": "угъу́р хьуй",
+    "part_of_speech": "phrase",
+    "grammar_notes_ru": "Рекьиз угъур хьуй! — Счастливого пути!",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "ughur-xhuy-ex-1",
+        "sentence_lez": "Ви кӀвалахдиз угъур хьуй!",
+        "translation_ru": "Удачи в твоём деле!",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "rex",
+    "lemma_lez": "рехъ",
+    "translation_ru": "дорога / путь",
+    "transcription_ru": "рехъ",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Мн. ч.: рекьер (дороги); в пути: рекье.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "rex-ex-1",
+        "sentence_lez": "Мягькем рехъ хьуй!",
+        "translation_ru": "Доброго (надёжного) пути!",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "kvez-xiyir-xhuy",
+    "lemma_lez": "квез хийир хьуй",
+    "translation_ru": "всего вам доброго! (пусть вам будет благо)",
+    "transcription_ru": "квез хийи́р хьуй",
+    "part_of_speech": "phrase",
+    "grammar_notes_ru": "Квез — вам (дательный падеж от «куьн»).",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "kvez-xiyir-xhuy-ex-1",
+        "sentence_lez": "Сагърай, квез хийир хьуй!",
+        "translation_ru": "До свидания, всего вам доброго!",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "gezh",
+    "lemma_lez": "геж",
+    "translation_ru": "поздно",
+    "transcription_ru": "геж",
+    "part_of_speech": "adverb",
+    "grammar_notes_ru": "Геж хьун — опаздывать, становиться поздно.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "gezh-ex-1",
+        "sentence_lez": "Гила геж я, кӀвализ хъфин.",
+        "translation_ru": "Сейчас уже поздно, пойдём домой.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "fad",
+    "lemma_lez": "фад",
+    "translation_ru": "рано / быстро / скоро",
+    "transcription_ru": "фад",
+    "part_of_speech": "adverb",
+    "grammar_notes_ru": "Фад-фад — часто; пакама фад — рано утром.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "fad-ex-1",
+        "sentence_lez": "Фад хъша!",
+        "translation_ru": "Возвращайся скорее!",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "mad",
+    "lemma_lez": "мад",
+    "translation_ru": "ещё / снова / опять",
+    "transcription_ru": "мад",
+    "part_of_speech": "adverb",
+    "grammar_notes_ru": "Мад сеферда — в другой (следующий) раз.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "mad-ex-1",
+        "sentence_lez": "Мад са сеферда тикрар ая.",
+        "translation_ru": "Повтори ещё один раз.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "viri",
+    "lemma_lez": "вири",
+    "translation_ru": "все / всё",
+    "transcription_ru": "вири́",
+    "part_of_speech": "pronoun",
+    "grammar_notes_ru": "Виридаз — всем (дательный падеж).",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "viri-ex-1",
+        "sentence_lez": "Виридаз салам!",
+        "translation_ru": "Всем привет!",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "viri-xsan-ya",
+    "lemma_lez": "вири хъсан я",
+    "translation_ru": "всё хорошо",
+    "transcription_ru": "вири́ хъсан я",
+    "part_of_speech": "phrase",
+    "grammar_notes_ru": "Частый позитивный ответ о делах и семье.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "viri-xsan-ya-ex-1",
+        "sentence_lez": "Чухсагъул, чи пата вири хъсан я.",
+        "translation_ru": "Спасибо, у нас всё хорошо.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "baxtlu",
+    "lemma_lez": "бахтлу",
+    "translation_ru": "счастливый",
+    "transcription_ru": "бахтлу́",
+    "part_of_speech": "adjective",
+    "grammar_notes_ru": "Бахтлу хьухь! — Будь счастлив!",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "baxtlu-ex-1",
+        "sentence_lez": "Бахтлу уьмуьр хьуй ваз!",
+        "translation_ru": "Счастливой тебе жизни!",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "baxt",
+    "lemma_lez": "бахт",
+    "translation_ru": "счастье",
+    "transcription_ru": "бахт",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Образует прилагательное «бахтлу» с суффиксом -лу.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "baxt-ex-1",
+        "sentence_lez": "За ваз чӀехи бахт тӀалабзава.",
+        "translation_ru": "Я желаю тебе большого счастья.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "saghrai-draft",
+    "lemma_lez": "сагърай (черновик)",
+    "translation_ru": "пусть будет здоров (демо-черновик для теста фильтрации RLS)",
+    "transcription_ru": "сагъра́й",
+    "part_of_speech": "phrase",
+    "grammar_notes_ru": "Запись со статусом draft — не видна гостям и ученикам.",
+    "status": "draft",
+    "examples": []
+  },
+  {
+    "slug": "chan-pending",
+    "lemma_lez": "чан",
+    "translation_ru": "душа / дорогой (ласковое обращение перед именем или родством)",
+    "transcription_ru": "чан",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Чан диде — дорогая мама; чан стха — дорогой брат. Ожидает проверки носителем.",
+    "status": "pending_review",
+    "examples": [
+      {
+        "slug": "chan-pending-ex-1",
+        "sentence_lez": "Салам, чан стха!",
+        "translation_ru": "Привет, дорогой брат!",
+        "status": "pending_review"
+      }
+    ]
+  },
+  {
+    "slug": "hurmet-pending",
+    "lemma_lez": "гьуьрмет",
+    "translation_ru": "уважение / почёт",
+    "transcription_ru": "гьуьрме́т",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Гьуьрметлу — уважаемый.",
+    "status": "pending_review",
+    "examples": []
+  },
+  {
+    "slug": "melhem-draft",
+    "lemma_lez": "мелгьем",
+    "translation_ru": "бальзам / исцеление",
+    "transcription_ru": "мелгье́м",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Черновая словарная карточка для будущих юнитов.",
+    "status": "draft",
+    "examples": []
+  },
+  {
+    "slug": "qsan-archived",
+    "lemma_lez": "късан (устар. орф.)",
+    "translation_ru": "архивная карточка для проверки статуса archived",
+    "transcription_ru": "хъсан",
+    "part_of_speech": "adverb",
+    "grammar_notes_ru": "Заменено на литературную норму «хъсан».",
+    "status": "archived",
+    "examples": []
+  }
+]

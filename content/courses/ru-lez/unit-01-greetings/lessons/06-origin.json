@@ -1,0 +1,93 @@
+{
+  "slug": "u1-l6-origin",
+  "unit_slug": "unit-01-greetings",
+  "order_index": 6,
+  "title_ru": "Откуда ты? Родина, село, город и горы",
+  "grammar_tip_ru": "Чтобы спросить «Откуда ты?», говорят **Вун гьинай я?** (**гьинай** — откуда, **гьина** — где). Чтобы сказать «из села / из города / из Дагестана», используется исходный падеж: **хуьряй** (из села **хуьр**), **шегьердай** (из города **шегьер**), **Дагъустандай** (из Дагестана).",
+  "status": "published",
+  "exercises": [
+    {
+      "slug": "u1-l6-ex1",
+      "order_index": 1,
+      "type": "multiple_choice",
+      "word_slug": "vun-hinay-ya",
+      "prompt_ru": "Что означает вопрос «Вун гьинай я?»",
+      "status": "published",
+      "payload": {
+        "question": "Вун гьинай я?",
+        "options": [
+          "Ты откуда?",
+          "Как тебя зовут?",
+          "Куда ты идёшь?",
+          "Сколько тебе лет?"
+        ],
+        "correct_index": 0
+      }
+    },
+    {
+      "slug": "u1-l6-ex2",
+      "order_index": 2,
+      "type": "multiple_choice",
+      "word_slug": "xur",
+      "prompt_ru": "Выберите правильный перевод слова «хуьр»",
+      "status": "published",
+      "payload": {
+        "question": "хуьр",
+        "options": ["село / аул", "город", "река", "улица"],
+        "correct_index": 0
+      }
+    },
+    {
+      "slug": "u1-l6-ex3",
+      "order_index": 3,
+      "type": "matching",
+      "prompt_ru": "Сопоставьте места и географические слова",
+      "status": "published",
+      "payload": {
+        "pairs": [
+          { "left": "хуьр", "right": "село / аул" },
+          { "left": "шегьер", "right": "город" },
+          { "left": "кӀвал", "right": "дом / комната" },
+          { "left": "куьче", "right": "улица" }
+        ]
+      }
+    },
+    {
+      "slug": "u1-l6-ex4",
+      "order_index": 4,
+      "type": "matching",
+      "prompt_ru": "Сопоставьте слова о природе и родном крае",
+      "status": "published",
+      "payload": {
+        "pairs": [
+          { "left": "ватан", "right": "родина" },
+          { "left": "дагъ", "right": "гора" },
+          { "left": "вацӀ", "right": "река" },
+          { "left": "чил", "right": "земля / край" }
+        ]
+      }
+    },
+    {
+      "slug": "u1-l6-ex5",
+      "order_index": 5,
+      "type": "word_input",
+      "word_slug": "kval",
+      "prompt_ru": "Напишите по-лезгински слово «дом / комната» (с буквой кӀ)",
+      "status": "published",
+      "payload": {
+        "accepted_answers": ["кӀвал"]
+      }
+    },
+    {
+      "slug": "u1-l6-ex6",
+      "order_index": 6,
+      "type": "word_input",
+      "word_slug": "dagh",
+      "prompt_ru": "Напишите по-лезгински слово «гора»",
+      "status": "published",
+      "payload": {
+        "accepted_answers": ["дагъ"]
+      }
+    }
+  ]
+}

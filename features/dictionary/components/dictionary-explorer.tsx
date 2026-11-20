@@ -33,8 +33,11 @@ export function DictionaryExplorer({ words }: DictionaryExplorerProps) {
     { key: 'all', label: t('allFilter') },
     { key: 'phrase', label: t('phraseFilter') },
     { key: 'noun', label: t('nounFilter') },
+    { key: 'verb', label: t('verbFilter') },
+    { key: 'adjective', label: t('adjectiveFilter') },
     { key: 'pronoun', label: t('pronounFilter') },
     { key: 'adverb', label: t('adverbFilter') },
+    { key: 'particle', label: t('particleFilter') },
   ];
 
   const filteredWords = useMemo(() => {

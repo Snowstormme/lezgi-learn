@@ -1,0 +1,518 @@
+[
+  {
+    "slug": "chal",
+    "lemma_lez": "чӀал",
+    "translation_ru": "язык / речь",
+    "transcription_ru": "чӀал",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Лезги чӀал — лезгинский язык; дидед чӀал — родной (материнский) язык.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "chal-ex-1",
+        "sentence_lez": "За лезги чӀал чирзава.",
+        "translation_ru": "Я учу лезгинский язык.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "lezgi",
+    "lemma_lez": "лезги",
+    "translation_ru": "лезгин / лезгинка / лезгинский",
+    "transcription_ru": "лезги́",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Мн. ч.: лезгияр (лезгины).",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "lezgi-ex-1",
+        "sentence_lez": "Зун лезги я.",
+        "translation_ru": "Я лезгин (лезгинка).",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "lezgi-chal",
+    "lemma_lez": "лезги чӀал",
+    "translation_ru": "лезгинский язык",
+    "transcription_ru": "лезги́ чӀал",
+    "part_of_speech": "phrase",
+    "grammar_notes_ru": "Самоназвание лезгинского языка.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "lezgi-chal-ex-1",
+        "sentence_lez": "Лезги чӀал чи дидед чӀал я.",
+        "translation_ru": "Лезгинский язык — наш родной язык.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "urus-chal",
+    "lemma_lez": "урус чӀал",
+    "translation_ru": "русский язык",
+    "transcription_ru": "уру́с чӀал",
+    "part_of_speech": "phrase",
+    "grammar_notes_ru": "Урус — русский.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "urus-chal-ex-1",
+        "sentence_lez": "Заз урус чӀал хъсандиз чида.",
+        "translation_ru": "Я хорошо знаю русский язык.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "lezgidaldi",
+    "lemma_lez": "лезгидалди",
+    "translation_ru": "по-лезгински (на лезгинском языке)",
+    "transcription_ru": "лезгида́лди",
+    "part_of_speech": "adverb",
+    "grammar_notes_ru": "Используется с глаголом «рахун» (говорить): лезгидалди рахун.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "lezgidaldi-ex-1",
+        "sentence_lez": "Чун кӀвале лезгидалди рахазва.",
+        "translation_ru": "Мы дома говорим по-лезгински.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "urusdaldi",
+    "lemma_lez": "урусдалди",
+    "translation_ru": "по-русски",
+    "transcription_ru": "урусда́лди",
+    "part_of_speech": "adverb",
+    "grammar_notes_ru": "Урусдалди рахун — говорить по-русски.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "urusdaldi-ex-1",
+        "sentence_lez": "И гаф урусдалди гьикӀ жеда?",
+        "translation_ru": "Как будет это слово по-русски?",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "raxun",
+    "lemma_lez": "рахун",
+    "translation_ru": "говорить / разговаривать",
+    "transcription_ru": "раху́н",
+    "part_of_speech": "verb",
+    "grammar_notes_ru": "Наст. вр.: рахазва (говорит); повелит.: рахух (говори).",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "raxun-ex-1",
+        "sentence_lez": "Лезгидалди рахух!",
+        "translation_ru": "Говори по-лезгински!",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "chir-xhun",
+    "lemma_lez": "чир хьун",
+    "translation_ru": "узнавать / становиться известным",
+    "transcription_ru": "чир хьун",
+    "part_of_speech": "verb",
+    "grammar_notes_ru": "Чирун — учить, изучать.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "chir-xhun-ex-1",
+        "sentence_lez": "Заз цӀийи гафар чир хьана.",
+        "translation_ru": "Я узнал новые слова.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "chirzava",
+    "lemma_lez": "чирзава",
+    "translation_ru": "учу / изучаю (в настоящее время)",
+    "transcription_ru": "чирзава́",
+    "part_of_speech": "verb",
+    "grammar_notes_ru": "Форма настоящего времени от «чирун». Требует эргатива: За чирзава.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "chirzava-ex-1",
+        "sentence_lez": "За гьар юкъуз лезги гафар чирзава.",
+        "translation_ru": "Я каждый день учу лезгинские слова.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "chida",
+    "lemma_lez": "чида",
+    "translation_ru": "знаю / знает",
+    "transcription_ru": "чида́",
+    "part_of_speech": "verb",
+    "grammar_notes_ru": "Субъект ставится в дательном падеже: Заз чида (Мне известно / Я знаю).",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "chida-ex-1",
+        "sentence_lez": "Заз са тӀимил лезги чӀал чида.",
+        "translation_ru": "Я немного знаю лезгинский язык.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "chidach",
+    "lemma_lez": "чидач",
+    "translation_ru": "не знаю / не знает",
+    "transcription_ru": "чида́ч",
+    "part_of_speech": "verb",
+    "grammar_notes_ru": "Отрицательная форма от «чида» (суффикс -ч): Заз чидач.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "chidach-ex-1",
+        "sentence_lez": "Багъишламиша, заз чидач.",
+        "translation_ru": "Извини, я не знаю.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "ghavurda-hatun",
+    "lemma_lez": "гъавурда гьатун",
+    "translation_ru": "понимать / разобраться",
+    "transcription_ru": "гъавурда́ гьату́н",
+    "part_of_speech": "verb",
+    "grammar_notes_ru": "Зун гъавурда гьатна — Я понял.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "ghavurda-hatun-ex-1",
+        "sentence_lez": "Вун зи гъавурда гьатнани?",
+        "translation_ru": "Ты меня понял?",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "tars",
+    "lemma_lez": "тарс",
+    "translation_ru": "урок",
+    "transcription_ru": "тарс",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Мн. ч.: тарсар (уроки).",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "tars-ex-1",
+        "sentence_lez": "Им чи сифте тарс я.",
+        "translation_ru": "Это наш первый урок.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "ktab",
+    "lemma_lez": "ктаб",
+    "translation_ru": "книга",
+    "transcription_ru": "ктаб",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Мн. ч.: ктабар (книги).",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "ktab-ex-1",
+        "sentence_lez": "И ктаб гзаф итижлу я.",
+        "translation_ru": "Эта книга очень интересная.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "gaf",
+    "lemma_lez": "гаф",
+    "translation_ru": "слово",
+    "transcription_ru": "гаф",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Мн. ч.: гафар (слова); гафалаг — словарь.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "gaf-ex-1",
+        "sentence_lez": "Къе за цӀуд цӀийи гаф чирна.",
+        "translation_ru": "Сегодня я выучил десять новых слов.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "chuxsaghul",
+    "lemma_lez": "чухсагъул",
+    "translation_ru": "спасибо / благодарю",
+    "transcription_ru": "чухсагъу́л",
+    "part_of_speech": "phrase",
+    "grammar_notes_ru": "Буквально: «много здравия».",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "chuxsaghul-ex-1",
+        "sentence_lez": "Ваз чухсагъул, стха!",
+        "translation_ru": "Спасибо тебе, брат!",
+        "status": "draft"
+      },
+      {
+        "slug": "chuxsaghul-ex-2",
+        "sentence_lez": "Ваз чухсагъул!",
+        "translation_ru": "Спасибо тебе!",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "saghray",
+    "lemma_lez": "сагърай",
+    "translation_ru": "спасибо (пусть будет здоров)",
+    "transcription_ru": "сагъра́й",
+    "part_of_speech": "phrase",
+    "grammar_notes_ru": "Исконно лезгинская форма благодарности и доброго пожелания.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "saghray-ex-1",
+        "sentence_lez": "Вун сагърай, зи дуст!",
+        "translation_ru": "Спасибо тебе (будь здоров), мой друг!",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "para-chuxsaghul",
+    "lemma_lez": "пара чухсагъул",
+    "translation_ru": "большое спасибо",
+    "transcription_ru": "пара́ чухсагъу́л",
+    "part_of_speech": "phrase",
+    "grammar_notes_ru": "Усиленная форма благодарности.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "para-chuxsaghul-ex-1",
+        "sentence_lez": "Куьмек гунай пара чухсагъул!",
+        "translation_ru": "Большое спасибо за помощь!",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "para",
+    "lemma_lez": "пара",
+    "translation_ru": "очень / много / весьма",
+    "transcription_ru": "пара́",
+    "part_of_speech": "adverb",
+    "grammar_notes_ru": "Широко употребляется наряду с «гзаф».",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "para-ex-1",
+        "sentence_lez": "Ам пара хъсан инсан я.",
+        "translation_ru": "Он очень хороший человек.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "barkalla",
+    "lemma_lez": "баркалла",
+    "translation_ru": "молодец! / браво! / хвала!",
+    "transcription_ru": "баркалла́",
+    "part_of_speech": "phrase",
+    "grammar_notes_ru": "Выражение одобрения и похвалы за хорошую работу или поступок.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "barkalla-ex-1",
+        "sentence_lez": "Баркалла ваз, хъсан кӀвалах я!",
+        "translation_ru": "Молодец, отличная работа!",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "halal-xhuy",
+    "lemma_lez": "гьалал хьуй",
+    "translation_ru": "пожалуйста! / на здоровье! (ответ на спасибо)",
+    "transcription_ru": "гьала́л хьуй",
+    "part_of_speech": "phrase",
+    "grammar_notes_ru": "Буквально: «пусть пойдёт во благо (впрок)!»",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "halal-xhuy-ex-1",
+        "sentence_lez": "— Пара чухсагъул! — Гьалал хьуй!",
+        "translation_ru": "— Большое спасибо! — На здоровье (пожалуйста)!",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "baghishlamisha",
+    "lemma_lez": "багъишламиша",
+    "translation_ru": "извини / простите",
+    "transcription_ru": "багъишлами́ша",
+    "part_of_speech": "phrase",
+    "grammar_notes_ru": "Форма вежливого извинения или привлечения внимания.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "baghishlamisha-ex-1",
+        "sentence_lez": "Багъишламиша, завай геж хьана.",
+        "translation_ru": "Извините, я опоздал.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "buyur",
+    "lemma_lez": "буюр",
+    "translation_ru": "пожалуйста (прошу / слушаю / угощайтесь)",
+    "transcription_ru": "бую́р",
+    "part_of_speech": "phrase",
+    "grammar_notes_ru": "Говорят, когда приглашают войти, подают что-то или отвечают на обращение.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "buyur-ex-1",
+        "sentence_lez": "Буюр, ацукьа!",
+        "translation_ru": "Пожалуйста, присаживайтесь!",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "minet-ya",
+    "lemma_lez": "минет я",
+    "translation_ru": "пожалуйста / очень прошу (при просьбе)",
+    "transcription_ru": "мине́т я",
+    "part_of_speech": "phrase",
+    "grammar_notes_ru": "Вежливое усиление просьбы («делаю просьбу»).",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "minet-ya-ex-1",
+        "sentence_lez": "Минет я, заз куьмек це.",
+        "translation_ru": "Пожалуйста, помоги мне.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "kumek",
+    "lemma_lez": "куьмек",
+    "translation_ru": "помощь",
+    "transcription_ru": "куьме́к",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Куьмек гун — помогать (давать помощь).",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "kumek-ex-1",
+        "sentence_lez": "Ви куьмек герек я.",
+        "translation_ru": "Нужна твоя помощь.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "kumek-tse",
+    "lemma_lez": "куьмек це",
+    "translation_ru": "помоги (дай помощь)",
+    "transcription_ru": "куьме́к це",
+    "part_of_speech": "phrase",
+    "grammar_notes_ru": "«Це» — повелительная форма глагола «гун» (давать).",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "kumek-tse-ex-1",
+        "sentence_lez": "Стха, заз са тӀимил куьмек це.",
+        "translation_ru": "Брат, помоги мне немного.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "un",
+    "lemma_lez": "ун",
+    "translation_ru": "да",
+    "transcription_ru": "ун",
+    "part_of_speech": "particle",
+    "grammar_notes_ru": "Также в разговорной речи встречается «эхь».",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "un-ex-1",
+        "sentence_lez": "Ун, вун гьахъ я.",
+        "translation_ru": "Да, ты прав.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "vaa",
+    "lemma_lez": "ваъ",
+    "translation_ru": "нет",
+    "transcription_ru": "ваъ",
+    "part_of_speech": "particle",
+    "grammar_notes_ru": "Твёрдый знак на конце обозначает гортанную смычку.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "vaa-ex-1",
+        "sentence_lez": "Ваъ, им зи ктаб туш.",
+        "translation_ru": "Нет, это не моя книга.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "belki",
+    "lemma_lez": "белки",
+    "translation_ru": "возможно / может быть",
+    "transcription_ru": "белки́",
+    "part_of_speech": "particle",
+    "grammar_notes_ru": "Вводное слово вероятности.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "belki-ex-1",
+        "sentence_lez": "Белки, ам пака къведа.",
+        "translation_ru": "Возможно, он придёт завтра.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "duz-ya",
+    "lemma_lez": "дуьз я",
+    "translation_ru": "правильно / верно",
+    "transcription_ru": "дуьз я",
+    "part_of_speech": "phrase",
+    "grammar_notes_ru": "Дуьз — прямой, правильный, честный.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "duz-ya-ex-1",
+        "sentence_lez": "Ви жаваб дуьз я!",
+        "translation_ru": "Твой ответ правильный!",
+        "status": "published"
+      }
+    ]
+  }
+]

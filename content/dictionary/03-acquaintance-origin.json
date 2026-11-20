@@ -1,0 +1,512 @@
+[
+  {
+    "slug": "vi-tvar-vuzh-ya",
+    "lemma_lez": "ви тӀвар вуж я?",
+    "translation_ru": "как тебя зовут? (кто твоё имя?)",
+    "transcription_ru": "ви тӀвар вуж я",
+    "part_of_speech": "phrase",
+    "grammar_notes_ru": "В лезгинском языке об имени человека спрашивают местоимением «вуж» (кто).",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "vi-tvar-vuzh-ya-ex-1",
+        "sentence_lez": "Салам! Ви тӀвар вуж я?",
+        "translation_ru": "Привет! Как тебя зовут?",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "tvar",
+    "lemma_lez": "тӀвар",
+    "translation_ru": "имя / название",
+    "transcription_ru": "тӀвар",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Мн. ч.: тӀварар. Начинается с абруптивного тӀ.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "tvar-ex-1",
+        "sentence_lez": "Зи тӀвар Али я.",
+        "translation_ru": "Моё имя — Али (Меня зовут Али).",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "zi-tvar-ya",
+    "lemma_lez": "зи тӀвар ... я",
+    "translation_ru": "меня зовут ... (моё имя есть ...)",
+    "transcription_ru": "зи тӀвар ... я",
+    "part_of_speech": "phrase",
+    "grammar_notes_ru": "Стандартная конструкция представления при знакомстве.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "zi-tvar-ya-ex-1",
+        "sentence_lez": "Зи тӀвар Саида я.",
+        "translation_ru": "Меня зовут Саида.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "vuzh",
+    "lemma_lez": "вуж",
+    "translation_ru": "кто",
+    "transcription_ru": "вуж",
+    "part_of_speech": "pronoun",
+    "grammar_notes_ru": "Относится только к людям. Эргатив: ни; родительный: нин.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "vuzh-ex-1",
+        "sentence_lez": "Ам вуж я?",
+        "translation_ru": "Кто он (она)?",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "vuch",
+    "lemma_lez": "вуч",
+    "translation_ru": "что",
+    "transcription_ru": "вуч",
+    "part_of_speech": "pronoun",
+    "grammar_notes_ru": "Относится ко всем неодушевлённым предметам, животным и явлениям.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "vuch-ex-1",
+        "sentence_lez": "Им вуч я?",
+        "translation_ru": "Что это?",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "tanish-xhun",
+    "lemma_lez": "таниш хьун",
+    "translation_ru": "знакомиться / познакомиться",
+    "transcription_ru": "тани́ш хьун",
+    "part_of_speech": "verb",
+    "grammar_notes_ru": "Таниш — знакомый; таниш хьун — стать знакомым.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "tanish-xhun-ex-1",
+        "sentence_lez": "Ша чун таниш жен!",
+        "translation_ru": "Давай познакомимся!",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "zun-gzaf-shad-ya",
+    "lemma_lez": "зун гзаф шад я",
+    "translation_ru": "я очень рад (приятно познакомиться)",
+    "transcription_ru": "зун гзаф шад я",
+    "part_of_speech": "phrase",
+    "grammar_notes_ru": "Произносится при знакомстве или радостной встрече.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "zun-gzaf-shad-ya-ex-1",
+        "sentence_lez": "Таниш хьуниз зун гзаф шад я!",
+        "translation_ru": "Очень рад познакомиться!",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "gzaf",
+    "lemma_lez": "гзаф",
+    "translation_ru": "очень / много",
+    "transcription_ru": "гзаф",
+    "part_of_speech": "adverb",
+    "grammar_notes_ru": "Синоним слова «пара» (очень / много).",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "gzaf-ex-1",
+        "sentence_lez": "Гзаф чухсагъул!",
+        "translation_ru": "Большое спасибо!",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "sixil",
+    "lemma_lez": "сихил",
+    "translation_ru": "род / тухум / фамильный род",
+    "transcription_ru": "сихи́л",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "У лезгин традиционное родовое объединение называется «сихил» или «тухум».",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "sixil-ex-1",
+        "sentence_lez": "Ви сихил гьим я?",
+        "translation_ru": "Какой твой род (сихил)?",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "yash",
+    "lemma_lez": "яш",
+    "translation_ru": "возраст",
+    "transcription_ru": "яш",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Яшлу — пожилой, старший по возрасту.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "yash-ex-1",
+        "sentence_lez": "ЧӀехибуруз гьуьрмет ая.",
+        "translation_ru": "Уважай старших.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "vaz-shumud-yis-ya",
+    "lemma_lez": "ваз шумуд йис я?",
+    "translation_ru": "сколько тебе лет?",
+    "transcription_ru": "ваз шуму́д йис я",
+    "part_of_speech": "phrase",
+    "grammar_notes_ru": "Буквально: «тебе сколько год есть?»",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "vaz-shumud-yis-ya-ex-1",
+        "sentence_lez": "Стха, ваз шумуд йис я?",
+        "translation_ru": "Брат, сколько тебе лет?",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "shumud",
+    "lemma_lez": "шумуд",
+    "translation_ru": "сколько",
+    "transcription_ru": "шуму́д",
+    "part_of_speech": "pronoun",
+    "grammar_notes_ru": "После «шумуд» существительное ставится в единственном числе: шумуд йис, шумуд сят.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "shumud-ex-1",
+        "sentence_lez": "Ина шумуд ктаб ава?",
+        "translation_ru": "Сколько здесь книг?",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "yis",
+    "lemma_lez": "йис",
+    "translation_ru": "год",
+    "transcription_ru": "йис",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Мн. ч.: йисар (годы).",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "yis-ex-1",
+        "sentence_lez": "Заз къад йис я.",
+        "translation_ru": "Мне двадцать лет.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "zhehil",
+    "lemma_lez": "жегьил",
+    "translation_ru": "молодой / юноша / молодёжь",
+    "transcription_ru": "жегьи́л",
+    "part_of_speech": "adjective",
+    "grammar_notes_ru": "Мн. ч.: жегьилар (молодёжь).",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "zhehil-ex-1",
+        "sentence_lez": "Ам жегьил гада я.",
+        "translation_ru": "Он молодой парень.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "chexi",
+    "lemma_lez": "чӀехи",
+    "translation_ru": "большой / старший",
+    "transcription_ru": "чӀехи́",
+    "part_of_speech": "adjective",
+    "grammar_notes_ru": "ЧӀехи стха — старший брат; чӀехи шегьер — большой город.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "chexi-ex-1",
+        "sentence_lez": "Им зи чӀехи стха я.",
+        "translation_ru": "Это мой старший брат.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "vun-hinay-ya",
+    "lemma_lez": "вун гьинай я?",
+    "translation_ru": "ты откуда?",
+    "transcription_ru": "вун гьина́й я",
+    "part_of_speech": "phrase",
+    "grammar_notes_ru": "Вопрос о родном селе, городе или крае собеседника.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "vun-hinay-ya-ex-1",
+        "sentence_lez": "Дуст, вун гьинай я?",
+        "translation_ru": "Друг, ты откуда?",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "hinay",
+    "lemma_lez": "гьинай",
+    "translation_ru": "откуда",
+    "transcription_ru": "гьина́й",
+    "part_of_speech": "adverb",
+    "grammar_notes_ru": "Исходный падеж от вопросительного корня «гьи-».",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "hinay-ex-1",
+        "sentence_lez": "Вун гьинай атана?",
+        "translation_ru": "Откуда ты приехал (пришёл)?",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "hina",
+    "lemma_lez": "гьина",
+    "translation_ru": "где",
+    "transcription_ru": "гьина́",
+    "part_of_speech": "adverb",
+    "grammar_notes_ru": "Гьина ава? — Где находится?",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "hina-ex-1",
+        "sentence_lez": "Вун гьина яшамиш жезва?",
+        "translation_ru": "Где ты живёшь?",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "vatan",
+    "lemma_lez": "ватан",
+    "translation_ru": "родина / отечество",
+    "transcription_ru": "вата́н",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Хайи ватан — родная земля, отчизна.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "vatan-ex-1",
+        "sentence_lez": "Заз зи ватан гзаф кӀанзава.",
+        "translation_ru": "Я очень люблю свою родину.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "xur",
+    "lemma_lez": "хуьр",
+    "translation_ru": "село / аул",
+    "transcription_ru": "хуьр",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Мн. ч.: хуьрер. Местный падеж (в селе): хуьре; исходный (из села): хуьряй.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "xur-ex-1",
+        "sentence_lez": "Зун хуьряй я.",
+        "translation_ru": "Я из села.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "sheher",
+    "lemma_lez": "шегьер",
+    "translation_ru": "город",
+    "transcription_ru": "шегье́р",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Мн. ч.: шегьерар. В городе: шегьерда; из города: шегьердай.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "sheher-ex-1",
+        "sentence_lez": "Ам чӀехи шегьерда ава.",
+        "translation_ru": "Он находится в большом городе.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "daghustan",
+    "lemma_lez": "Дагъустан",
+    "translation_ru": "Дагестан",
+    "transcription_ru": "Дагъуста́н",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Из Дагестана: Дагъустандай; в Дагестане: Дагъустанда.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "daghustan-ex-1",
+        "sentence_lez": "Зун Дагъустандай я.",
+        "translation_ru": "Я из Дагестана.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "lezgistan",
+    "lemma_lez": "Лезгистан",
+    "translation_ru": "Лезгистан (историческая родина лезгин)",
+    "transcription_ru": "Лезгиста́н",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Земли расселения лезгин по обе стороны Самура.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "lezgistan-ex-1",
+        "sentence_lez": "Лезгистан дагъларин уьлкве я.",
+        "translation_ru": "Лезгистан — горный край.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "urusat",
+    "lemma_lez": "Урусат",
+    "translation_ru": "Россия",
+    "transcription_ru": "Уруса́т",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "В России: Урусатда.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "urusat-ex-1",
+        "sentence_lez": "Зун Урусатда яшамиш жезва.",
+        "translation_ru": "Я живу в России.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "kval",
+    "lemma_lez": "кӀвал",
+    "translation_ru": "дом / комната",
+    "transcription_ru": "кӀвал",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Мн. ч.: кӀвалер. Дома (в доме): кӀвале; домой: кӀвализ.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "kval-ex-1",
+        "sentence_lez": "Им чи кӀвал я.",
+        "translation_ru": "Это наш дом.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "kuche",
+    "lemma_lez": "куьче",
+    "translation_ru": "улица",
+    "transcription_ru": "куьче́",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Мн. ч.: куьчеяр.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "kuche-ex-1",
+        "sentence_lez": "Чи куьче гегьенш я.",
+        "translation_ru": "Наша улица широкая.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "dagh",
+    "lemma_lez": "дагъ",
+    "translation_ru": "гора",
+    "transcription_ru": "дагъ",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Мн. ч.: дагълар (горы).",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "dagh-ex-1",
+        "sentence_lez": "Чи хуьр кьакьан дагълара ава.",
+        "translation_ru": "Наше село находится в высоких горах.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "vats",
+    "lemma_lez": "вацӀ",
+    "translation_ru": "река",
+    "transcription_ru": "вацӀ",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Конечный цӀ — абруптивный. Мн. ч.: вацӀар (реки). Не путать с «варз» (месяц/луна).",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "vats-ex-1",
+        "sentence_lez": "Самур чӀехи вацӀ я.",
+        "translation_ru": "Самур — большая река.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "chil",
+    "lemma_lez": "чил",
+    "translation_ru": "земля / почва / край",
+    "transcription_ru": "чил",
+    "part_of_speech": "noun",
+    "grammar_notes_ru": "Хайи чил — родная земля.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "chil-ex-1",
+        "sentence_lez": "Им чи бубайрин чил я.",
+        "translation_ru": "Это земля наших предков (отцов).",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "muqva",
+    "lemma_lez": "мукьва",
+    "translation_ru": "близкий / близко / родственник",
+    "transcription_ru": "мукьва́",
+    "part_of_speech": "adjective",
+    "grammar_notes_ru": "Мукьва-кьилияр — родственники, близкие.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "muqva-ex-1",
+        "sentence_lez": "Чи хуьр шегьердиз мукьва я.",
+        "translation_ru": "Наше село близко к городу.",
+        "status": "published"
+      }
+    ]
+  }
+]

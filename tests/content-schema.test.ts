@@ -5,19 +5,38 @@ import {
   wordSeedSchema,
 } from '@/content/schema';
 
-describe('Content JSON bundle & Zod schema integrity', () => {
-  it('loads and validates all JSON files in content/ without errors', () => {
+describe('Content JSON bundle & Zod schema integrity (Stage 3)', () => {
+  it('loads and validates all 155 words, 10 lessons, and 60 exercises in Unit 1 without errors', () => {
     const bundle = loadAndValidateContentBundle();
 
-    expect(bundle.words.length).toBeGreaterThanOrEqual(9);
-    expect(bundle.units.length).toBeGreaterThanOrEqual(1);
-    expect(bundle.lessons.length).toBeGreaterThanOrEqual(2);
+    expect(bundle.words.length).toBe(155);
+    expect(bundle.units.length).toBe(1);
+    expect(bundle.lessons.length).toBe(10);
 
     const publishedWords = bundle.words.filter((w) => w.status === 'published');
-    const draftWords = bundle.words.filter((w) => w.status === 'draft');
+    const nonPublishedWords = bundle.words.filter(
+      (w) => w.status !== 'published'
+    );
 
-    expect(publishedWords.length).toBeGreaterThanOrEqual(8);
-    expect(draftWords.length).toBeGreaterThanOrEqual(1);
+    expect(publishedWords.length).toBe(150);
+    expect(nonPublishedWords.length).toBe(5);
+
+    const allExercises = bundle.lessons.flatMap((l) => l.exercises);
+    expect(allExercises.length).toBe(60);
+
+    const mcCount = allExercises.filter(
+      (e) => e.type === 'multiple_choice'
+    ).length;
+    const matchingCount = allExercises.filter(
+      (e) => e.type === 'matching'
+    ).length;
+    const inputCount = allExercises.filter(
+      (e) => e.type === 'word_input'
+    ).length;
+
+    expect(mcCount).toBe(20);
+    expect(matchingCount).toBe(20);
+    expect(inputCount).toBe(20);
   });
 
   it('normalizes palochka automatically when parsing a word via wordSeedSchema', () => {
