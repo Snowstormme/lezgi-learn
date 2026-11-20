@@ -452,3 +452,37 @@ create policy "Reviewers and admins can update content reports"
   to authenticated
   using (public.is_reviewer_or_admin())
   with check (public.is_reviewer_or_admin());
+
+-- ============================================================================
+-- 5. TABLE & SCHEMA GRANTS (PostgREST role privileges)
+-- ============================================================================
+
+grant usage on schema public to anon, authenticated, service_role;
+
+grant all on all tables in schema public to service_role;
+grant all on all sequences in schema public to service_role;
+grant all on all routines in schema public to service_role;
+
+-- Guest (anon) can only SELECT from the 5 content tables (further filtered by RLS to status = 'published')
+grant select on
+  public.words,
+  public.word_examples,
+  public.units,
+  public.lessons,
+  public.exercises
+to anon;
+
+-- Authenticated users get table-level access gated by RLS policies above
+grant select, insert, update, delete on
+  public.words,
+  public.word_examples,
+  public.units,
+  public.lessons,
+  public.exercises
+to authenticated;
+
+grant select, update on public.profiles to authenticated;
+grant select, insert, update on public.user_progress to authenticated;
+grant select, insert, update on public.content_reports to authenticated;
+grant execute on function public.is_reviewer_or_admin() to anon, authenticated, service_role;
+
