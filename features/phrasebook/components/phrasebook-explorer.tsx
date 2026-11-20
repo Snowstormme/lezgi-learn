@@ -6,23 +6,25 @@ import type { PhrasebookEntry } from '@/features/phrasebook/queries';
 import { normalizeLezgiInputForComparison } from '@/lib/lezgi-utils';
 import { AudioPlayerButton } from '@/features/shared/components/audio-player-button';
 import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
 const CATEGORIES = [
-  { key: 'all', label: 'Все' },
+  { key: 'all', label: 'Все фразы' },
   { key: 'greetings', label: 'Приветствия' },
-  { key: 'family', label: 'Семья' },
+  { key: 'family', label: 'Семья и старшие' },
   { key: 'guest', label: 'В гостях' },
   { key: 'road', label: 'В дороге' },
-  { key: 'daily', label: 'Повседневное' },
+  { key: 'daily', label: 'На каждый день' },
 ];
 
-const CATEGORY_LABELS: Record<string, string> = {
-  greetings: 'приветствия',
-  family: 'семья',
-  guest: 'в гостях',
-  road: 'в дороге',
-  daily: 'разговор',
+const CATEGORY_BADGES: Record<string, string> = {
+  greetings: 'Приветствия',
+  family: 'Семья',
+  guest: 'В гостях',
+  road: 'В дороге',
+  daily: 'Разговор',
 };
 
 interface PhrasebookExplorerProps {
@@ -53,28 +55,27 @@ export function PhrasebookExplorer({ phrases }: PhrasebookExplorerProps) {
   }, [phrases, query, category]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div className="relative">
-        <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#CBD5E1]" />
+        <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <Input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Поиск фразы..."
+          placeholder="Поиск фразы по-русски или по-лезгински..."
           className="h-12 pl-10 pr-10 text-sm"
         />
         {query && (
           <button
             type="button"
             onClick={() => setQuery('')}
-            aria-label="Очистить поиск"
-            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#CBD5E1] hover:text-[#F8FAFC]"
+            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
           >
             <X className="h-4 w-4" />
           </button>
         )}
       </div>
 
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-1.5">
         {CATEGORIES.map((cat) => {
           const isActive = category === cat.key;
           return (
@@ -83,10 +84,10 @@ export function PhrasebookExplorer({ phrases }: PhrasebookExplorerProps) {
               type="button"
               onClick={() => setCategory(cat.key)}
               className={cn(
-                'rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors',
+                'rounded-xl border-2 border-b-4 px-3.5 py-2 text-xs font-extrabold uppercase tracking-wide transition-all active:translate-y-[1px] active:border-b-2',
                 isActive
-                  ? 'border-[#F8FAFC] bg-[#F8FAFC] font-semibold text-[#0B132B]'
-                  : 'border-border bg-card text-[#CBD5E1] hover:text-[#F8FAFC]'
+                  ? 'border-[#CBD5E1] bg-[#F8FAFC] text-[#0B132B]'
+                  : 'border-border bg-card text-muted-foreground hover:text-[#F8FAFC]'
               )}
             >
               {cat.label}
@@ -95,47 +96,49 @@ export function PhrasebookExplorer({ phrases }: PhrasebookExplorerProps) {
         })}
       </div>
 
-      <p className="text-xs text-[#CBD5E1]">{filtered.length} фраз</p>
+      <p className="text-xs text-muted-foreground">
+        Проверенных фраз: {filtered.length}
+      </p>
 
-      <div className="space-y-3.5">
+      <div className="space-y-3">
         {filtered.map((item) => (
-          <article
-            key={item.slug}
-            className="space-y-3 rounded-xl border border-border bg-card p-5"
-          >
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0 space-y-1">
-                <p className="text-[11px] font-medium text-primary">
-                  {CATEGORY_LABELS[item.category] ?? item.category}
-                </p>
-                <h2 className="text-balance text-base font-bold leading-snug text-[#F8FAFC]">
-                  {item.target_lez}
-                </h2>
-                {item.transcription_ru && (
-                  <p className="text-xs text-[#CBD5E1]">
-                    [{item.transcription_ru}]
-                  </p>
-                )}
+          <Card key={item.slug}>
+            <CardHeader className="space-y-1.5 pb-2.5">
+              <div className="flex items-center justify-between gap-2">
+                <Badge variant="verified">
+                  {CATEGORY_BADGES[item.category] ?? item.category}
+                </Badge>
+                <AudioPlayerButton
+                  textLez={item.target_lez}
+                  transcriptionRu={item.transcription_ru}
+                  audioPath={item.audio_path}
+                  audioStatus={item.audio_status}
+                />
               </div>
 
-              <AudioPlayerButton
-                textLez={item.target_lez}
-                transcriptionRu={item.transcription_ru}
-                audioPath={item.audio_path}
-                audioStatus={item.audio_status}
-              />
-            </div>
+              <CardTitle className="pt-1 text-base font-bold text-primary">
+                {item.target_lez}
+              </CardTitle>
 
-            <p className="text-sm font-medium text-[#F8FAFC]">
-              {item.source_ru}
-            </p>
+              {item.transcription_ru && (
+                <p className="text-xs text-muted-foreground">
+                  [{item.transcription_ru}]
+                </p>
+              )}
+
+              <p className="text-sm font-medium text-foreground">
+                {item.source_ru}
+              </p>
+            </CardHeader>
 
             {item.context_note_ru && (
-              <p className="border-t border-border pt-3 text-xs leading-relaxed text-[#CBD5E1]">
-                {item.context_note_ru}
-              </p>
+              <CardContent className="pt-0 text-xs text-muted-foreground">
+                <div className="rounded-lg border border-border/70 bg-background/60 p-2.5">
+                  {item.context_note_ru}
+                </div>
+              </CardContent>
             )}
-          </article>
+          </Card>
         ))}
       </div>
     </div>

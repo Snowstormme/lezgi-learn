@@ -1,124 +1,167 @@
-import { Check } from 'lucide-react';
+import {
+  Award,
+  BookOpen,
+  Check,
+  Compass,
+  HeartHandshake,
+  MessageCircle,
+  Sparkles,
+  Star,
+  Trophy,
+  Users,
+} from 'lucide-react';
 import { getPublishedUnitsWithLessons } from '@/features/learning/queries';
 import { Link } from '@/lib/i18n/routing';
-import { LezgiOrnament } from '@/components/ui/lezgi-ornament';
+import { cn } from '@/lib/utils';
+
+const PATH_OFFSETS = [
+  'translate-x-0',
+  '-translate-x-7',
+  '-translate-x-11',
+  '-translate-x-6',
+  'translate-x-2',
+  'translate-x-8',
+  'translate-x-11',
+  'translate-x-6',
+  '-translate-x-2',
+  'translate-x-0',
+];
+
+const NODE_ICONS = [
+  Star,
+  Sparkles,
+  MessageCircle,
+  Users,
+  BookOpen,
+  Compass,
+  MessageCircle,
+  HeartHandshake,
+  Award,
+  Trophy,
+];
 
 export default async function UnitMapPage() {
   const units = await getPublishedUnitsWithLessons();
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 overflow-x-hidden">
       {units.map((unit) => {
         const firstIncompleteIndex = unit.lessons.findIndex(
           (l) => !l.is_completed
         );
         const activeLessonIndex =
           firstIncompleteIndex === -1 ? 0 : firstIncompleteIndex;
-        const unitTitle = unit.title_ru.replace(/^Юнит \d+\.\s*/, '');
 
         return (
-          <section key={unit.slug} className="space-y-6">
-            {/* Geometric Lezgi sumakh carpet divider */}
-            <LezgiOrnament />
+          <div key={unit.slug} className="space-y-8">
+            {/* Vermillion Unit Header Banner with Cloud White action button */}
+            <div className="flex items-center justify-between gap-3 rounded-2xl border-2 border-b-4 border-[#B92B1C] bg-primary px-5 py-4 text-[#F8FAFC]">
+              <div className="min-w-0 space-y-0.5">
+                <p className="text-xs font-black uppercase tracking-wider text-[#F8FAFC]/85">
+                  МОДУЛЬ {unit.order_index} • {unit.completed_count} ИЗ{' '}
+                  {unit.lessons.length}
+                </p>
+                <h1 className="text-lg font-black leading-snug text-[#F8FAFC]">
+                  {unit.title_ru.replace(/^Юнит \d+\.\s*/, '')}
+                </h1>
+              </div>
 
-            {/* Clean editorial unit header — grouped with spacing, no filler pills */}
-            <div className="space-y-1.5 pt-1 text-center">
-              <h1 className="text-balance text-2xl font-bold leading-tight tracking-tight text-[#F8FAFC]">
-                Модуль {unit.order_index} · {unitTitle}
-              </h1>
-              <p className="text-xs font-medium text-[#CBD5E1]">
-                {unit.lessons.length} уроков · пройдено {unit.completed_count}
-              </p>
+              <Link
+                href="/dictionary"
+                title="Открыть словарь модуля"
+                className="flex h-11 shrink-0 items-center gap-1.5 rounded-xl border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC] px-3.5 text-xs font-black uppercase tracking-wider text-[#0B132B] transition-all hover:bg-white active:translate-y-[2px] active:border-b-2"
+              >
+                <BookOpen className="h-4 w-4 stroke-[2.5]" />
+                <span>Слова</span>
+              </Link>
             </div>
 
-            {/* Vertical chapter-style lesson list */}
-            <div className="space-y-3.5">
+            {/* Winding Stepping-Stone Snake Path */}
+            <div className="flex flex-col items-center space-y-6 py-2">
               {unit.lessons.map((lesson, idx) => {
-                const isActive = idx === activeLessonIndex;
+                const isCurrentTarget = idx === activeLessonIndex;
                 const isCompleted = lesson.is_completed;
-                const indexText = String(lesson.order_index).padStart(2, '0');
-                const previewLine = lesson.preview_words.join(' · ');
-
-                if (isActive) {
-                  return (
-                    <div
-                      key={lesson.slug}
-                      className="relative rounded-xl bg-[#F8FAFC] p-5 text-[#0B132B]"
-                    >
-                      {/* Subtle Vermillion active dot aligned optically on left edge */}
-                      <span
-                        aria-hidden="true"
-                        className="absolute -left-1.5 top-6 h-3 w-3 rounded-full bg-primary"
-                      />
-
-                      <div className="space-y-3">
-                        <div className="flex items-baseline gap-2.5">
-                          <span className="shrink-0 text-base font-bold tabular-nums text-[#0B132B]">
-                            {indexText} ·
-                          </span>
-                          <h2 className="text-balance text-lg font-bold leading-snug text-[#0B132B]">
-                            {lesson.title_ru}
-                          </h2>
-                        </div>
-
-                        {previewLine && (
-                          <p className="text-pretty text-sm font-medium leading-relaxed text-[#334155]">
-                            {previewLine}
-                          </p>
-                        )}
-
-                        <div className="pt-1">
-                          <Link
-                            href={`/lesson/${lesson.slug}`}
-                            className="flex min-h-[48px] w-full items-center justify-center rounded-xl bg-primary px-5 py-3 text-sm font-bold text-[#F8FAFC] transition-colors hover:bg-[#DC3D26] active:scale-[0.99]"
-                          >
-                            {isCompleted ? 'Повторить урок' : 'Начать урок'}
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                }
+                const offsetClass =
+                  PATH_OFFSETS[idx % PATH_OFFSETS.length] ?? 'translate-x-0';
+                const NodeIcon =
+                  NODE_ICONS[idx % NODE_ICONS.length] ?? Star;
 
                 return (
-                  <Link
+                  <div
                     key={lesson.slug}
-                    href={`/lesson/${lesson.slug}`}
-                    className="block rounded-xl border border-border bg-card p-5 transition-colors hover:border-[#41578E] hover:bg-[#19264A]"
+                    className={cn(
+                      'relative flex flex-col items-center transition-transform',
+                      offsetClass
+                    )}
                   >
-                    <div className="flex items-start gap-4">
-                      <span className="mt-[2px] flex w-7 shrink-0 items-center justify-start text-base font-semibold tabular-nums text-[#CBD5E1]">
-                        {isCompleted ? (
-                          <Check className="h-4 w-4 stroke-[2.5] text-primary" />
-                        ) : (
-                          indexText
-                        )}
-                      </span>
-
-                      <div className="min-w-0 flex-1 space-y-1.5">
-                        <div className="flex items-baseline justify-between gap-3">
-                          <h2 className="text-balance text-sm font-semibold leading-snug text-[#F8FAFC]">
-                            {lesson.title_ru}
-                          </h2>
-                          {lesson.best_score !== null && (
-                            <span className="shrink-0 text-xs font-semibold tabular-nums text-primary">
-                              {lesson.best_score}%
-                            </span>
-                          )}
+                    {/* Cloud White speech bubble above active current lesson */}
+                    {isCurrentTarget && (
+                      <div className="mb-2.5 flex flex-col items-center animate-bounce">
+                        <div className="rounded-xl border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC] px-4 py-1.5 text-xs font-black uppercase tracking-wider text-primary shadow-md">
+                          {isCompleted ? 'ПОВТОРИТЬ' : 'НАЧАТЬ'}
                         </div>
-
-                        {previewLine && (
-                          <p className="text-pretty text-xs leading-relaxed text-[#CBD5E1]">
-                            {previewLine}
-                          </p>
-                        )}
+                        <div className="h-0 w-0 border-x-[7px] border-t-[7px] border-x-transparent border-t-[#CBD5E1]" />
                       </div>
+                    )}
+
+                    {/* Outer ring for active target */}
+                    <div
+                      className={cn(
+                        'rounded-full transition-all',
+                        isCurrentTarget &&
+                          'border-4 border-[#F8FAFC]/30 bg-background p-2'
+                      )}
+                    >
+                      <Link
+                        href={`/lesson/${lesson.slug}`}
+                        className={cn(
+                          'flex h-[72px] w-[78px] items-center justify-center rounded-full transition-all active:translate-y-[4px]',
+                          isCompleted &&
+                            'border-2 border-b-[6px] border-[#CBD5E1] bg-[#F8FAFC] text-[#0B132B] hover:bg-white',
+                          !isCompleted &&
+                            isCurrentTarget &&
+                            'border-2 border-b-[6px] border-[#B92B1C] bg-primary text-[#F8FAFC] hover:brightness-105',
+                          !isCompleted &&
+                            !isCurrentTarget &&
+                            'border-2 border-b-[6px] border-border bg-card text-muted-foreground hover:border-[#F8FAFC]/50 hover:text-[#F8FAFC]'
+                        )}
+                      >
+                        {isCompleted ? (
+                          <Check className="h-8 w-8 stroke-[3.5] text-primary" />
+                        ) : (
+                          <NodeIcon className="h-7 w-7 stroke-[2.5]" />
+                        )}
+                      </Link>
                     </div>
-                  </Link>
+
+                    {/* Lesson title under node */}
+                    <Link
+                      href={`/lesson/${lesson.slug}`}
+                      className="mt-2 max-w-[184px] text-center"
+                    >
+                      <p
+                        className={cn(
+                          'text-xs font-extrabold leading-tight',
+                          isCurrentTarget
+                            ? 'text-[#F8FAFC]'
+                            : isCompleted
+                              ? 'text-primary'
+                              : 'text-muted-foreground'
+                        )}
+                      >
+                        {lesson.order_index}. {lesson.title_ru.split(':')[0]}
+                      </p>
+                      {lesson.best_score !== null && (
+                        <span className="mt-1 inline-block rounded-lg border border-primary/40 bg-primary/15 px-2 py-0.5 text-[10px] font-black text-primary">
+                          ★ {lesson.best_score}%
+                        </span>
+                      )}
+                    </Link>
+                  </div>
                 );
               })}
             </div>
-          </section>
+          </div>
         );
       })}
     </div>

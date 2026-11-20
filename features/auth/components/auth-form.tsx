@@ -8,6 +8,7 @@ import {
 } from '@/features/auth/actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export function AuthForm() {
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
@@ -35,7 +36,7 @@ export function AuthForm() {
       }
 
       if (mode === 'signup') {
-        setMessage('Аккаунт создан. Открываем курс...');
+        setMessage('Аккаунт создан! Перенаправляем к курсу...');
       }
       router.push('/learn');
       router.refresh();
@@ -43,116 +44,122 @@ export function AuthForm() {
   }
 
   return (
-    <div className="w-full space-y-5 rounded-xl border border-border bg-card p-5">
-      <div className="grid grid-cols-2 gap-2">
-        <Button
-          type="button"
-          variant={mode === 'signin' ? 'cloud' : 'secondary'}
-          size="sm"
-          className="w-full"
-          onClick={() => {
-            setMode('signin');
-            setError(null);
-          }}
-        >
-          Вход
-        </Button>
-        <Button
-          type="button"
-          variant={mode === 'signup' ? 'cloud' : 'secondary'}
-          size="sm"
-          className="w-full"
-          onClick={() => {
-            setMode('signup');
-            setError(null);
-          }}
-        >
-          Регистрация
-        </Button>
-      </div>
+    <Card className="w-full max-w-md border-border/80 bg-card/90">
+      <CardHeader className="space-y-1">
+        <div className="grid grid-cols-2 gap-2.5 pb-2">
+          <Button
+            type="button"
+            variant={mode === 'signin' ? 'cloud' : 'secondary'}
+            size="sm"
+            className="w-full"
+            onClick={() => {
+              setMode('signin');
+              setError(null);
+            }}
+          >
+            Вход
+          </Button>
+          <Button
+            type="button"
+            variant={mode === 'signup' ? 'cloud' : 'secondary'}
+            size="sm"
+            className="w-full"
+            onClick={() => {
+              setMode('signup');
+              setError(null);
+            }}
+          >
+            Регистрация
+          </Button>
+        </div>
+        <CardTitle className="text-lg">
+          {mode === 'signin' ? 'Вход по Email и паролю' : 'Создание аккаунта'}
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {mode === 'signup' && (
+            <div className="space-y-1.5">
+              <label
+                htmlFor="displayName"
+                className="text-xs font-medium text-muted-foreground"
+              >
+                Ваше имя
+              </label>
+              <Input
+                id="displayName"
+                name="displayName"
+                type="text"
+                placeholder="Али"
+                required
+                minLength={2}
+              />
+            </div>
+          )}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {mode === 'signup' && (
           <div className="space-y-1.5">
             <label
-              htmlFor="displayName"
-              className="text-xs font-medium text-[#CBD5E1]"
+              htmlFor="email"
+              className="text-xs font-medium text-muted-foreground"
             >
-              Имя
+              Email
             </label>
             <Input
-              id="displayName"
-              name="displayName"
-              type="text"
-              placeholder="Али"
+              id="email"
+              name="email"
+              type="email"
+              placeholder="student@example.com"
               required
-              minLength={2}
+              autoComplete="email"
             />
           </div>
-        )}
 
-        <div className="space-y-1.5">
-          <label
-            htmlFor="email"
-            className="text-xs font-medium text-[#CBD5E1]"
+          <div className="space-y-1.5">
+            <label
+              htmlFor="password"
+              className="text-xs font-medium text-muted-foreground"
+            >
+              Пароль (от 8 символов)
+            </label>
+            <Input
+              id="password"
+              name="password"
+              type="password"
+              placeholder="••••••••"
+              required
+              minLength={8}
+              autoComplete={
+                mode === 'signin' ? 'current-password' : 'new-password'
+              }
+            />
+          </div>
+
+          {error && (
+            <div className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-xs text-destructive">
+              {error}
+            </div>
+          )}
+
+          {message && (
+            <div className="rounded-md border border-emerald-500/40 bg-emerald-500/10 px-3 py-2 text-xs text-emerald-300">
+              {message}
+            </div>
+          )}
+
+          <Button
+            type="submit"
+            size="lg"
+            className="w-full"
+            disabled={isPending}
           >
-            Email
-          </label>
-          <Input
-            id="email"
-            name="email"
-            type="email"
-            placeholder="student@example.com"
-            required
-            autoComplete="email"
-          />
-        </div>
-
-        <div className="space-y-1.5">
-          <label
-            htmlFor="password"
-            className="text-xs font-medium text-[#CBD5E1]"
-          >
-            Пароль (минимум 8 символов)
-          </label>
-          <Input
-            id="password"
-            name="password"
-            type="password"
-            placeholder="••••••••"
-            required
-            minLength={8}
-            autoComplete={
-              mode === 'signin' ? 'current-password' : 'new-password'
-            }
-          />
-        </div>
-
-        {error && (
-          <p className="rounded-lg border border-primary/50 bg-primary/15 px-3 py-2 text-xs text-primary">
-            {error}
-          </p>
-        )}
-
-        {message && (
-          <p className="rounded-lg border border-emerald-400/50 bg-emerald-500/15 px-3 py-2 text-xs text-emerald-200">
-            {message}
-          </p>
-        )}
-
-        <Button
-          type="submit"
-          size="lg"
-          className="w-full"
-          disabled={isPending}
-        >
-          {isPending
-            ? 'Подождите...'
-            : mode === 'signin'
-              ? 'Войти'
-              : 'Создать аккаунт'}
-        </Button>
-      </form>
-    </div>
+            {isPending
+              ? 'Подождите...'
+              : mode === 'signin'
+                ? 'Войти'
+                : 'Зарегистрироваться'}
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
   );
 }

@@ -6,18 +6,19 @@ import { useTranslations } from 'next-intl';
 import type { DictionaryWordItem } from '@/features/dictionary/queries';
 import { normalizeLezgiInputForComparison } from '@/lib/lezgi-utils';
 import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { ReportMistakeTrigger } from '@/features/shared/components/report-mistake-trigger';
 import { AudioPlayerButton } from '@/features/shared/components/audio-player-button';
 import { cn } from '@/lib/utils';
 
 const POS_LABELS: Record<string, string> = {
-  phrase: 'фраза',
-  noun: 'сущ.',
-  pronoun: 'мест.',
-  adverb: 'наречие',
-  verb: 'глагол',
-  adjective: 'прил.',
-  particle: 'частица',
+  phrase: 'Фраза',
+  noun: 'Сущ.',
+  pronoun: 'Мест.',
+  adverb: 'Наречие',
+  verb: 'Глагол',
+  adjective: 'Прил.',
 };
 
 interface DictionaryExplorerProps {
@@ -70,14 +71,14 @@ export function DictionaryExplorer({ words }: DictionaryExplorerProps) {
   }, [words, query, posFilter]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Search bar */}
       <div className="relative">
-        <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#CBD5E1]" />
+        <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <Input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Поиск: салам, чӀал, брат..."
+          placeholder={t('searchPlaceholder')}
           className="h-12 pl-10 pr-10 text-sm"
         />
         {query && (
@@ -85,15 +86,15 @@ export function DictionaryExplorer({ words }: DictionaryExplorerProps) {
             type="button"
             onClick={() => setQuery('')}
             aria-label="Очистить поиск"
-            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#CBD5E1] hover:text-[#F8FAFC]"
+            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
           >
             <X className="h-4 w-4" />
           </button>
         )}
       </div>
 
-      {/* Minimal inline filter strip */}
-      <div className="flex flex-wrap gap-2">
+      {/* Part of speech filter chips */}
+      <div className="flex flex-wrap items-center gap-1.5">
         {filterChips.map((chip) => {
           const isActive = posFilter === chip.key;
           return (
@@ -102,10 +103,10 @@ export function DictionaryExplorer({ words }: DictionaryExplorerProps) {
               type="button"
               onClick={() => setPosFilter(chip.key)}
               className={cn(
-                'rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors',
+                'rounded-xl border-2 border-b-4 px-3.5 py-2 text-xs font-extrabold uppercase tracking-wide transition-all active:translate-y-[1px] active:border-b-2',
                 isActive
-                  ? 'border-[#F8FAFC] bg-[#F8FAFC] font-semibold text-[#0B132B]'
-                  : 'border-border bg-card text-[#CBD5E1] hover:text-[#F8FAFC]'
+                  ? 'border-[#CBD5E1] bg-[#F8FAFC] text-[#0B132B]'
+                  : 'border-border bg-card text-muted-foreground hover:text-[#F8FAFC]'
               )}
             >
               {chip.label}
@@ -114,73 +115,80 @@ export function DictionaryExplorer({ words }: DictionaryExplorerProps) {
         })}
       </div>
 
-      <p className="text-xs text-[#CBD5E1]">
-        {filteredWords.length} слов · 1/I распознаются как Ӏ
-      </p>
+      <div className="flex items-center justify-between text-xs text-muted-foreground">
+        <span>{t('foundCount', { count: filteredWords.length })}</span>
+        <span className="font-mono text-[11px]">Ӏ = 1 / I</span>
+      </div>
 
-      {/* Word list grouped with spacing */}
+      {/* Word cards */}
       {filteredWords.length === 0 ? (
-        <div className="rounded-xl border border-border bg-card py-10 text-center text-xs text-[#CBD5E1]">
-          {t('emptyResults')}
-        </div>
+        <Card>
+          <CardContent className="py-8 text-center text-xs text-muted-foreground">
+            {t('emptyResults')}
+          </CardContent>
+        </Card>
       ) : (
-        <div className="space-y-3.5">
+        <div className="space-y-3">
           {filteredWords.map((word) => (
-            <article
-              key={word.slug}
-              className="space-y-3 rounded-xl border border-border bg-card p-5"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0 space-y-1">
-                  <div className="flex flex-wrap items-baseline gap-x-2.5 gap-y-0.5">
-                    <h2 className="text-lg font-bold text-[#F8FAFC]">
-                      {word.lemma_lez}
-                    </h2>
-                    {word.transcription_ru && (
-                      <span className="text-xs text-[#CBD5E1]">
-                        [{word.transcription_ru}]
-                      </span>
-                    )}
-                    {word.part_of_speech && (
-                      <span className="text-xs text-primary">
-                        {POS_LABELS[word.part_of_speech] ?? word.part_of_speech}
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-sm font-medium text-[#F8FAFC]">
-                    {word.translation_ru}
-                  </p>
-                </div>
-
-                <AudioPlayerButton
-                  textLez={word.lemma_lez}
-                  transcriptionRu={word.transcription_ru}
-                  audioPath={word.audio_path}
-                  audioStatus={word.audio_status}
-                />
-              </div>
-
-              {word.grammar_notes_ru && (
-                <p className="text-xs leading-relaxed text-[#CBD5E1]">
-                  {word.grammar_notes_ru}
-                </p>
-              )}
-
-              {word.examples.length > 0 && (
-                <div className="space-y-1 border-t border-border pt-3 text-xs leading-relaxed">
-                  {word.examples.map((ex) => (
-                    <div key={ex.slug}>
-                      <p className="font-semibold text-[#F8FAFC]">
-                        {ex.sentence_lez}
-                      </p>
-                      <p className="text-[#CBD5E1]">{ex.translation_ru}</p>
+            <Card key={word.slug} className="overflow-hidden">
+              <CardHeader className="pb-2.5">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="space-y-0.5">
+                    <div className="flex items-baseline gap-2">
+                      <CardTitle className="text-xl font-bold text-primary">
+                        {word.lemma_lez}
+                      </CardTitle>
+                      {word.transcription_ru && (
+                        <span className="text-xs text-muted-foreground">
+                          [{word.transcription_ru}]
+                        </span>
+                      )}
                     </div>
-                  ))}
-                </div>
-              )}
+                    <p className="text-sm font-semibold text-foreground">
+                      {word.translation_ru}
+                    </p>
+                  </div>
 
-              <ReportMistakeTrigger entityType="word" entityId={word.id} />
-            </article>
+                  <div className="flex flex-col items-end gap-1.5">
+                    {word.part_of_speech && (
+                      <Badge variant="secondary">
+                        {POS_LABELS[word.part_of_speech] ?? word.part_of_speech}
+                      </Badge>
+                    )}
+                    <AudioPlayerButton
+                      textLez={word.lemma_lez}
+                      transcriptionRu={word.transcription_ru}
+                      audioPath={word.audio_path}
+                      audioStatus={word.audio_status}
+                    />
+                  </div>
+                </div>
+              </CardHeader>
+
+              <CardContent className="space-y-2.5 text-xs text-muted-foreground">
+                {word.grammar_notes_ru && (
+                  <p className="leading-relaxed">{word.grammar_notes_ru}</p>
+                )}
+
+                {word.examples.length > 0 && (
+                  <div className="space-y-1.5 rounded-lg border border-border/70 bg-background/60 p-3">
+                    <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                      {t('examplesTitle')}
+                    </p>
+                    {word.examples.map((ex) => (
+                      <div key={ex.slug} className="space-y-0.5">
+                        <p className="font-semibold text-foreground">
+                          «{ex.sentence_lez}»
+                        </p>
+                        <p>{ex.translation_ru}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <ReportMistakeTrigger entityType="word" entityId={word.id} />
+              </CardContent>
+            </Card>
           ))}
         </div>
       )}

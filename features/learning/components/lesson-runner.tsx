@@ -1,7 +1,11 @@
 'use client';
 
 import { useMemo, useState, useTransition } from 'react';
-import { Check, X } from 'lucide-react';
+import {
+  Check,
+  Lightbulb,
+  X,
+} from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Link, useRouter } from '@/lib/i18n/routing';
 import type { LessonDetail, LessonExerciseItem } from '@/features/learning/queries';
@@ -43,6 +47,7 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
   const [showGrammarTip, setShowGrammarTip] = useState(false);
   const [correctCount, setCorrectCount] = useState(0);
 
+  // Per-exercise state
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [textAnswer, setTextAnswer] = useState('');
   const [selectedLeft, setSelectedLeft] = useState<string | null>(null);
@@ -179,16 +184,16 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
         : '';
 
   return (
-    <div className="flex min-h-[calc(100dvh-2.5rem)] flex-col justify-between">
-      {/* Top Bar */}
-      <div className="space-y-6">
-        <div className="flex items-center gap-4">
+    <div className="flex min-h-[calc(100dvh-2rem)] flex-col justify-between">
+      {/* Top Bar: X + Chunky Progress Bar + Step Counter */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-3">
           <Link
             href="/learn"
             aria-label={t('exitToMap')}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-[#CBD5E1] transition-colors hover:bg-card hover:text-[#F8FAFC]"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border-2 border-border bg-card text-muted-foreground transition-colors hover:text-[#F8FAFC]"
           >
-            <X className="h-5 w-5 stroke-[2]" />
+            <X className="h-5 w-5 stroke-[2.5]" />
           </Link>
 
           <LessonProgressBar
@@ -197,15 +202,15 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
             className="flex-1"
           />
 
-          <span className="shrink-0 text-xs font-semibold tabular-nums text-[#CBD5E1]">
-            {currentIndex + 1}/{totalExercises}
+          <span className="shrink-0 rounded-xl border-2 border-border bg-card px-2.5 py-1 text-xs font-black tabular-nums text-[#F8FAFC]">
+            {currentIndex + 1} / {totalExercises}
           </span>
         </div>
 
-        {/* Prompt Header */}
-        <div className="space-y-3">
-          <div className="flex items-start justify-between gap-3">
-            <h1 className="text-balance text-xl font-bold leading-snug text-[#F8FAFC]">
+        {/* Prompt Header + Theory Toggle */}
+        <div className="space-y-3 pt-2">
+          <div className="flex items-start justify-between gap-2.5">
+            <h1 className="text-2xl font-black leading-tight text-[#F8FAFC]">
               {currentExercise.prompt_ru}
             </h1>
 
@@ -213,39 +218,49 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
               <button
                 type="button"
                 onClick={() => setShowGrammarTip((v) => !v)}
+                title="Показать подсказку к уроку"
                 className={cn(
-                  'shrink-0 pt-0.5 text-xs font-semibold underline-offset-4 transition-colors hover:underline',
-                  showGrammarTip ? 'text-primary' : 'text-[#CBD5E1]'
+                  'flex h-10 shrink-0 items-center gap-1.5 rounded-xl border-2 border-b-4 px-3 text-xs font-black uppercase tracking-wider transition-all active:translate-y-[1px] active:border-b-2',
+                  showGrammarTip
+                    ? 'border-[#CBD5E1] bg-[#F8FAFC] text-[#0B132B]'
+                    : 'border-border bg-card text-[#F8FAFC] hover:border-primary'
                 )}
               >
-                {showGrammarTip ? 'Скрыть' : 'Правило'}
+                <Lightbulb className="h-4 w-4 stroke-[2.5] text-primary" />
+                <span>Подсказка</span>
               </button>
             )}
           </div>
 
           {showGrammarTip && lesson.grammar_tip_ru && (
-            <div className="rounded-xl border border-border bg-card p-4 text-xs leading-relaxed text-[#CBD5E1]">
+            <div className="rounded-2xl border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC] p-4 text-sm font-bold leading-relaxed text-[#0B132B]">
               {lesson.grammar_tip_ru}
             </div>
           )}
         </div>
 
         {/* Exercise Workspace */}
-        <div className="space-y-5">
+        <div className="pt-2">
           {/* 1. MULTIPLE CHOICE */}
           {currentExercise.type === 'multiple_choice' && (
-            <div className="space-y-4">
-              <div className="flex items-center justify-between gap-3 rounded-xl bg-[#F8FAFC] p-5 text-[#0B132B]">
-                <span className="text-balance text-xl font-bold leading-snug">
-                  {currentExercise.payload.question}
-                </span>
-                <AudioPlayerButton
-                  textLez={currentExercise.payload.question}
-                  lightSurface
-                />
+            <div className="space-y-5">
+              {/* Emblem + Speech Bubble */}
+              <div className="flex items-center gap-3">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border-2 border-b-4 border-[#B92B1C] bg-primary text-lg font-black text-[#F8FAFC]">
+                  ЛӀ
+                </div>
+                <div className="flex min-w-0 flex-1 items-center justify-between gap-3 rounded-2xl border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC] px-4 py-3.5 text-[#0B132B]">
+                  <span className="text-xl font-black leading-snug">
+                    {currentExercise.payload.question}
+                  </span>
+                  <AudioPlayerButton
+                    textLez={currentExercise.payload.question}
+                  />
+                </div>
               </div>
 
-              <div className="space-y-2.5">
+              {/* 3D Option Cards */}
+              <div className="space-y-3">
                 {currentExercise.payload.options.map((option, idx) => {
                   const isSelected = selectedOption === idx;
                   const isCorrectOption =
@@ -258,29 +273,29 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
                       disabled={checkResult !== null}
                       onClick={() => setSelectedOption(idx)}
                       className={cn(
-                        'flex min-h-[52px] w-full items-center justify-between gap-4 rounded-xl border px-4 py-3 text-left text-sm font-medium transition-colors',
+                        'flex min-h-[56px] w-full items-center justify-between gap-3 rounded-2xl border-2 border-b-4 px-4 py-3 text-left text-base font-extrabold transition-all active:translate-y-[2px]',
                         checkResult === null &&
                           !isSelected &&
-                          'border-border bg-card text-[#F8FAFC] hover:border-[#41578E]',
+                          'border-border bg-card text-[#F8FAFC] hover:bg-secondary',
                         checkResult === null &&
                           isSelected &&
-                          'border-[#F8FAFC] bg-[#F8FAFC] font-semibold text-[#0B132B]',
+                          'border-[#CBD5E1] bg-[#F8FAFC] text-[#0B132B]',
                         checkResult !== null &&
                           isCorrectOption &&
-                          'border-emerald-400 bg-emerald-500/15 text-emerald-200',
+                          'border-emerald-500 bg-emerald-500/20 text-emerald-200',
                         checkResult === 'wrong' &&
                           isSelected &&
                           !isCorrectOption &&
-                          'border-primary bg-primary/15 text-primary'
+                          'border-primary bg-primary/20 text-primary'
                       )}
                     >
                       <span className="leading-snug">{option}</span>
                       <span
                         className={cn(
-                          'shrink-0 text-xs tabular-nums',
+                          'flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border-2 text-xs font-black',
                           isSelected && checkResult === null
-                            ? 'text-[#334155]'
-                            : 'text-[#CBD5E1]'
+                            ? 'border-[#0B132B]/30 text-[#0B132B]'
+                            : 'border-border text-muted-foreground'
                         )}
                       >
                         {idx + 1}
@@ -295,11 +310,12 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
           {/* 2. MATCHING */}
           {currentExercise.type === 'matching' && (
             <div className="space-y-4">
-              <p className="text-xs font-medium text-[#CBD5E1]">
+              <p className="text-sm font-bold text-muted-foreground">
                 {t('matchingInstruction')}
               </p>
 
               <div className="grid grid-cols-2 gap-3">
+                {/* Left column: Lezgi */}
                 <div className="space-y-2.5">
                   {currentExercise.payload.pairs.map((pair) => {
                     const isMatched = matchedLefts.includes(pair.left);
@@ -312,15 +328,15 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
                         disabled={isMatched}
                         onClick={() => setSelectedLeft(pair.left)}
                         className={cn(
-                          'flex min-h-[54px] w-full items-center justify-center rounded-xl border px-3 py-2.5 text-center text-sm font-semibold transition-colors',
+                          'flex min-h-[58px] w-full items-center justify-center rounded-2xl border-2 border-b-4 px-3 py-2.5 text-center text-base font-black transition-all active:translate-y-[2px]',
                           isMatched &&
-                            'border-border/40 bg-background text-[#CBD5E1]/35',
+                            'border-border/40 bg-card/30 text-muted-foreground/40',
                           !isMatched &&
                             isSelected &&
-                            'border-[#F8FAFC] bg-[#F8FAFC] text-[#0B132B]',
+                            'border-[#CBD5E1] bg-[#F8FAFC] text-[#0B132B]',
                           !isMatched &&
                             !isSelected &&
-                            'border-border bg-card text-[#F8FAFC] hover:border-[#41578E]'
+                            'border-border bg-card text-[#F8FAFC] hover:bg-secondary'
                         )}
                       >
                         {pair.left}
@@ -329,6 +345,7 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
                   })}
                 </div>
 
+                {/* Right column: Russian */}
                 <div className="space-y-2.5">
                   {shuffledRightOptions.map((rightText) => {
                     const matchedPair = currentExercise.payload.pairs.find(
@@ -345,14 +362,14 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
                         disabled={isMatched || !selectedLeft}
                         onClick={() => handleSelectRightPair(rightText)}
                         className={cn(
-                          'flex min-h-[54px] w-full items-center justify-center rounded-xl border px-3 py-2.5 text-center text-xs font-medium transition-colors',
+                          'flex min-h-[58px] w-full items-center justify-center rounded-2xl border-2 border-b-4 px-3 py-2.5 text-center text-sm font-extrabold transition-all active:translate-y-[2px]',
                           isMatched &&
-                            'border-border/40 bg-background text-[#CBD5E1]/35',
+                            'border-border/40 bg-card/30 text-muted-foreground/40',
                           isMismatch &&
-                            'border-primary bg-primary/20 text-primary',
+                            'border-primary bg-primary/25 text-primary',
                           !isMatched &&
                             !isMismatch &&
-                            'border-border bg-card text-[#F8FAFC] hover:border-[#41578E]'
+                            'border-border bg-card text-[#F8FAFC] hover:bg-secondary'
                         )}
                       >
                         {rightText}
@@ -378,14 +395,16 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
                   }
                 }}
                 placeholder={t('inputPlaceholder')}
-                className="h-14 text-base font-semibold"
+                className="h-14 text-lg font-extrabold"
                 autoComplete="off"
                 autoCorrect="off"
                 spellCheck={false}
               />
 
-              <div className="space-y-2.5">
-                <p className="text-xs text-[#CBD5E1]">{t('palochkaHelper')}</p>
+              <div className="space-y-2">
+                <p className="text-xs font-bold text-muted-foreground">
+                  {t('palochkaHelper')}
+                </p>
                 <div className="flex flex-wrap gap-2">
                   {LEZGI_HELPER_KEYS.map((char) => (
                     <button
@@ -393,7 +412,7 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
                       type="button"
                       disabled={checkResult !== null}
                       onClick={() => setTextAnswer((prev) => `${prev}${char}`)}
-                      className="flex h-11 min-w-[44px] items-center justify-center rounded-xl border border-border bg-card px-3 text-sm font-semibold text-[#F8FAFC] transition-colors hover:border-primary disabled:opacity-45"
+                      className="flex h-11 min-w-[44px] items-center justify-center rounded-xl border-2 border-b-4 border-border bg-card px-3 text-sm font-black text-[#F8FAFC] transition-all hover:border-primary active:translate-y-[2px] disabled:opacity-50"
                     >
                       {char}
                     </button>
@@ -405,7 +424,7 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
         </div>
       </div>
 
-      {/* Bottom Action Bar */}
+      {/* Bottom Action Sheet */}
       <div className="mt-8 pt-4">
         {checkResult === null ? (
           currentExercise.type !== 'matching' && (
@@ -420,42 +439,50 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
             </Button>
           )
         ) : (
-          <div className="space-y-4 border-t border-border pt-5">
-            <div className="flex items-start gap-3">
-              <span
-                className={cn(
-                  'mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[#F8FAFC]',
-                  checkResult === 'correct' ? 'bg-emerald-500' : 'bg-primary'
-                )}
-              >
-                {checkResult === 'correct' ? (
-                  <Check className="h-4 w-4 stroke-[2.5]" />
-                ) : (
-                  <X className="h-4 w-4 stroke-[2.5]" />
-                )}
-              </span>
-
-              <div className="space-y-1">
-                <p
+          <div
+            className={cn(
+              '-mx-4 -mb-4 space-y-4 rounded-t-3xl border-t-2 p-5',
+              checkResult === 'correct'
+                ? 'border-emerald-500/40 bg-[#102926]'
+                : 'border-primary/50 bg-[#2A1419]'
+            )}
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div
                   className={cn(
-                    'text-sm font-bold',
-                    checkResult === 'correct'
-                      ? 'text-emerald-300'
-                      : 'text-primary'
+                    'flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[#F8FAFC]',
+                    checkResult === 'correct' ? 'bg-emerald-500' : 'bg-primary'
                   )}
                 >
-                  {checkResult === 'correct'
-                    ? t('correctHeader')
-                    : t('wrongHeader')}
-                </p>
-                {checkResult === 'wrong' && correctReferenceText && (
-                  <p className="text-xs leading-relaxed text-[#CBD5E1]">
-                    {t('correctAnswerLabel')}{' '}
-                    <span className="font-semibold text-[#F8FAFC]">
-                      {correctReferenceText}
-                    </span>
+                  {checkResult === 'correct' ? (
+                    <Check className="h-6 w-6 stroke-[3]" />
+                  ) : (
+                    <X className="h-6 w-6 stroke-[3]" />
+                  )}
+                </div>
+                <div>
+                  <p
+                    className={cn(
+                      'text-lg font-black',
+                      checkResult === 'correct'
+                        ? 'text-emerald-300'
+                        : 'text-primary'
+                    )}
+                  >
+                    {checkResult === 'correct'
+                      ? t('correctHeader')
+                      : t('wrongHeader')}
                   </p>
-                )}
+                  {checkResult === 'wrong' && correctReferenceText && (
+                    <p className="text-sm font-bold text-[#F8FAFC]">
+                      {t('correctAnswerLabel')}{' '}
+                      <span className="font-black text-emerald-300">
+                        {correctReferenceText}
+                      </span>
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -473,7 +500,7 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
               onClick={handleNextOrFinish}
             >
               {isPending
-                ? 'Сохранение...'
+                ? 'СОХРАНЕНИЕ...'
                 : currentIndex + 1 < totalExercises
                   ? t('nextExercise')
                   : t('finishLesson')}

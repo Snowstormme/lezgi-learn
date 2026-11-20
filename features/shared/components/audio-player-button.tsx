@@ -10,7 +10,7 @@ interface AudioPlayerButtonProps {
   transcriptionRu?: string | null;
   audioPath?: string | null;
   audioStatus?: ContentStatus;
-  lightSurface?: boolean;
+  size?: 'sm' | 'md';
 }
 
 export function AudioPlayerButton({
@@ -18,7 +18,7 @@ export function AudioPlayerButton({
   transcriptionRu,
   audioPath,
   audioStatus = 'draft',
-  lightSurface = false,
+  size = 'sm',
 }: AudioPlayerButtonProps) {
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -45,6 +45,7 @@ export function AudioPlayerButton({
       }
     }
 
+    // Fallback: Web Speech API phonetic synthesis preview
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
       window.speechSynthesis.cancel();
       const spokenText = (transcriptionRu || textLez)
@@ -64,26 +65,28 @@ export function AudioPlayerButton({
     <button
       type="button"
       onClick={handlePlay}
-      aria-label={`Озвучить: ${textLez}`}
       title={
         hasVerifiedNativeAudio
-          ? 'Запись носителя'
-          : 'Прослушать слово'
+          ? 'Прослушать запись носителя языка'
+          : 'Прослушать фонетическое демо (запись носителя в очереди)'
       }
       className={cn(
-        'inline-flex h-9 shrink-0 items-center justify-center gap-1.5 rounded-lg border px-2.5 text-xs font-medium transition-colors',
-        lightSurface
-          ? 'border-[#CBD5E1] bg-white text-[#0B132B] hover:bg-[#E2E8F0]'
-          : 'border-border bg-secondary text-[#F8FAFC] hover:border-[#41578E]',
-        isPlaying && 'border-primary text-primary'
+        'inline-flex shrink-0 items-center gap-1.5 rounded-xl border-2 border-b-4 font-extrabold transition-all active:translate-y-[1px] active:border-b-2',
+        size === 'sm' ? 'h-9 px-2.5 text-xs' : 'h-10 px-3.5 text-xs',
+        hasVerifiedNativeAudio
+          ? 'border-[#B92B1C] bg-primary text-[#F8FAFC] hover:brightness-105'
+          : 'border-border bg-secondary text-[#F8FAFC] hover:border-primary',
+        isPlaying && 'border-[#B92B1C] bg-primary text-[#F8FAFC]'
       )}
     >
       {isPlaying ? (
-        <VolumeX className="h-3.5 w-3.5" />
+        <VolumeX className="h-3.5 w-3.5 animate-pulse" />
       ) : (
         <Volume2 className="h-3.5 w-3.5" />
       )}
-      <span>{isPlaying ? 'Звук' : 'Слушать'}</span>
+      <span>
+        {hasVerifiedNativeAudio ? 'Носитель' : isPlaying ? 'Звучит...' : 'Озвучить'}
+      </span>
     </button>
   );
 }

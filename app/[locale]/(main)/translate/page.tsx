@@ -1,7 +1,6 @@
 import { getModerationSuggestions } from '@/features/community/actions';
 import { getCurrentUserSession } from '@/features/profile/queries';
 import { TranslatorWorkspace } from '@/features/translation/components/translator-workspace';
-import { LezgiOrnament } from '@/components/ui/lezgi-ornament';
 
 export default async function TranslatePage() {
   const [suggestions, session] = await Promise.all([
@@ -10,16 +9,13 @@ export default async function TranslatePage() {
   ]);
 
   return (
-    <div className="space-y-6">
-      <LezgiOrnament />
-
-      <div className="space-y-1.5">
-        <h1 className="text-balance text-2xl font-bold leading-tight text-[#F8FAFC]">
+    <div className="space-y-4">
+      <div className="space-y-1">
+        <h1 className="text-2xl font-black tracking-tight">
           Переводчик
         </h1>
-        <p className="text-xs leading-relaxed text-[#CBD5E1]">
-          Сначала ищет точный ответ в базе проверенных фраз, а новые запросы
-          отмечает как черновик для проверки носителем.
+        <p className="text-sm font-bold text-muted-foreground">
+          Сначала ищет точный ответ в базе проверенных носителями фраз, а для новых выражений собирает черновик с возможностью отправить правку.
         </p>
       </div>
 

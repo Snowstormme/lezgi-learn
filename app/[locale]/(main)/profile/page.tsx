@@ -3,7 +3,8 @@ import { getCurrentUserSession } from '@/features/profile/queries';
 import { signOutAction } from '@/features/auth/actions';
 import { Link } from '@/lib/i18n/routing';
 import { Button } from '@/components/ui/button';
-import { LezgiOrnament } from '@/components/ui/lezgi-ornament';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 
 export default async function ProfilePage() {
   const tProfile = await getTranslations('profile');
@@ -11,71 +12,74 @@ export default async function ProfilePage() {
   const session = await getCurrentUserSession();
 
   return (
-    <div className="space-y-6">
-      <LezgiOrnament />
-
-      <h1 className="text-balance text-2xl font-bold leading-tight text-[#F8FAFC]">
-        {tProfile('title')}
-      </h1>
+    <div className="space-y-5">
+      <h1 className="text-2xl font-black tracking-tight">{tProfile('title')}</h1>
 
       {session.isAuthenticated ? (
-        <div className="space-y-6 rounded-xl border border-border bg-card p-5">
-          <div className="space-y-1">
-            <h2 className="text-lg font-bold text-[#F8FAFC]">
-              {session.displayName}
-            </h2>
-            <p className="text-xs text-[#CBD5E1]">{session.email}</p>
-          </div>
-
-          <div className="grid grid-cols-2 divide-x divide-border rounded-xl border border-border bg-background py-4 text-center">
-            <div className="space-y-1 px-2">
-              <p className="text-2xl font-bold tabular-nums text-primary">
-                {session.xp}
-              </p>
-              <p className="text-xs text-[#CBD5E1]">Опыт (XP)</p>
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between gap-2">
+              <CardTitle className="text-lg font-black">
+                {session.displayName}
+              </CardTitle>
+              <Badge variant="default">{session.role}</Badge>
             </div>
-            <div className="space-y-1 px-2">
-              <p className="text-2xl font-bold tabular-nums text-[#F8FAFC]">
-                {session.streakDays}
-              </p>
-              <p className="text-xs text-[#CBD5E1]">Дней подряд</p>
-            </div>
-          </div>
-
-          <form
-            action={async () => {
-              'use server';
-              await signOutAction();
-            }}
-          >
-            <Button
-              type="submit"
-              variant="secondary"
-              size="lg"
-              className="w-full"
-            >
-              {tAuth('signOutButton')}
-            </Button>
-          </form>
-        </div>
-      ) : (
-        <div className="space-y-5 rounded-xl border border-border bg-card p-5">
-          <div className="space-y-2">
-            <h2 className="text-base font-bold text-[#F8FAFC]">
-              Гостевой режим
-            </h2>
-            <p className="text-xs leading-relaxed text-[#CBD5E1]">
-              {tProfile('guestNotice')}
+            <p className="text-xs font-bold text-muted-foreground">
+              {session.email}
             </p>
-          </div>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-2 gap-3 text-center">
+              <div className="rounded-2xl border-2 border-b-4 border-border bg-secondary p-3.5">
+                <p className="text-2xl font-black text-primary">{session.xp}</p>
+                <p className="text-xs font-extrabold uppercase tracking-wider text-muted-foreground">
+                  Опыт (XP)
+                </p>
+              </div>
+              <div className="rounded-2xl border-2 border-b-4 border-border bg-secondary p-3.5">
+                <p className="text-2xl font-black text-[#F8FAFC]">
+                  {session.streakDays}
+                </p>
+                <p className="text-xs font-extrabold uppercase tracking-wider text-muted-foreground">
+                  Дней подряд
+                </p>
+              </div>
+            </div>
 
-          <Link
-            href="/login"
-            className="flex min-h-[48px] w-full items-center justify-center rounded-xl bg-primary px-6 py-3 text-sm font-bold text-[#F8FAFC] transition-colors hover:bg-[#DC3D26]"
-          >
-            Войти по Email и паролю
-          </Link>
-        </div>
+            <form
+              action={async () => {
+                'use server';
+                await signOutAction();
+              }}
+            >
+              <Button
+                type="submit"
+                variant="secondary"
+                size="lg"
+                className="w-full"
+              >
+                {tAuth('signOutButton')}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      ) : (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg font-black">
+              Гостевой просмотр
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4 text-sm font-bold text-muted-foreground">
+            <p>{tProfile('guestNotice')}</p>
+            <Link
+              href="/login"
+              className="flex min-h-[52px] w-full items-center justify-center rounded-2xl border-2 border-b-4 border-[#B92B1C] bg-primary px-6 py-3 text-sm font-black uppercase tracking-wider text-[#F8FAFC] transition-all hover:brightness-105 active:translate-y-[2px]"
+            >
+              Войти по Email и паролю
+            </Link>
+          </CardContent>
+        </Card>
       )}
     </div>
   );

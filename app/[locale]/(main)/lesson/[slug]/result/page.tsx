@@ -1,8 +1,14 @@
 import { notFound } from 'next/navigation';
+import {
+  Check,
+  RotateCcw,
+  Target,
+  Trophy,
+  Zap,
+} from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 import { getPublishedLessonDetail } from '@/features/learning/queries';
 import { Link } from '@/lib/i18n/routing';
-import { LezgiOrnament } from '@/components/ui/lezgi-ornament';
 import { AudioPlayerButton } from '@/features/shared/components/audio-player-button';
 
 export default async function LessonResultScreenPage({
@@ -37,72 +43,91 @@ export default async function LessonResultScreenPage({
   const savedToAccount = sp.saved === '1';
 
   return (
-    <div className="space-y-8 py-4">
-      <LezgiOrnament />
+    <div className="space-y-6 py-4">
+      {/* Vermillion & Cloud White Trophy Celebration */}
+      <div className="space-y-3 text-center">
+        <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-3xl border-2 border-b-[6px] border-[#B92B1C] bg-primary text-[#F8FAFC]">
+          <Trophy className="h-12 w-12 stroke-[2.5]" />
+        </div>
 
-      {/* Editorial summary header */}
-      <div className="space-y-2 text-center">
-        <h1 className="text-balance text-2xl font-bold leading-tight text-[#F8FAFC]">
+        <h1 className="text-3xl font-black tracking-tight text-[#F8FAFC]">
           {tResult('title')}
         </h1>
-        <p className="text-pretty text-xs leading-relaxed text-[#CBD5E1]">
+        <p className="text-sm font-bold text-muted-foreground">
           {tResult('subtitle', { lessonTitle: lesson.title_ru })}
         </p>
       </div>
 
-      {/* Clean spaced stats strip */}
-      <div className="grid grid-cols-3 divide-x divide-border rounded-xl border border-border bg-card py-4 text-center">
-        <div className="space-y-1 px-2">
-          <p className="text-xl font-bold tabular-nums text-primary">
-            +{xpEarned}
+      {/* 3 Tactile Stat Boxes (Vermillion / Cloud White / Navy) */}
+      <div className="grid grid-cols-3 gap-3">
+        {/* XP Box (Vermillion) */}
+        <div className="overflow-hidden rounded-2xl border-2 border-b-4 border-[#B92B1C] bg-primary">
+          <p className="py-1.5 text-center text-[11px] font-black uppercase tracking-wider text-[#F8FAFC]">
+            ОПЫТ
           </p>
-          <p className="text-[11px] text-[#CBD5E1]">опыт</p>
+          <div className="flex items-center justify-center gap-1 rounded-xl bg-background py-3 text-lg font-black text-primary">
+            <Zap className="h-5 w-5 fill-primary text-primary" />
+            <span>+{xpEarned}</span>
+          </div>
         </div>
-        <div className="space-y-1 px-2">
-          <p className="text-xl font-bold tabular-nums text-[#F8FAFC]">
-            {score}%
+
+        {/* Accuracy Box (Cloud White) */}
+        <div className="overflow-hidden rounded-2xl border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC]">
+          <p className="py-1.5 text-center text-[11px] font-black uppercase tracking-wider text-[#0B132B]">
+            ТОЧНОСТЬ
           </p>
-          <p className="text-[11px] text-[#CBD5E1]">точность</p>
+          <div className="flex items-center justify-center gap-1 rounded-xl bg-background py-3 text-lg font-black text-[#F8FAFC]">
+            <Target className="h-5 w-5 text-[#F8FAFC]" />
+            <span>{score}%</span>
+          </div>
         </div>
-        <div className="space-y-1 px-2">
-          <p className="text-xl font-bold tabular-nums text-[#F8FAFC]">
-            {correct}/{total}
+
+        {/* Correct Answers Box (Navy + Cloud) */}
+        <div className="overflow-hidden rounded-2xl border-2 border-b-4 border-border bg-secondary">
+          <p className="py-1.5 text-center text-[11px] font-black uppercase tracking-wider text-[#F8FAFC]">
+            ВЕРНО
           </p>
-          <p className="text-[11px] text-[#CBD5E1]">верно</p>
+          <div className="flex items-center justify-center gap-1 rounded-xl bg-background py-3 text-lg font-black text-[#F8FAFC]">
+            <Check className="h-5 w-5 stroke-[3] text-primary" />
+            <span>
+              {correct}/{total}
+            </span>
+          </div>
         </div>
       </div>
 
+      {/* Save prompt if guest */}
       {!savedToAccount && (
-        <div className="flex items-center justify-between gap-4 rounded-xl border border-border bg-card p-4">
-          <p className="text-xs leading-relaxed text-[#CBD5E1]">
-            Войдите, чтобы сохранить пройденные уроки.
+        <div className="flex items-center justify-between gap-3 rounded-2xl border-2 border-b-4 border-border bg-card p-4">
+          <p className="text-xs font-bold text-muted-foreground">
+            Создайте профиль, чтобы сохранить ударный режим и опыт!
           </p>
           <Link
             href="/login"
-            className="shrink-0 rounded-lg bg-[#F8FAFC] px-3.5 py-2 text-xs font-semibold text-[#0B132B]"
+            className="flex h-10 shrink-0 items-center rounded-xl border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC] px-3.5 text-xs font-black uppercase text-[#0B132B] active:translate-y-[1px]"
           >
             Войти
           </Link>
         </div>
       )}
 
-      {/* Practiced words */}
+      {/* Words practiced in this lesson */}
       {lesson.practice_words.length > 0 && (
-        <div className="space-y-3">
-          <h2 className="text-xs font-semibold text-[#CBD5E1]">
-            Слова из урока
-          </h2>
-          <div className="divide-y divide-border rounded-xl border border-border bg-card px-4">
+        <div className="space-y-2.5">
+          <p className="text-xs font-black uppercase tracking-wider text-muted-foreground">
+            {tResult('wordsLearnedTitle')}
+          </p>
+          <div className="space-y-2">
             {lesson.practice_words.map((word) => (
               <div
                 key={word.slug}
-                className="flex items-center justify-between gap-3 py-3.5"
+                className="flex items-center justify-between gap-3 rounded-2xl border-2 border-b-4 border-border bg-card px-4 py-3"
               >
                 <div className="min-w-0">
-                  <p className="text-sm font-bold text-[#F8FAFC]">
+                  <p className="text-base font-black text-primary">
                     {word.lemma_lez}
                   </p>
-                  <p className="mt-0.5 text-xs text-[#CBD5E1]">
+                  <p className="text-xs font-bold text-[#F8FAFC]">
                     {word.translation_ru}
                   </p>
                 </div>
@@ -116,7 +141,7 @@ export default async function LessonResultScreenPage({
         </div>
       )}
 
-      {/* Actions */}
+      {/* Full-height Action Buttons */}
       <div className="space-y-3 pt-2">
         <Link
           href={
@@ -124,24 +149,25 @@ export default async function LessonResultScreenPage({
               ? `/lesson/${lesson.next_lesson_slug}`
               : '/learn'
           }
-          className="flex min-h-[52px] w-full items-center justify-center rounded-xl bg-primary px-6 py-3.5 text-sm font-bold text-[#F8FAFC] transition-colors hover:bg-[#DC3D26]"
+          className="flex min-h-[56px] w-full items-center justify-center rounded-2xl border-2 border-b-4 border-[#B92B1C] bg-primary px-6 py-3.5 text-base font-black uppercase tracking-wider text-[#F8FAFC] transition-all hover:brightness-105 active:translate-y-[2px] active:border-b-2"
         >
-          {lesson.next_lesson_slug ? 'Следующий урок' : 'К карте курса'}
+          ПРОДОЛЖИТЬ
         </Link>
 
         <div className="grid grid-cols-2 gap-3">
           <Link
             href="/learn"
-            className="flex min-h-[46px] items-center justify-center rounded-xl border border-border bg-card px-4 py-2.5 text-xs font-semibold text-[#F8FAFC] transition-colors hover:bg-secondary"
+            className="flex min-h-[48px] items-center justify-center rounded-2xl border-2 border-b-4 border-border bg-card px-4 py-2.5 text-center text-xs font-extrabold uppercase tracking-wider text-[#F8FAFC] transition-all hover:bg-secondary active:translate-y-[2px] active:border-b-2"
           >
-            К карте
+            К КАРТЕ КУРСА
           </Link>
 
           <Link
             href={`/lesson/${lesson.slug}`}
-            className="flex min-h-[46px] items-center justify-center rounded-xl bg-[#F8FAFC] px-4 py-2.5 text-xs font-semibold text-[#0B132B] transition-colors hover:bg-[#E2E8F0]"
+            className="flex min-h-[48px] items-center justify-center gap-1.5 rounded-2xl border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC] px-4 py-2.5 text-center text-xs font-black uppercase tracking-wider text-[#0B132B] transition-all hover:bg-white active:translate-y-[2px] active:border-b-2"
           >
-            Повторить
+            <RotateCcw className="h-4 w-4" />
+            <span>ПОВТОРИТЬ</span>
           </Link>
         </div>
       </div>
