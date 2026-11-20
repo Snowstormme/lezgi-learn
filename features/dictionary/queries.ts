@@ -1,6 +1,7 @@
 import { isSupabaseConfigured } from '@/lib/env';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { loadAndValidateContentBundle } from '@/content/loader';
+import type { ContentStatus } from '@/features/shared/types';
 
 export interface DictionaryWordItem {
   id?: string;
@@ -10,6 +11,8 @@ export interface DictionaryWordItem {
   transcription_ru: string | null;
   part_of_speech: string | null;
   grammar_notes_ru: string | null;
+  audio_path: string | null;
+  audio_status: ContentStatus;
   examples: Array<{
     slug: string;
     sentence_lez: string;
@@ -30,7 +33,7 @@ export async function getPublishedDictionaryWords(): Promise<
       const { data: words, error: wordsError } = await supabase
         .from('words')
         .select(
-          'id, slug, lemma_lez, translation_ru, transcription_ru, part_of_speech, grammar_notes_ru'
+          'id, slug, lemma_lez, translation_ru, transcription_ru, part_of_speech, grammar_notes_ru, audio_path, audio_status'
         )
         .eq('status', 'published')
         .order('lemma_lez', { ascending: true });
@@ -49,6 +52,8 @@ export async function getPublishedDictionaryWords(): Promise<
           transcription_ru: w.transcription_ru,
           part_of_speech: w.part_of_speech,
           grammar_notes_ru: w.grammar_notes_ru,
+          audio_path: w.audio_path,
+          audio_status: w.audio_status,
           examples: (examples ?? [])
             .filter((ex) => ex.word_id === w.id)
             .map((ex) => ({
@@ -73,6 +78,8 @@ export async function getPublishedDictionaryWords(): Promise<
       transcription_ru: w.transcription_ru ?? null,
       part_of_speech: w.part_of_speech ?? null,
       grammar_notes_ru: w.grammar_notes_ru ?? null,
+      audio_path: w.audio_path ?? null,
+      audio_status: w.audio_status ?? 'draft',
       examples: w.examples
         .filter((ex) => ex.status === 'published')
         .map((ex) => ({

@@ -1,0 +1,362 @@
+[
+  {
+    "slug": "pb-salam-aleikum-stxa",
+    "category": "greetings",
+    "source_ru": "Здравствуй, брат! Как твои дела?",
+    "target_lez": "Салам алейкум, стха! Ви кӀвалахар гьикӀ я?",
+    "transcription_ru": "сала́м але́йкум, стха! ви кӀвалаха́р гьикӀ я?",
+    "context_note_ru": "Традиционное уважительное приветствие между мужчинами.",
+    "status": "published"
+  },
+  {
+    "slug": "pb-aleikum-salam-viri-xsan",
+    "category": "greetings",
+    "source_ru": "И тебе мир! Спасибо, всё хорошо.",
+    "target_lez": "Алейкум салам! Чухсагъул, вири хъсан я.",
+    "transcription_ru": "але́йкум сала́м! чухсагъу́л, вири́ хъсан я.",
+    "context_note_ru": "Полный вежливый ответ на «Салам алейкум».",
+    "status": "published"
+  },
+  {
+    "slug": "pb-pakaman-xiyirar-dide",
+    "category": "greetings",
+    "source_ru": "Доброе утро! Как спалось?",
+    "target_lez": "Пакаман хийирар! Хийирар хьуй!",
+    "transcription_ru": "пакама́н хийира́р! хийира́р хьуй!",
+    "context_note_ru": "Утреннее приветствие и традиционный ответ.",
+    "status": "published"
+  },
+  {
+    "slug": "pb-nisinin-xiyirar-dustar",
+    "category": "greetings",
+    "source_ru": "Добрый день, дорогие друзья!",
+    "target_lez": "Нисинин хийирар, играми дустар!",
+    "transcription_ru": "нисини́н хийира́р, играми́ дуста́р!",
+    "context_note_ru": "Приветствие днём при обращении к компании людей.",
+    "status": "published"
+  },
+  {
+    "slug": "pb-nyanin-xiyirar-qunshi",
+    "category": "greetings",
+    "source_ru": "Добрый вечер, сосед!",
+    "target_lez": "Нянин хийирар, къунши!",
+    "transcription_ru": "няни́н хийира́р, къунши́!",
+    "context_note_ru": "Приветствие вечером.",
+    "status": "published"
+  },
+  {
+    "slug": "pb-yifen-xiyirar",
+    "category": "greetings",
+    "source_ru": "Спокойной ночи! Приятных снов.",
+    "target_lez": "Йифен хийирар! Ширин ахварар хьуй.",
+    "transcription_ru": "йифе́н хийира́р! шири́н ахвара́р хьуй.",
+    "context_note_ru": "Ширин ахварар — сладкие сны.",
+    "status": "published"
+  },
+  {
+    "slug": "pb-vun-akuna-shad-ya",
+    "category": "greetings",
+    "source_ru": "Я очень рад тебя видеть!",
+    "target_lez": "Вун акуна зун гзаф шад я!",
+    "transcription_ru": "вун акуна́ зун гзаф шад я!",
+    "context_note_ru": "Буквально: «Увидев тебя, я очень рад».",
+    "status": "published"
+  },
+  {
+    "slug": "pb-kefiyar-hik-ya",
+    "category": "greetings",
+    "source_ru": "Как твоё настроение и здоровье?",
+    "target_lez": "Ви кефияр, сагъламвал гьикӀ я?",
+    "transcription_ru": "ви кефия́р, сагъламва́л гьикӀ я?",
+    "context_note_ru": "Тёплый вопрос о самочувствии близкого человека.",
+    "status": "published"
+  },
+  {
+    "slug": "pb-sagh-xhuxh-gurushmish",
+    "category": "greetings",
+    "source_ru": "До свидания, потом увидимся!",
+    "target_lez": "Сагъ хьухь, ахпа гуьруьшмиш жеда!",
+    "transcription_ru": "сагъ хьухь, ахпа́ гуьруьшми́ш жеда́!",
+    "context_note_ru": "Повседневное прощание.",
+    "status": "published"
+  },
+  {
+    "slug": "pb-xizan-hik-ya",
+    "category": "family",
+    "source_ru": "Как поживает твоя семья?",
+    "target_lez": "Ви хизан гьикӀ ава?",
+    "transcription_ru": "ви хиза́н гьикӀ ава́?",
+    "context_note_ru": "По лезгинскому этикету при встрече принято спрашивать о семье.",
+    "status": "published"
+  },
+  {
+    "slug": "pb-dide-buba-saghlam-ya",
+    "category": "family",
+    "source_ru": "Мама и папа здоровы, передают тебе привет.",
+    "target_lez": "Дидени буба сагълам я, ваз салам лугьузва.",
+    "transcription_ru": "дидени́ буба́ сагъла́м я, ваз сала́м лугьузва́.",
+    "context_note_ru": "Суффикс -ни означает союз «и» (дидени буба — мама и папа).",
+    "status": "published"
+  },
+  {
+    "slug": "pb-im-zi-chexi-stxa-ya",
+    "category": "family",
+    "source_ru": "Это мой старший брат.",
+    "target_lez": "Им зи чӀехи стха я.",
+    "transcription_ru": "им зи чӀехи́ стха я.",
+    "context_note_ru": "ЧӀехи — старший; гъвечӀи — младший.",
+    "status": "published"
+  },
+  {
+    "slug": "pb-chexi-buba-xure-ava",
+    "category": "family",
+    "source_ru": "Дедушка и бабушка живут в селе.",
+    "target_lez": "ЧӀехи бубани чӀехи диде хуьре яшамиш жезва.",
+    "transcription_ru": "чӀехи́ бубани́ чӀехи́ диде́ хуьре́ яшами́ш жезва́.",
+    "context_note_ru": "Яшамиш хьун — жить, проживать.",
+    "status": "published"
+  },
+  {
+    "slug": "pb-chexi-buruz-hurmet",
+    "category": "family",
+    "source_ru": "Уважай старших.",
+    "target_lez": "ЧӀехибуруз гьуьрмет ая.",
+    "transcription_ru": "чӀехибуру́з гьуьрме́т ая́.",
+    "context_note_ru": "Традиционное наставление.",
+    "status": "published"
+  },
+  {
+    "slug": "pb-vi-tvar-vuzh-ya",
+    "category": "family",
+    "source_ru": "Как тебя зовут и из какого ты рода?",
+    "target_lez": "Ви тӀвар вуж я, ви сихил гьим я?",
+    "transcription_ru": "ви тӀвар вуж я, ви сихи́л гьим я?",
+    "context_note_ru": "Традиционный вопрос при знакомстве со старшими.",
+    "status": "published"
+  },
+  {
+    "slug": "pb-vaz-shumud-yis-ya",
+    "category": "family",
+    "source_ru": "Сколько тебе лет?",
+    "target_lez": "Ваз шумуд йис я?",
+    "transcription_ru": "ваз шуму́д йис я?",
+    "context_note_ru": "Ответ: Заз ... йис я (Мне ... лет).",
+    "status": "published"
+  },
+  {
+    "slug": "pb-sha-ilifa-kvaliz",
+    "category": "guest",
+    "source_ru": "Заходи, добро пожаловать в наш дом!",
+    "target_lez": "Ша, илифа чи кӀвализ!",
+    "transcription_ru": "ша, или́фа чи кӀвали́з!",
+    "context_note_ru": "Главное приветствие гостю на пороге дома.",
+    "status": "published"
+  },
+  {
+    "slug": "pb-buyur-atsuqa",
+    "category": "guest",
+    "source_ru": "Пожалуйста, присаживайтесь за стол!",
+    "target_lez": "Буюр, суфрадихъ ацукьа!",
+    "transcription_ru": "бую́р, суфради́хъ ацу́кьа!",
+    "context_note_ru": "Приглашение к накрытому столу (суфра).",
+    "status": "published"
+  },
+  {
+    "slug": "pb-sha-chay-xvan",
+    "category": "guest",
+    "source_ru": "Давай выпьем горячего чаю!",
+    "target_lez": "Ша чна чими чай хъван!",
+    "transcription_ru": "ша чна чими́ чай хъван!",
+    "context_note_ru": "Чими — тёплый, горячий.",
+    "status": "published"
+  },
+  {
+    "slug": "pb-zaz-yad-tse",
+    "category": "guest",
+    "source_ru": "Дай мне холодной воды, пожалуйста.",
+    "target_lez": "Минет я, заз къайи яд це.",
+    "transcription_ru": "мине́т я, заз къайи́ яд це.",
+    "context_note_ru": "Къайи — холодный; це — дай.",
+    "status": "published"
+  },
+  {
+    "slug": "pb-fu-gza-tyamlu-ya",
+    "category": "guest",
+    "source_ru": "Этот хлеб очень вкусный!",
+    "target_lez": "И фу гзаф тӀямлу я!",
+    "transcription_ru": "и фу гзаф тӀямлу́ я!",
+    "context_note_ru": "ТӀямлу — вкусный (с абруптивным тӀ).",
+    "status": "published"
+  },
+  {
+    "slug": "pb-para-chuxsaghul-halal",
+    "category": "guest",
+    "source_ru": "Большое спасибо за угощение! — На здоровье!",
+    "target_lez": "Пара чухсагъул! — Гьалал хьуй!",
+    "transcription_ru": "пара́ чухсагъу́л! — гьала́л хьуй!",
+    "context_note_ru": "Благодарность хозяевам после трапезы.",
+    "status": "published"
+  },
+  {
+    "slug": "pb-muhman-allahtin-pay",
+    "category": "guest",
+    "source_ru": "Гость в нашем доме — большая радость.",
+    "target_lez": "Чи кӀвале мугьман чӀехи шадвал я.",
+    "transcription_ru": "чи кӀвале́ мугьма́н чӀехи́ шадва́л я.",
+    "context_note_ru": "Шадвал — радость.",
+    "status": "published"
+  },
+  {
+    "slug": "pb-vun-hinay-ya",
+    "category": "road",
+    "source_ru": "Откуда ты родом? Из какого села?",
+    "target_lez": "Вун гьинай я? Гьи хуьряй я?",
+    "transcription_ru": "вун гьина́й я? гьи хуьря́й я?",
+    "context_note_ru": "Гьи хуьряй — из какого села.",
+    "status": "published"
+  },
+  {
+    "slug": "pb-zun-daghustanday-ya",
+    "category": "road",
+    "source_ru": "Я из Дагестана.",
+    "target_lez": "Зун Дагъустандай я.",
+    "transcription_ru": "зун Дагъустанда́й я.",
+    "context_note_ru": "Суффикс -дай обозначает исходный падеж («из»).",
+    "status": "published"
+  },
+  {
+    "slug": "pb-chi-xur-daghlara-ava",
+    "category": "road",
+    "source_ru": "Наше село находится в высоких горах.",
+    "target_lez": "Чи хуьр кьакьан дагълара ава.",
+    "transcription_ru": "чи хуьр кьакьа́н дагълара́ ава́.",
+    "context_note_ru": "Кьакьан — высокий.",
+    "status": "published"
+  },
+  {
+    "slug": "pb-i-rex-hiniz-fizva",
+    "category": "road",
+    "source_ru": "Куда ведёт (идёт) эта дорога?",
+    "target_lez": "И рехъ гьиниз физва?",
+    "transcription_ru": "и рехъ гьини́з физва́?",
+    "context_note_ru": "Гьиниз — куда.",
+    "status": "published"
+  },
+  {
+    "slug": "pb-sheher-muqva-yani",
+    "category": "road",
+    "source_ru": "Город близко отсюда?",
+    "target_lez": "Шегьер инай мукьва яни?",
+    "transcription_ru": "шегье́р ина́й мукьва́ яни́?",
+    "context_note_ru": "Частица -ни на конце образует общий вопрос.",
+    "status": "published"
+  },
+  {
+    "slug": "pb-rekiz-ughur-xhuy",
+    "category": "road",
+    "source_ru": "Счастливого пути! Возвращайся благополучно!",
+    "target_lez": "Рекьиз угъур хьуй! Саламатдиз хъша!",
+    "transcription_ru": "рекьи́з угъу́р хьуй! салама́тдиз хъша!",
+    "context_note_ru": "Напутствие отправляющемуся в дорогу.",
+    "status": "published"
+  },
+  {
+    "slug": "pb-za-lezgi-chal-chirzava",
+    "category": "daily",
+    "source_ru": "Я учу лезгинский язык.",
+    "target_lez": "За лезги чӀал чирзава.",
+    "transcription_ru": "за лезги́ чӀал чирзава́.",
+    "context_note_ru": "Подлежащее «за» стоит в эргативном падеже.",
+    "status": "published"
+  },
+  {
+    "slug": "pb-zaz-sa-timil-chida",
+    "category": "daily",
+    "source_ru": "Я немного знаю лезгинский язык.",
+    "target_lez": "Заз са тӀимил лезги чӀал чида.",
+    "transcription_ru": "заз са тӀими́л лезги́ чӀал чида́.",
+    "context_note_ru": "Са тӀимил — немного, чуть-чуть.",
+    "status": "published"
+  },
+  {
+    "slug": "pb-vun-lezgidaldi-raxazvani",
+    "category": "daily",
+    "source_ru": "Ты говоришь по-лезгински?",
+    "target_lez": "Вун лезгидалди рахазвани?",
+    "transcription_ru": "вун лезгида́лди рахазвани́?",
+    "context_note_ru": "Рахазва — говорит (настоящее время).",
+    "status": "published"
+  },
+  {
+    "slug": "pb-i-gaf-lezgidaldi-hik-zheda",
+    "category": "daily",
+    "source_ru": "Как будет это слово по-лезгински?",
+    "target_lez": "И гаф лезгидалди гьикӀ жеда?",
+    "transcription_ru": "и гаф лезгида́лди гьикӀ жеда́?",
+    "context_note_ru": "Полезный вопрос к носителю языка.",
+    "status": "published"
+  },
+  {
+    "slug": "pb-yavashdiz-lagh-minet-ya",
+    "category": "daily",
+    "source_ru": "Пожалуйста, скажи помедленнее.",
+    "target_lez": "Минет я, явашдиз лагь.",
+    "transcription_ru": "мине́т я, ява́шдиз лагь.",
+    "context_note_ru": "Лагь — скажи (от глагола «лугьун»).",
+    "status": "published"
+  },
+  {
+    "slug": "pb-mad-sa-seferda-tikrar-aya",
+    "category": "daily",
+    "source_ru": "Повтори ещё один раз, пожалуйста.",
+    "target_lez": "Минет я, мад са сеферда тикрар ая.",
+    "transcription_ru": "мине́т я, мад са сеферда́ тикра́р ая́.",
+    "context_note_ru": "Тикрар авун — повторять.",
+    "status": "published"
+  },
+  {
+    "slug": "pb-zun-ghavurda-hatna",
+    "category": "daily",
+    "source_ru": "Я всё понял, спасибо!",
+    "target_lez": "Зун вири гъавурда гьатна, чухсагъул!",
+    "transcription_ru": "зун вири́ гъавурда́ гьатна́, чухсагъу́л!",
+    "context_note_ru": "Отрицание («не понял»): Зун гъавурда гьатнач.",
+    "status": "published"
+  },
+  {
+    "slug": "pb-baghishlamisha-zaz-chidach",
+    "category": "daily",
+    "source_ru": "Извините, я не знаю.",
+    "target_lez": "Багъишламиша, заз чидач.",
+    "transcription_ru": "багъишлами́ша, заз чида́ч.",
+    "context_note_ru": "Вежливый ответ, если ответ неизвестен.",
+    "status": "published"
+  },
+  {
+    "slug": "pb-syat-shumud-ya",
+    "category": "daily",
+    "source_ru": "Который сейчас час?",
+    "target_lez": "Гила сят шумуд я?",
+    "transcription_ru": "гила́ сят шуму́д я?",
+    "context_note_ru": "Гила — сейчас, теперь.",
+    "status": "published"
+  },
+  {
+    "slug": "pb-qe-xsan-yugh-ya",
+    "category": "daily",
+    "source_ru": "Сегодня очень хороший день.",
+    "target_lez": "Къе гзаф хъсан югъ я.",
+    "transcription_ru": "къе гзаф хъсан югъ я.",
+    "context_note_ru": "Повседневное замечание о погоде и дне.",
+    "status": "published"
+  },
+  {
+    "slug": "pb-barkalla-duz-zhavab",
+    "category": "daily",
+    "source_ru": "Молодец, твой ответ правильный!",
+    "target_lez": "Баркалла, ви жаваб дуьз я!",
+    "transcription_ru": "баркалла́, ви жава́б дуьз я!",
+    "context_note_ru": "Похвала ученику на уроке.",
+    "status": "published"
+  }
+]

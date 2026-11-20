@@ -1,6 +1,7 @@
 import { config as loadDotenv } from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
 import { loadAndValidateContentBundle } from '../content/loader';
+import { normalizeRussianForLookup } from '../lib/lezgi-utils';
 import type { Database } from '../lib/supabase/database.types';
 
 loadDotenv({ path: '.env.local' });
@@ -19,7 +20,8 @@ async function main() {
     `✅ Content bundle is valid:\n` +
       `   - Words: ${bundle.words.length} (${totalExamples} usage examples)\n` +
       `   - Units: ${bundle.units.length}\n` +
-      `   - Lessons: ${bundle.lessons.length} (${totalExercises} exercises)`
+      `   - Lessons: ${bundle.lessons.length} (${totalExercises} exercises)\n` +
+      `   - Verified Phrases (Phrasebook & Translator): ${bundle.phrases.length}`
   );
 
   if (isDryRun) {
@@ -174,6 +176,32 @@ async function main() {
       .upsert(exerciseRows, { onConflict: 'slug' });
     if (exercisesError) {
       throw new Error(`Failed to upsert exercises: ${exercisesError.message}`);
+    }
+  }
+
+  if (bundle.phrases.length > 0) {
+    console.log('🚀 Upserting verified_phrases (Phrasebook & Translator)...');
+    const phraseRows = bundle.phrases.map((p) => ({
+      slug: p.slug,
+      category: p.category,
+      source_ru: p.source_ru,
+      target_lez: p.target_lez,
+      normalized_ru: normalizeRussianForLookup(p.source_ru),
+      transcription_ru: p.transcription_ru ?? null,
+      context_note_ru: p.context_note_ru ?? null,
+      audio_path: p.audio_path ?? null,
+      audio_status: p.audio_status,
+      status: p.status,
+    }));
+
+    const { error: phrasesError } = await supabase
+      .from('verified_phrases')
+      .upsert(phraseRows, { onConflict: 'slug' });
+
+    if (phrasesError) {
+      throw new Error(
+        `Failed to upsert verified_phrases: ${phrasesError.message}`
+      );
     }
   }
 

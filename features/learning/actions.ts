@@ -5,6 +5,7 @@ import { revalidatePath } from 'next/cache';
 import { isSupabaseConfigured } from '@/lib/env';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import type { ActionResult } from '@/features/shared/types';
+import { createInitialSrsCardState } from './fsrs';
 
 const completeLessonSchema = z.object({
   lessonSlug: z.string().min(2).max(80),
@@ -106,6 +107,34 @@ export async function completeLessonAction(
       error: 'Не удалось сохранить прогресс урока',
       code: 'DB_ERROR',
     };
+  }
+
+  // Enroll practiced lesson words into user_word_cards (FSRS)
+  const { data: lessonExercises } = await supabase
+    .from('exercises')
+    .select('word_id')
+    .eq('lesson_id', lesson.id)
+    .not('word_id', 'is', null);
+
+  const uniqueWordIds = [
+    ...new Set(
+      (lessonExercises ?? [])
+        .map((ex) => ex.word_id)
+        .filter((wid): wid is string => Boolean(wid))
+    ),
+  ];
+
+  if (uniqueWordIds.length > 0) {
+    const initialCard = createInitialSrsCardState();
+    const cardRows = uniqueWordIds.map((wordId) => ({
+      user_id: user.id,
+      word_id: wordId,
+      ...initialCard,
+    }));
+
+    await supabase
+      .from('user_word_cards')
+      .upsert(cardRows, { onConflict: 'user_id,word_id', ignoreDuplicates: true });
   }
 
   const { data: profile } = await supabase

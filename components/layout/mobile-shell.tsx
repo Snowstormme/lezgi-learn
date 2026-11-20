@@ -1,6 +1,12 @@
 'use client';
 
-import { BookOpen, GraduationCap, MessageSquare, User } from 'lucide-react';
+import {
+  BookOpen,
+  Brain,
+  GraduationCap,
+  Languages,
+  MessageSquare,
+} from 'lucide-react';
 import { Link, usePathname } from '@/lib/i18n/routing';
 import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
@@ -22,9 +28,10 @@ export function MobileShell({
 
   const navItems = [
     { href: '/learn', label: tNav('learn'), icon: GraduationCap },
+    { href: '/review', label: tNav('review'), icon: Brain },
     { href: '/dictionary', label: tNav('dictionary'), icon: BookOpen },
     { href: '/phrasebook', label: tNav('phrasebook'), icon: MessageSquare },
-    { href: '/profile', label: tNav('profile'), icon: User },
+    { href: '/translate', label: tNav('translate'), icon: Languages },
   ];
 
   return (

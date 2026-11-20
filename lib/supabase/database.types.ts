@@ -324,6 +324,171 @@ export type Database = {
         };
         Relationships: [];
       };
+      user_word_cards: {
+        Row: {
+          id: string;
+          user_id: string;
+          word_id: string;
+          state: number;
+          due: string;
+          stability: number;
+          difficulty: number;
+          elapsed_days: number;
+          scheduled_days: number;
+          reps: number;
+          lapses: number;
+          last_review: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          word_id: string;
+          state?: number;
+          due?: string;
+          stability?: number;
+          difficulty?: number;
+          elapsed_days?: number;
+          scheduled_days?: number;
+          reps?: number;
+          lapses?: number;
+          last_review?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          state?: number;
+          due?: string;
+          stability?: number;
+          difficulty?: number;
+          elapsed_days?: number;
+          scheduled_days?: number;
+          reps?: number;
+          lapses?: number;
+          last_review?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      verified_phrases: {
+        Row: {
+          id: string;
+          slug: string;
+          category: string;
+          source_ru: string;
+          target_lez: string;
+          normalized_ru: string;
+          transcription_ru: string | null;
+          context_note_ru: string | null;
+          audio_path: string | null;
+          audio_status: ContentStatus;
+          status: ContentStatus;
+          reviewed_by: string | null;
+          reviewed_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          slug: string;
+          category?: string;
+          source_ru: string;
+          target_lez: string;
+          normalized_ru: string;
+          transcription_ru?: string | null;
+          context_note_ru?: string | null;
+          audio_path?: string | null;
+          audio_status?: ContentStatus;
+          status?: ContentStatus;
+          reviewed_by?: string | null;
+          reviewed_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          slug?: string;
+          category?: string;
+          source_ru?: string;
+          target_lez?: string;
+          normalized_ru?: string;
+          transcription_ru?: string | null;
+          context_note_ru?: string | null;
+          audio_path?: string | null;
+          audio_status?: ContentStatus;
+          status?: ContentStatus;
+          reviewed_by?: string | null;
+          reviewed_at?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      translation_requests: {
+        Row: {
+          id: string;
+          user_id: string | null;
+          direction: 'ru_to_lez' | 'lez_to_ru';
+          query_text: string;
+          matched_phrase_id: string | null;
+          llm_draft_output: string | null;
+          is_verified: boolean;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id?: string | null;
+          direction: 'ru_to_lez' | 'lez_to_ru';
+          query_text: string;
+          matched_phrase_id?: string | null;
+          llm_draft_output?: string | null;
+          is_verified?: boolean;
+          created_at?: string;
+        };
+        Update: {
+          matched_phrase_id?: string | null;
+          llm_draft_output?: string | null;
+          is_verified?: boolean;
+        };
+        Relationships: [];
+      };
+      content_suggestions: {
+        Row: {
+          id: string;
+          request_id: string | null;
+          suggested_by: string;
+          source_ru: string;
+          suggested_lez: string;
+          comment: string | null;
+          status: ContentStatus;
+          reviewer_id: string | null;
+          review_comment: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          request_id?: string | null;
+          suggested_by: string;
+          source_ru: string;
+          suggested_lez: string;
+          comment?: string | null;
+          status?: ContentStatus;
+          reviewer_id?: string | null;
+          review_comment?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          source_ru?: string;
+          suggested_lez?: string;
+          comment?: string | null;
+          status?: ContentStatus;
+          reviewer_id?: string | null;
+          review_comment?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: {
       [_ in never]: never;

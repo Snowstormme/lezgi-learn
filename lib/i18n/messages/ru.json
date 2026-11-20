@@ -7,8 +7,10 @@
   },
   "nav": {
     "learn": "Курс",
+    "review": "Повтор",
     "dictionary": "Словарь",
-    "phrasebook": "Разговорник",
+    "phrasebook": "Фразы",
+    "translate": "Перевод",
     "profile": "Профиль"
   },
   "start": {

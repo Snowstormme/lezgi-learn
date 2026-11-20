@@ -61,3 +61,17 @@ export function isLezgiAnswerCorrect(
     (answer) => normalizeLezgiInputForComparison(answer) === candidate
   );
 }
+
+/**
+ * Normalizes a Russian phrase or word for fast lookup in `verified_phrases` and `words`.
+ */
+export function normalizeRussianForLookup(input: string): string {
+  return input
+    .normalize('NFC')
+    .toLowerCase()
+    .replace(/ё/g, 'е')
+    .replace(/[.,!?;:"'«»()[\]—–-]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+

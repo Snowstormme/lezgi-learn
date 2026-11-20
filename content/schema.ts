@@ -131,16 +131,40 @@ export const lessonSeedSchema = z.object({
   exercises: z.array(exerciseSeedSchema).min(1),
 });
 
+export const phraseCategorySchema = z.enum([
+  'greetings',
+  'family',
+  'guest',
+  'road',
+  'daily',
+]);
+
+export const verifiedPhraseSeedSchema = z.object({
+  slug: slugSchema,
+  category: phraseCategorySchema,
+  source_ru: z.string().min(1),
+  target_lez: lezgiTextSchema,
+  transcription_ru: z.string().nullable().optional(),
+  context_note_ru: z.string().nullable().optional(),
+  audio_path: z.string().nullable().optional(),
+  audio_status: contentStatusSchema.default('draft'),
+  status: contentStatusSchema.default('draft'),
+});
+
+export const phrasebookFileSchema = z.array(verifiedPhraseSeedSchema).min(1);
+
 export type WordSeed = z.infer<typeof wordSeedSchema>;
 export type WordExampleSeed = z.infer<typeof wordExampleSeedSchema>;
 export type UnitSeed = z.infer<typeof unitSeedSchema>;
 export type LessonSeed = z.infer<typeof lessonSeedSchema>;
 export type ExerciseSeed = z.infer<typeof exerciseSeedSchema>;
+export type VerifiedPhraseSeed = z.infer<typeof verifiedPhraseSeedSchema>;
 
 export interface ContentBundle {
   words: WordSeed[];
   units: UnitSeed[];
   lessons: LessonSeed[];
+  phrases: VerifiedPhraseSeed[];
 }
 
 /**
@@ -153,6 +177,14 @@ export function validateContentBundleIntegrity(bundle: ContentBundle): void {
   const unitSlugs = new Set<string>();
   const lessonSlugs = new Set<string>();
   const exerciseSlugs = new Set<string>();
+  const phraseSlugs = new Set<string>();
+
+  for (const phrase of bundle.phrases ?? []) {
+    if (phraseSlugs.has(phrase.slug)) {
+      throw new Error(`Duplicate verified_phrase slug found: "${phrase.slug}"`);
+    }
+    phraseSlugs.add(phrase.slug);
+  }
 
   for (const word of bundle.words) {
     if (wordSlugs.has(word.slug)) {

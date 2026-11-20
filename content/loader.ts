@@ -3,6 +3,7 @@ import dict02WellbeingPronouns from './dictionary/02-wellbeing-pronouns.json';
 import dict03AcquaintanceOrigin from './dictionary/03-acquaintance-origin.json';
 import dict04LanguagePoliteness from './dictionary/04-language-politeness.json';
 import dict05HospitalityFarewell from './dictionary/05-hospitality-farewell.json';
+import corePhrasesJson from './phrasebook/core-phrases.json';
 
 import unit01Json from './courses/ru-lez/unit-01-greetings/unit.json';
 import lesson01HelloJson from './courses/ru-lez/unit-01-greetings/lessons/01-hello.json';
@@ -20,10 +21,12 @@ import {
   type ContentBundle,
   dictionaryFileSchema,
   lessonSeedSchema,
+  phrasebookFileSchema,
   unitSeedSchema,
   validateContentBundleIntegrity,
   type LessonSeed,
   type UnitSeed,
+  type VerifiedPhraseSeed,
   type WordSeed,
 } from './schema';
 
@@ -34,6 +37,8 @@ const RAW_DICTIONARY_FILES: unknown[] = [
   dict04LanguagePoliteness,
   dict05HospitalityFarewell,
 ];
+
+const RAW_PHRASEBOOK_FILES: unknown[] = [corePhrasesJson];
 
 const RAW_UNIT_FILES: unknown[] = [unit01Json];
 
@@ -62,6 +67,12 @@ export function loadAndValidateContentBundle(): ContentBundle {
     words.push(...parsed);
   }
 
+  const phrases: VerifiedPhraseSeed[] = [];
+  for (const rawPhrases of RAW_PHRASEBOOK_FILES) {
+    const parsed = phrasebookFileSchema.parse(rawPhrases);
+    phrases.push(...parsed);
+  }
+
   const units: UnitSeed[] = [];
   for (const rawUnit of RAW_UNIT_FILES) {
     units.push(unitSeedSchema.parse(rawUnit));
@@ -72,7 +83,7 @@ export function loadAndValidateContentBundle(): ContentBundle {
     lessons.push(lessonSeedSchema.parse(rawLesson));
   }
 
-  const bundle: ContentBundle = { words, units, lessons };
+  const bundle: ContentBundle = { words, units, lessons, phrases };
   validateContentBundleIntegrity(bundle);
 
   return bundle;

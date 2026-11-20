@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Search, Volume2, X } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import type { DictionaryWordItem } from '@/features/dictionary/queries';
 import { normalizeLezgiInputForComparison } from '@/lib/lezgi-utils';
@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ReportMistakeTrigger } from '@/features/shared/components/report-mistake-trigger';
+import { AudioPlayerButton } from '@/features/shared/components/audio-player-button';
 import { cn } from '@/lib/utils';
 
 const POS_LABELS: Record<string, string> = {
@@ -148,16 +149,18 @@ export function DictionaryExplorer({ words }: DictionaryExplorerProps) {
                     </p>
                   </div>
 
-                  <div className="flex flex-col items-end gap-1">
+                  <div className="flex flex-col items-end gap-1.5">
                     {word.part_of_speech && (
                       <Badge variant="secondary">
                         {POS_LABELS[word.part_of_speech] ?? word.part_of_speech}
                       </Badge>
                     )}
-                    <span className="inline-flex items-center gap-1 text-[10px] text-muted-foreground">
-                      <Volume2 className="h-3 w-3" />
-                      {t('audioSoon')}
-                    </span>
+                    <AudioPlayerButton
+                      textLez={word.lemma_lez}
+                      transcriptionRu={word.transcription_ru}
+                      audioPath={word.audio_path}
+                      audioStatus={word.audio_status}
+                    />
                   </div>
                 </div>
               </CardHeader>
