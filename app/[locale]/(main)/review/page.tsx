@@ -1,17 +1,20 @@
 import { getSrsReviewDeck } from '@/features/learning/srs-queries';
 import { SrsReviewDeck } from '@/features/learning/components/srs-review-deck';
+import { LezgiOrnament } from '@/components/ui/lezgi-ornament';
 
 export default async function SrsReviewPage() {
   const deck = await getSrsReviewDeck();
 
   return (
-    <div className="space-y-4">
-      <div className="space-y-1">
-        <h1 className="text-2xl font-black tracking-tight">
-          Тренировка слов
+    <div className="space-y-6">
+      <LezgiOrnament />
+
+      <div className="space-y-1.5">
+        <h1 className="text-balance text-2xl font-bold leading-tight text-[#F8FAFC]">
+          Повторение слов
         </h1>
-        <p className="text-sm font-bold text-muted-foreground">
-          Умные карточки показывают слова именно тогда, когда их пора освежить в памяти.
+        <p className="text-xs leading-relaxed text-[#CBD5E1]">
+          Карточки планируются автоматически по мере того, как вы их запоминаете.
         </p>
       </div>
 

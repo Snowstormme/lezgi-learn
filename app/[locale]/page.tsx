@@ -1,11 +1,7 @@
-import {
-  Flame,
-  ShieldCheck,
-  Volume2,
-} from 'lucide-react';
 import { Link } from '@/lib/i18n/routing';
 import { getPublishedDictionaryWords } from '@/features/dictionary/queries';
 import { getCurrentUserSession } from '@/features/profile/queries';
+import { LezgiOrnament } from '@/components/ui/lezgi-ornament';
 import { AudioPlayerButton } from '@/features/shared/components/audio-player-button';
 
 export default async function StartScreenPage() {
@@ -15,122 +11,90 @@ export default async function StartScreenPage() {
   ]);
 
   const featuredWord =
-    words.find((w) => w.slug === 'salam') ??
     words.find((w) => w.slug === 'chal') ??
+    words.find((w) => w.slug === 'salam') ??
     words[0];
 
   return (
-    <div className="mx-auto flex min-h-dvh max-w-md flex-col justify-between border-x-2 border-border bg-background px-6 py-8">
-      {/* Top logo bar */}
-      <div className="flex items-center justify-between gap-3">
-        <div className="flex items-center gap-2.5">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl border-b-4 border-[#B92B1C] bg-primary text-base font-black text-[#F8FAFC]">
-            ЛӀ
-          </div>
-          <span className="text-xl font-black tracking-tight text-[#F8FAFC]">
-            lezgi <span className="text-primary">learn</span>
-          </span>
-        </div>
-
+    <div className="mx-auto flex min-h-dvh w-full max-w-lg flex-col justify-between bg-background px-5 py-6">
+      {/* Top minimal bar */}
+      <header className="flex items-baseline justify-between">
+        <span className="text-base font-bold tracking-tight text-[#F8FAFC]">
+          Лезги ч<span className="text-primary">Ӏ</span>ал
+        </span>
         <Link
           href="/dictionary"
-          className="flex h-10 items-center rounded-xl border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC] px-3.5 text-xs font-black uppercase tracking-wider text-[#0B132B] transition-all hover:bg-white active:translate-y-[2px] active:border-b-2"
+          className="text-xs font-medium text-[#CBD5E1] underline-offset-4 transition-colors hover:text-[#F8FAFC] hover:underline"
         >
-          150 слов
+          Словарь
         </Link>
-      </div>
+      </header>
 
-      {/* Center mascot emblem & hero */}
-      <div className="my-auto space-y-6 py-6 text-center">
-        {/* Tactile Vermillion & Cloud White Emblem */}
-        <div className="mx-auto flex h-36 w-40 flex-col items-center justify-center rounded-3xl border-2 border-b-[6px] border-[#B92B1C] bg-primary px-4 text-[#F8FAFC]">
-          <span className="text-4xl font-black leading-none tracking-tight">
-            Салам!
-          </span>
-          <span className="mt-2.5 rounded-xl bg-[#0B132B]/25 px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-[#F8FAFC]">
-            Лезги чӀал
-          </span>
-        </div>
+      {/* Main editorial hero */}
+      <main className="my-auto space-y-8 py-8">
+        <LezgiOrnament />
 
-        <div className="space-y-3">
-          <h1 className="text-3xl font-black leading-tight tracking-tight text-[#F8FAFC]">
-            Учи лезгинский язык шаг за шагом!
+        <div className="space-y-4">
+          <h1 className="text-balance text-3xl font-bold leading-[1.18] tracking-tight text-[#F8FAFC]">
+            Учи лезгинский язык шаг за шагом
           </h1>
-          <p className="mx-auto max-w-xs text-base font-bold text-muted-foreground">
-            Короткие игровые уроки, умное повторение слов и живой словарь,
-            проверенный носителями.
+          <p className="text-pretty text-sm leading-relaxed text-[#CBD5E1]">
+            Короткие уроки, интервальное повторение и словарь, проверенный
+            носителями языка.
           </p>
         </div>
 
-        {/* Cloud White contrast word card */}
+        {/* Cloud White live word preview */}
         {featuredWord && (
-          <div className="mx-auto flex items-center justify-between gap-3 rounded-2xl border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC] px-4 py-3.5 text-left text-[#0B132B]">
-            <div className="min-w-0">
-              <div className="flex flex-wrap items-baseline gap-1.5">
-                <span className="text-lg font-black text-primary">
+          <div className="rounded-xl bg-[#F8FAFC] p-5 text-[#0B132B]">
+            <div className="flex items-start justify-between gap-4">
+              <div className="space-y-1">
+                <p className="text-2xl font-bold leading-tight text-[#0B132B]">
                   {featuredWord.lemma_lez}
-                </span>
-                <span className="text-sm font-extrabold text-[#0B132B]">
-                  — {featuredWord.translation_ru}
-                </span>
+                </p>
+                <p className="text-sm font-medium text-[#334155]">
+                  {featuredWord.translation_ru}
+                </p>
               </div>
-              {featuredWord.examples[0] && (
-                <p className="mt-0.5 text-xs font-bold text-[#334155]">
-                  «{featuredWord.examples[0].sentence_lez}» —{' '}
+              <AudioPlayerButton
+                textLez={featuredWord.lemma_lez}
+                transcriptionRu={featuredWord.transcription_ru}
+                lightSurface
+              />
+            </div>
+
+            {featuredWord.examples[0] && (
+              <div className="mt-4 border-t border-[#CBD5E1] pt-3 text-xs leading-relaxed">
+                <p className="font-semibold text-[#0B132B]">
+                  {featuredWord.examples[0].sentence_lez}
+                </p>
+                <p className="mt-0.5 text-[#334155]">
                   {featuredWord.examples[0].translation_ru}
                 </p>
-              )}
-            </div>
-            <AudioPlayerButton
-              textLez={featuredWord.lemma_lez}
-              transcriptionRu={featuredWord.transcription_ru}
-            />
+              </div>
+            )}
           </div>
         )}
+      </main>
 
-        {/* 3 feature tiles */}
-        <div className="grid grid-cols-3 gap-2.5 text-center">
-          <div className="rounded-2xl border-2 border-b-4 border-border bg-card p-3">
-            <Flame className="mx-auto h-5 w-5 text-primary" />
-            <p className="mt-1.5 text-xs font-extrabold text-[#F8FAFC]">
-              10 уроков
-            </p>
-          </div>
-          <div className="rounded-2xl border-2 border-b-4 border-border bg-card p-3">
-            <ShieldCheck className="mx-auto h-5 w-5 text-[#F8FAFC]" />
-            <p className="mt-1.5 text-xs font-extrabold text-[#F8FAFC]">
-              Носители
-            </p>
-          </div>
-          <div className="rounded-2xl border-2 border-b-4 border-border bg-card p-3">
-            <Volume2 className="mx-auto h-5 w-5 text-primary" />
-            <p className="mt-1.5 text-xs font-extrabold text-[#F8FAFC]">
-              Озвучка
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Bottom full-height 3D CTAs */}
-      <div className="space-y-3">
+      {/* Bottom CTA group */}
+      <footer className="space-y-3">
         <Link
           href="/learn"
-          className="flex min-h-[56px] w-full items-center justify-center rounded-2xl border-2 border-b-4 border-[#B92B1C] bg-primary px-6 py-3.5 text-center text-base font-black uppercase tracking-wider text-[#F8FAFC] transition-all hover:brightness-105 active:translate-y-[2px] active:border-b-2"
+          className="flex min-h-[52px] w-full items-center justify-center rounded-xl bg-primary px-6 py-3.5 text-sm font-bold text-[#F8FAFC] transition-colors hover:bg-[#DC3D26] active:scale-[0.99]"
         >
           {session.isAuthenticated
-            ? `ПРОДОЛЖИТЬ (${session.displayName})`
-            : 'НАЧАТЬ ОБУЧЕНИЕ'}
+            ? `Продолжить обучение`
+            : 'Начать обучение'}
         </Link>
 
         <Link
           href={session.isAuthenticated ? '/profile' : '/login'}
-          className="flex min-h-[56px] w-full items-center justify-center rounded-2xl border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC] px-6 py-3.5 text-center text-sm font-black uppercase tracking-wider text-[#0B132B] transition-all hover:bg-white active:translate-y-[2px] active:border-b-2"
+          className="flex min-h-[48px] w-full items-center justify-center rounded-xl border border-border bg-card px-6 py-3 text-sm font-semibold text-[#F8FAFC] transition-colors hover:bg-secondary"
         >
-          {session.isAuthenticated
-            ? 'МОЙ ПРОФИЛЬ'
-            : 'У МЕНЯ УЖЕ ЕСТЬ АККАУНТ'}
+          {session.isAuthenticated ? 'Профиль' : 'Войти в аккаунт'}
         </Link>
-      </div>
+      </footer>
     </div>
   );
 }

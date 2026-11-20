@@ -1,13 +1,7 @@
 'use client';
 
 import { useMemo, useState, useTransition } from 'react';
-import {
-  Brain,
-  CheckCircle2,
-  Eye,
-  RotateCcw,
-  Sparkles,
-} from 'lucide-react';
+import { Check, Eye, RotateCcw } from 'lucide-react';
 import { Link } from '@/lib/i18n/routing';
 import type { SrsReviewCardItem } from '@/features/learning/srs-queries';
 import {
@@ -17,9 +11,7 @@ import {
 import { reviewWordCardAction } from '@/features/learning/srs-actions';
 import { AudioPlayerButton } from '@/features/shared/components/audio-player-button';
 import { LessonProgressBar } from '@/components/ui/progress-bar';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
 interface SrsReviewDeckProps {
@@ -31,7 +23,6 @@ interface SrsReviewDeckProps {
 export function SrsReviewDeck({
   initialCards,
   isAuthenticated,
-  totalEnrolled,
 }: SrsReviewDeckProps) {
   const [queue, setQueue] = useState<SrsReviewCardItem[]>(initialCards);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -58,7 +49,6 @@ export function SrsReviewDeck({
 
       const updatedState = res.ok ? res.data.nextState : currentCard.cardState;
 
-      // If rated "Again" (1), re-queue card at the end of current session
       if (grade === 1) {
         setQueue((prev) => [
           ...prev,
@@ -74,186 +64,179 @@ export function SrsReviewDeck({
 
   if (!currentCard) {
     return (
-      <Card className="border-primary/30 bg-gradient-to-b from-primary/10 via-card to-card">
-        <CardHeader className="text-center">
-          <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary text-primary-foreground">
-            <CheckCircle2 className="h-6 w-6" />
-          </div>
-          <CardTitle className="text-lg">
-            Сессия повторения завершена!
-          </CardTitle>
-          <p className="text-xs text-muted-foreground">
-            Повторено карточек по алгоритму FSRS: {reviewedCount}
+      <div className="space-y-6 rounded-xl border border-border bg-card p-6 text-center">
+        <div className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-primary text-[#F8FAFC]">
+          <Check className="h-5 w-5 stroke-[2.5]" />
+        </div>
+        <div className="space-y-1.5">
+          <h2 className="text-balance text-lg font-bold text-[#F8FAFC]">
+            Повторение завершено
+          </h2>
+          <p className="text-xs text-[#CBD5E1]">
+            Пройдено карточек: {reviewedCount}
           </p>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {!isAuthenticated && (
-            <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-200">
-              Войдите в аккаунт, чтобы интервалы FSRS сохранялись между сессиями.
-            </div>
-          )}
-          <div className="grid grid-cols-2 gap-3">
-            <Button
-              type="button"
-              variant="secondary"
-              size="default"
-              className="w-full"
-              onClick={() => {
-                setQueue(initialCards);
-                setCurrentIndex(0);
-                setReviewedCount(0);
-                setIsRevealed(false);
-              }}
-            >
-              <RotateCcw className="h-4 w-4" />
-              <span>Ещё круг</span>
-            </Button>
-            <Link
-              href="/learn"
-              className="flex min-h-[48px] w-full items-center justify-center rounded-2xl border-2 border-b-4 border-[#B92B1C] bg-primary px-4 py-2.5 text-center text-xs font-black uppercase tracking-wider text-[#F8FAFC] transition-all active:translate-y-[2px]"
-            >
-              К урокам
-            </Link>
-          </div>
-        </CardContent>
-      </Card>
+        </div>
+
+        {!isAuthenticated && (
+          <p className="text-xs leading-relaxed text-[#CBD5E1]">
+            Войдите, чтобы сохранять прогресс интервалов между сессиями.
+          </p>
+        )}
+
+        <div className="grid grid-cols-2 gap-3 pt-1">
+          <Button
+            type="button"
+            variant="secondary"
+            className="w-full"
+            onClick={() => {
+              setQueue(initialCards);
+              setCurrentIndex(0);
+              setReviewedCount(0);
+              setIsRevealed(false);
+            }}
+          >
+            <RotateCcw className="h-4 w-4" />
+            <span>Ещё раз</span>
+          </Button>
+          <Link
+            href="/learn"
+            className="flex min-h-[46px] w-full items-center justify-center rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-[#F8FAFC] transition-colors hover:bg-[#DC3D26]"
+          >
+            К курсу
+          </Link>
+        </div>
+      </div>
     );
   }
 
   const ratingButtons: Array<{
     grade: SrsRatingGrade;
     label: string;
-    colorClass: string;
+    styleClass: string;
   }> = [
     {
       grade: 1,
       label: 'Снова',
-      colorClass:
-        'border-2 border-b-4 border-[#B92B1C] bg-primary/20 text-primary',
+      styleClass:
+        'border-primary/60 bg-primary/15 text-primary hover:bg-primary/25',
     },
     {
       grade: 2,
       label: 'Трудно',
-      colorClass:
-        'border-2 border-b-4 border-border bg-secondary text-[#F8FAFC]',
+      styleClass:
+        'border-border bg-secondary text-[#F8FAFC] hover:border-[#41578E]',
     },
     {
       grade: 3,
       label: 'Хорошо',
-      colorClass:
-        'border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC] text-[#0B132B]',
+      styleClass:
+        'border-[#F8FAFC] bg-[#F8FAFC] text-[#0B132B] hover:bg-[#E2E8F0]',
     },
     {
       grade: 4,
       label: 'Легко',
-      colorClass:
-        'border-2 border-b-4 border-emerald-500/60 bg-emerald-500/15 text-emerald-300',
+      styleClass:
+        'border-emerald-400/50 bg-emerald-500/15 text-emerald-200 hover:bg-emerald-500/25',
     },
   ];
 
   return (
-    <div className="space-y-4">
-      {/* Progress & stats header */}
-      <div className="flex items-center justify-between text-xs font-extrabold uppercase tracking-wider text-muted-foreground">
-        <span className="inline-flex items-center gap-1.5 text-foreground">
-          <Brain className="h-4 w-4 text-primary" />
-          <span>Карточек в тренировке: {totalEnrolled || queue.length}</span>
-        </span>
-        <span className="tabular-nums">
-          {currentIndex + 1} / {queue.length}
+    <div className="space-y-5">
+      <div className="flex items-center gap-4">
+        <LessonProgressBar
+          current={currentIndex}
+          total={queue.length}
+          className="flex-1"
+        />
+        <span className="shrink-0 text-xs font-semibold tabular-nums text-[#CBD5E1]">
+          {currentIndex + 1}/{queue.length}
         </span>
       </div>
 
-      <LessonProgressBar current={currentIndex} total={queue.length} />
+      {/* Main Flashcard */}
+      <div className="space-y-6 rounded-xl border border-border bg-card p-6">
+        <div className="flex items-center justify-between gap-2">
+          <span className="text-xs font-medium text-[#CBD5E1]">
+            {currentCard.part_of_speech ?? 'слово'}
+          </span>
+          <AudioPlayerButton
+            textLez={currentCard.lemma_lez}
+            transcriptionRu={currentCard.transcription_ru}
+            audioPath={currentCard.audio_path}
+            audioStatus={currentCard.audio_status}
+          />
+        </div>
 
-      {/* Flashcard */}
-      <Card className="min-h-64 border-border/90">
-        <CardHeader className="space-y-3 pb-3">
-          <div className="flex items-center justify-between">
-            <Badge variant="verified">Повторение: {currentCard.cardState.reps}</Badge>
-            <AudioPlayerButton
-              textLez={currentCard.lemma_lez}
-              transcriptionRu={currentCard.transcription_ru}
-              audioPath={currentCard.audio_path}
-              audioStatus={currentCard.audio_status}
-            />
-          </div>
+        <div className="space-y-2 py-6 text-center">
+          <h2 className="text-balance text-3xl font-bold leading-tight text-[#F8FAFC]">
+            {currentCard.lemma_lez}
+          </h2>
+          {currentCard.transcription_ru && (
+            <p className="text-xs text-[#CBD5E1]">
+              [{currentCard.transcription_ru}]
+            </p>
+          )}
+        </div>
 
-          <div className="py-4 text-center">
-            <CardTitle className="text-3xl font-extrabold tracking-tight text-primary">
-              {currentCard.lemma_lez}
-            </CardTitle>
-            {currentCard.transcription_ru && (
-              <p className="mt-1 text-xs text-muted-foreground">
-                [{currentCard.transcription_ru}]
+        {!isRevealed ? (
+          <Button
+            type="button"
+            variant="cloud"
+            size="lg"
+            className="w-full"
+            onClick={() => setIsRevealed(true)}
+          >
+            <Eye className="h-4 w-4" />
+            <span>Показать перевод</span>
+          </Button>
+        ) : (
+          <div className="space-y-5 border-t border-border pt-5">
+            <div className="space-y-1.5 text-center">
+              <p className="text-lg font-bold text-[#F8FAFC]">
+                {currentCard.translation_ru}
               </p>
-            )}
-          </div>
-        </CardHeader>
-
-        <CardContent className="space-y-4">
-          {!isRevealed ? (
-            <Button
-              type="button"
-              size="lg"
-              variant="secondary"
-              className="w-full font-semibold"
-              onClick={() => setIsRevealed(true)}
-            >
-              <Eye className="h-4 w-4" />
-              <span>Показать перевод</span>
-            </Button>
-          ) : (
-            <div className="space-y-4 border-t border-border/70 pt-4">
-              <div className="text-center">
-                <p className="text-lg font-bold text-foreground">
-                  {currentCard.translation_ru}
+              {currentCard.grammar_notes_ru && (
+                <p className="text-xs leading-relaxed text-[#CBD5E1]">
+                  {currentCard.grammar_notes_ru}
                 </p>
-                {currentCard.grammar_notes_ru && (
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    {currentCard.grammar_notes_ru}
+              )}
+            </div>
+
+            {currentCard.example_lez && (
+              <div className="rounded-xl border border-border bg-background p-4 text-xs leading-relaxed">
+                <p className="font-semibold text-[#F8FAFC]">
+                  {currentCard.example_lez}
+                </p>
+                {currentCard.example_ru && (
+                  <p className="mt-1 text-[#CBD5E1]">
+                    {currentCard.example_ru}
                   </p>
                 )}
               </div>
+            )}
 
-              {currentCard.example_lez && (
-                <div className="rounded-xl border border-border/70 bg-background/60 p-3 text-xs">
-                  <p className="flex items-center gap-1 font-semibold text-foreground">
-                    <Sparkles className="h-3 w-3 text-primary" />
-                    <span>«{currentCard.example_lez}»</span>
-                  </p>
-                  {currentCard.example_ru && (
-                    <p className="mt-0.5 text-muted-foreground">
-                      {currentCard.example_ru}
-                    </p>
+            <div className="grid grid-cols-4 gap-2">
+              {ratingButtons.map((btn) => (
+                <button
+                  key={btn.grade}
+                  type="button"
+                  disabled={isPending}
+                  onClick={() => handleRate(btn.grade)}
+                  className={cn(
+                    'flex min-h-[56px] w-full flex-col items-center justify-center rounded-xl border px-1.5 py-2 text-center transition-colors disabled:opacity-50',
+                    btn.styleClass
                   )}
-                </div>
-              )}
-
-              {/* 4 FSRS grade buttons */}
-              <div className="grid grid-cols-4 gap-2 pt-1">
-                {ratingButtons.map((btn) => (
-                  <button
-                    key={btn.grade}
-                    type="button"
-                    disabled={isPending}
-                    onClick={() => handleRate(btn.grade)}
-                    className={cn(
-                      'flex min-h-[58px] w-full flex-col items-center justify-center rounded-2xl px-2 py-2.5 text-center transition-all active:translate-y-[2px] disabled:opacity-50',
-                      btn.colorClass
-                    )}
-                  >
-                    <span className="text-xs font-bold">{btn.label}</span>
-                    <span className="mt-0.5 text-[10px] opacity-85">
-                      {intervalPreviews[btn.grade]}
-                    </span>
-                  </button>
-                ))}
-              </div>
+                >
+                  <span className="text-xs font-semibold">{btn.label}</span>
+                  <span className="mt-0.5 text-[10px] opacity-85">
+                    {intervalPreviews[btn.grade]}
+                  </span>
+                </button>
+              ))}
             </div>
-          )}
-        </CardContent>
-      </Card>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

@@ -13,6 +13,7 @@ export interface LessonSummary {
   title_ru: string;
   grammar_tip_ru: string | null;
   exercises_count: number;
+  preview_words: string[];
   is_completed: boolean;
   best_score: number | null;
 }
@@ -62,6 +63,7 @@ export async function getPublishedUnitsWithLessons(): Promise<
         { data: units, error: unitsError },
         { data: lessons, error: lessonsError },
         { data: exercises, error: exercisesError },
+        { data: wordsRows },
         {
           data: { user },
         },
@@ -78,10 +80,19 @@ export async function getPublishedUnitsWithLessons(): Promise<
           .order('order_index', { ascending: true }),
         supabase
           .from('exercises')
-          .select('id, lesson_id')
+          .select('id, lesson_id, type, word_id, payload')
+          .eq('status', 'published')
+          .order('order_index', { ascending: true }),
+        supabase
+          .from('words')
+          .select('id, lemma_lez')
           .eq('status', 'published'),
         supabase.auth.getUser(),
       ]);
+
+      const wordLemmaById = new Map(
+        (wordsRows ?? []).map((w) => [w.id, w.lemma_lez])
+      );
 
       const progressByLessonId = new Map<
         string,
@@ -107,9 +118,34 @@ export async function getPublishedUnitsWithLessons(): Promise<
           const unitLessons = (lessons ?? [])
             .filter((l) => l.unit_id === u.id)
             .map((l) => {
-              const exCount = (exercises ?? []).filter(
+              const lessonEx = (exercises ?? []).filter(
                 (ex) => ex.lesson_id === l.id
-              ).length;
+              );
+              const previewSet = new Set<string>();
+              for (const ex of lessonEx) {
+                if (ex.word_id) {
+                  const lemma = wordLemmaById.get(ex.word_id);
+                  if (lemma) previewSet.add(lemma);
+                }
+                if (
+                  ex.type === 'matching' &&
+                  ex.payload &&
+                  typeof ex.payload === 'object' &&
+                  'pairs' in ex.payload &&
+                  Array.isArray(ex.payload.pairs)
+                ) {
+                  for (const pair of ex.payload.pairs) {
+                    if (
+                      pair &&
+                      typeof pair === 'object' &&
+                      'left' in pair &&
+                      typeof pair.left === 'string'
+                    ) {
+                      previewSet.add(pair.left);
+                    }
+                  }
+                }
+              }
               const prog = progressByLessonId.get(l.id);
               return {
                 id: l.id,
@@ -117,7 +153,8 @@ export async function getPublishedUnitsWithLessons(): Promise<
                 order_index: l.order_index,
                 title_ru: l.title_ru,
                 grammar_tip_ru: l.grammar_tip_ru,
-                exercises_count: exCount || 3,
+                exercises_count: lessonEx.length || 6,
+                preview_words: Array.from(previewSet).slice(0, 4),
                 is_completed: prog?.status === 'completed',
                 best_score: prog?.score ?? null,
               };
@@ -148,16 +185,31 @@ export async function getPublishedUnitsWithLessons(): Promise<
     const unitLessons = bundle.lessons
       .filter((l) => l.unit_slug === unit.slug && l.status === 'published')
       .sort((a, b) => a.order_index - b.order_index)
-      .map((l) => ({
-        slug: l.slug,
-        order_index: l.order_index,
-        title_ru: l.title_ru,
-        grammar_tip_ru: l.grammar_tip_ru ?? null,
-        exercises_count: l.exercises.filter((e) => e.status === 'published')
-          .length,
-        is_completed: false,
-        best_score: null,
-      }));
+      .map((l) => {
+        const previewSet = new Set<string>();
+        const publishedEx = l.exercises.filter((e) => e.status === 'published');
+        for (const ex of publishedEx) {
+          if (ex.word_slug) {
+            const w = bundle.words.find((word) => word.slug === ex.word_slug);
+            if (w) previewSet.add(w.lemma_lez);
+          }
+          if (ex.type === 'matching') {
+            for (const p of ex.payload.pairs) {
+              previewSet.add(p.left);
+            }
+          }
+        }
+        return {
+          slug: l.slug,
+          order_index: l.order_index,
+          title_ru: l.title_ru,
+          grammar_tip_ru: l.grammar_tip_ru ?? null,
+          exercises_count: publishedEx.length,
+          preview_words: Array.from(previewSet).slice(0, 4),
+          is_completed: false,
+          best_score: null,
+        };
+      });
 
     return {
       slug: unit.slug,

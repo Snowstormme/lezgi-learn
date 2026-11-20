@@ -5,32 +5,43 @@
 @layer base {
   :root,
   .dark {
-    /* Midnight Navy + Cloud White + Vermillion Palette */
+    /* Variant A: Midnight Navy + Cloud White + Vermillion (Flat Editorial System) */
     --background: 225 59% 11%;        /* #0B132B Midnight Navy */
     --foreground: 210 40% 98%;        /* #F8FAFC Cloud White */
-    --card: 223 48% 16%;              /* #16213E Deep Navy Surface */
+    --card: 223 51% 16%;              /* #141F3D Elevated Navy */
     --card-foreground: 210 40% 98%;   /* #F8FAFC Cloud White */
-    --primary: 6 86% 57%;             /* #F04E37 Vermillion */
+    --primary: 7 86% 58%;             /* #F04E37 Vermillion */
     --primary-foreground: 210 40% 98%;/* #F8FAFC Cloud White */
-    --secondary: 221 44% 19%;         /* #1B2845 Elevated Navy */
+    --secondary: 222 44% 20%;         /* #1C2A4F Interactive Navy */
     --secondary-foreground: 210 40% 98%;
-    --muted: 223 39% 25%;             /* #273659 Muted Navy */
-    --muted-foreground: 214 28% 72%;  /* #A3B5CC Soft Cloud */
-    --accent: 210 40% 98%;            /* #F8FAFC Cloud White Accent */
+    --muted: 222 39% 25%;             /* #26365D Subtle Track */
+    --muted-foreground: 214 32% 80%;  /* #BCCCE0 High-Contrast Slate */
+    --accent: 210 40% 98%;            /* #F8FAFC Cloud White */
     --accent-foreground: 225 59% 11%; /* #0B132B Midnight Navy */
-    --destructive: 0 84% 58%;         /* #EE3F3F Alert Red */
+    --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
-    --border: 223 39% 28%;            /* #2B3B63 Navy Border */
-    --input: 223 39% 28%;
-    --ring: 6 86% 57%;                /* Vermillion focus ring */
-    --radius: 1rem;
+    --border: 223 39% 26%;            /* #273862 Hairline Navy */
+    --input: 223 39% 26%;
+    --ring: 7 86% 58%;
+    --radius: 0.75rem;
   }
 
   * {
     @apply border-border;
+    font-style: normal;
   }
 
   body {
-    @apply bg-background text-foreground antialiased selection:bg-primary/30 selection:text-foreground;
+    @apply bg-background font-mono text-foreground antialiased selection:bg-primary/30 selection:text-foreground;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
   }
 }
