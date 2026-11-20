@@ -1,11 +1,40 @@
 'use server';
 
+import { cookies } from 'next/headers';
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { isSupabaseConfigured } from '@/lib/env';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import type { ActionResult } from '@/features/shared/types';
 import { createInitialSrsCardState } from './fsrs';
+import {
+  GUEST_COMPLETED_COOKIE,
+  mergeGuestProgress,
+  parseGuestProgressCookie,
+} from './progression';
+
+async function saveGuestLessonCompletion(
+  lessonSlug: string,
+  score: number
+): Promise<number> {
+  const cookieStore = await cookies();
+  const current = parseGuestProgressCookie(
+    cookieStore.get(GUEST_COMPLETED_COOKIE)?.value
+  );
+  const updated = mergeGuestProgress(current, lessonSlug, score);
+
+  cookieStore.set(GUEST_COMPLETED_COOKIE, JSON.stringify(updated), {
+    httpOnly: true,
+    sameSite: 'lax',
+    path: '/',
+    maxAge: 60 * 60 * 24 * 30,
+  });
+
+  revalidatePath('/learn');
+  revalidatePath('/[locale]/(main)/learn', 'page');
+
+  return updated[lessonSlug] ?? score;
+}
 
 const completeLessonSchema = z.object({
   lessonSlug: z.string().min(2).max(80),
@@ -33,12 +62,16 @@ export async function completeLessonAction(
   const xpEarned = Math.max(5, Math.round(parsed.data.score * 0.15));
 
   if (!isSupabaseConfigured()) {
+    const bestScore = await saveGuestLessonCompletion(
+      parsed.data.lessonSlug,
+      parsed.data.score
+    );
     return {
       ok: true,
       data: {
         savedToAccount: false,
         xpEarned,
-        bestScore: parsed.data.score,
+        bestScore,
       },
     };
   }
@@ -49,12 +82,16 @@ export async function completeLessonAction(
   } = await supabase.auth.getUser();
 
   if (!user) {
+    const bestScore = await saveGuestLessonCompletion(
+      parsed.data.lessonSlug,
+      parsed.data.score
+    );
     return {
       ok: true,
       data: {
         savedToAccount: false,
         xpEarned,
-        bestScore: parsed.data.score,
+        bestScore,
       },
     };
   }
@@ -160,6 +197,7 @@ export async function completeLessonAction(
   }
 
   revalidatePath('/learn');
+  revalidatePath('/[locale]/(main)/learn', 'page');
   revalidatePath('/profile');
 
   return {

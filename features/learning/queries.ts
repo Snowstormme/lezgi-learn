@@ -1,3 +1,4 @@
+import { cookies } from 'next/headers';
 import { isSupabaseConfigured } from '@/lib/env';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { loadAndValidateContentBundle } from '@/content/loader';
@@ -5,6 +6,12 @@ import {
   exerciseSeedSchema,
   type ExerciseSeed,
 } from '@/content/schema';
+import {
+  applySequentialUnlockAcrossUnits,
+  GUEST_COMPLETED_COOKIE,
+  parseGuestProgressCookie,
+  type GuestProgressMap,
+} from './progression';
 
 export interface LessonSummary {
   id?: string;
@@ -14,7 +21,26 @@ export interface LessonSummary {
   grammar_tip_ru: string | null;
   exercises_count: number;
   is_completed: boolean;
+  is_unlocked: boolean;
   best_score: number | null;
+}
+
+export interface LessonAccessStatus {
+  exists: boolean;
+  isUnlocked: boolean;
+  activeLessonSlug: string | null;
+  previousLessonTitle: string | null;
+}
+
+async function readGuestProgressSafe(): Promise<GuestProgressMap> {
+  try {
+    const cookieStore = await cookies();
+    return parseGuestProgressCookie(
+      cookieStore.get(GUEST_COMPLETED_COOKIE)?.value
+    );
+  } catch {
+    return {};
+  }
 }
 
 export interface UnitWithLessons {
@@ -103,7 +129,8 @@ export async function getPublishedUnitsWithLessons(): Promise<
       }
 
       if (!unitsError && !lessonsError && !exercisesError && units?.length) {
-        return units.map((u) => {
+        const guestProgress = user ? {} : await readGuestProgressSafe();
+        const rawUnits = units.map((u) => {
           const unitLessons = (lessons ?? [])
             .filter((l) => l.unit_id === u.id)
             .map((l) => {
@@ -111,6 +138,9 @@ export async function getPublishedUnitsWithLessons(): Promise<
                 (ex) => ex.lesson_id === l.id
               ).length;
               const prog = progressByLessonId.get(l.id);
+              const guestScore = user ? undefined : guestProgress[l.slug];
+              const isCompleted =
+                prog?.status === 'completed' || guestScore !== undefined;
               return {
                 id: l.id,
                 slug: l.slug,
@@ -118,8 +148,8 @@ export async function getPublishedUnitsWithLessons(): Promise<
                 title_ru: l.title_ru,
                 grammar_tip_ru: l.grammar_tip_ru,
                 exercises_count: exCount || 3,
-                is_completed: prog?.status === 'completed',
-                best_score: prog?.score ?? null,
+                is_completed: isCompleted,
+                best_score: prog?.score ?? guestScore ?? null,
               };
             });
 
@@ -128,11 +158,13 @@ export async function getPublishedUnitsWithLessons(): Promise<
             order_index: u.order_index,
             title_ru: u.title_ru,
             description_ru: u.description_ru,
-            source: 'supabase',
+            source: 'supabase' as const,
             lessons: unitLessons,
             completed_count: unitLessons.filter((l) => l.is_completed).length,
           };
         });
+
+        return applySequentialUnlockAcrossUnits(rawUnits);
       }
     } catch {
       // Fallback to local content bundle
@@ -140,35 +172,72 @@ export async function getPublishedUnitsWithLessons(): Promise<
   }
 
   const bundle = loadAndValidateContentBundle();
+  const guestProgress = await readGuestProgressSafe();
   const publishedUnits = bundle.units
     .filter((u) => u.status === 'published')
     .sort((a, b) => a.order_index - b.order_index);
 
-  return publishedUnits.map((unit) => {
+  const fallbackUnits = publishedUnits.map((unit) => {
     const unitLessons = bundle.lessons
       .filter((l) => l.unit_slug === unit.slug && l.status === 'published')
       .sort((a, b) => a.order_index - b.order_index)
-      .map((l) => ({
-        slug: l.slug,
-        order_index: l.order_index,
-        title_ru: l.title_ru,
-        grammar_tip_ru: l.grammar_tip_ru ?? null,
-        exercises_count: l.exercises.filter((e) => e.status === 'published')
-          .length,
-        is_completed: false,
-        best_score: null,
-      }));
+      .map((l) => {
+        const guestScore = guestProgress[l.slug];
+        return {
+          slug: l.slug,
+          order_index: l.order_index,
+          title_ru: l.title_ru,
+          grammar_tip_ru: l.grammar_tip_ru ?? null,
+          exercises_count: l.exercises.filter((e) => e.status === 'published')
+            .length,
+          is_completed: guestScore !== undefined,
+          best_score: guestScore ?? null,
+        };
+      });
 
     return {
       slug: unit.slug,
       order_index: unit.order_index,
       title_ru: unit.title_ru,
       description_ru: unit.description_ru ?? null,
-      source: 'local-seed-preview',
+      source: 'local-seed-preview' as const,
       lessons: unitLessons,
-      completed_count: 0,
+      completed_count: unitLessons.filter((l) => l.is_completed).length,
     };
   });
+
+  return applySequentialUnlockAcrossUnits(fallbackUnits);
+}
+
+export async function getLessonAccessStatus(
+  slug: string
+): Promise<LessonAccessStatus> {
+  const units = await getPublishedUnitsWithLessons();
+  const orderedLessons = units.flatMap((u) => u.lessons);
+  const targetIdx = orderedLessons.findIndex((l) => l.slug === slug);
+
+  if (targetIdx === -1) {
+    return {
+      exists: false,
+      isUnlocked: false,
+      activeLessonSlug: orderedLessons[0]?.slug ?? null,
+      previousLessonTitle: null,
+    };
+  }
+
+  const target = orderedLessons[targetIdx];
+  const prev = targetIdx > 0 ? orderedLessons[targetIdx - 1] : null;
+  const active =
+    orderedLessons.find((l) => l.is_unlocked && !l.is_completed) ??
+    orderedLessons[0] ??
+    null;
+
+  return {
+    exists: true,
+    isUnlocked: target.is_unlocked,
+    activeLessonSlug: active?.slug ?? null,
+    previousLessonTitle: prev?.title_ru ?? null,
+  };
 }
 
 export async function getPublishedLessonDetail(

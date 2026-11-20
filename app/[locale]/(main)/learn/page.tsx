@@ -4,6 +4,7 @@ import {
   Check,
   Compass,
   HeartHandshake,
+  Lock,
   MessageCircle,
   Sparkles,
   Star,
@@ -47,7 +48,7 @@ export default async function UnitMapPage() {
     <div className="space-y-8 overflow-x-hidden">
       {units.map((unit) => {
         const firstIncompleteIndex = unit.lessons.findIndex(
-          (l) => !l.is_completed
+          (l) => l.is_unlocked && !l.is_completed
         );
         const activeLessonIndex =
           firstIncompleteIndex === -1 ? 0 : firstIncompleteIndex;
@@ -79,12 +80,33 @@ export default async function UnitMapPage() {
             {/* Winding Stepping-Stone Snake Path */}
             <div className="flex flex-col items-center space-y-7 py-2">
               {unit.lessons.map((lesson, idx) => {
-                const isCurrentTarget = idx === activeLessonIndex;
+                const isLocked = !lesson.is_unlocked;
+                const isCurrentTarget = !isLocked && idx === activeLessonIndex;
                 const isCompleted = lesson.is_completed;
                 const offsetClass =
                   PATH_OFFSETS[idx % PATH_OFFSETS.length] ?? 'translate-x-0';
                 const NodeIcon =
                   NODE_ICONS[idx % NODE_ICONS.length] ?? Star;
+
+                const nodeCircleClasses = cn(
+                  'flex h-[74px] w-[78px] items-center justify-center rounded-full pt-[2px] transition-all',
+                  isLocked &&
+                    'cursor-not-allowed border-2 border-b-[6px] border-[#1D2B4D] bg-[#111A33] text-[#64748B]',
+                  !isLocked && 'active:translate-y-[4px]',
+                  !isLocked &&
+                    isCompleted &&
+                    'border-2 border-b-[6px] border-[#CBD5E1] bg-[#F8FAFC] text-[#0B132B] hover:bg-white',
+                  !isLocked &&
+                    !isCompleted &&
+                    isCurrentTarget &&
+                    'border-2 border-b-[6px] border-[#B92B1C] bg-primary text-[#F8FAFC] hover:brightness-105',
+                  !isLocked &&
+                    !isCompleted &&
+                    !isCurrentTarget &&
+                    'border-2 border-b-[6px] border-border bg-card text-[#CBD5E1] hover:border-[#F8FAFC]/60 hover:text-[#F8FAFC]'
+                );
+
+                const lessonTitleText = `${lesson.order_index}. ${lesson.title_ru.split(':')[0]}`;
 
                 return (
                   <div
@@ -112,51 +134,59 @@ export default async function UnitMapPage() {
                           'border-4 border-[#F8FAFC]/35 bg-background p-2'
                       )}
                     >
-                      <Link
-                        href={`/lesson/${lesson.slug}`}
-                        className={cn(
-                          'flex h-[74px] w-[78px] items-center justify-center rounded-full pt-[2px] transition-all active:translate-y-[4px]',
-                          isCompleted &&
-                            'border-2 border-b-[6px] border-[#CBD5E1] bg-[#F8FAFC] text-[#0B132B] hover:bg-white',
-                          !isCompleted &&
-                            isCurrentTarget &&
-                            'border-2 border-b-[6px] border-[#B92B1C] bg-primary text-[#F8FAFC] hover:brightness-105',
-                          !isCompleted &&
-                            !isCurrentTarget &&
-                            'border-2 border-b-[6px] border-border bg-card text-[#CBD5E1] hover:border-[#F8FAFC]/60 hover:text-[#F8FAFC]'
-                        )}
-                      >
-                        {isCompleted ? (
-                          <Check className="h-8 w-8 stroke-[3.5] text-primary" />
-                        ) : (
-                          <NodeIcon className="h-7 w-7 stroke-[2.5]" />
-                        )}
-                      </Link>
+                      {isLocked ? (
+                        <div
+                          aria-disabled="true"
+                          title="Сначала завершите предыдущий урок"
+                          className={nodeCircleClasses}
+                        >
+                          <Lock className="h-6 w-6 stroke-[2.5]" />
+                        </div>
+                      ) : (
+                        <Link
+                          href={`/lesson/${lesson.slug}`}
+                          className={nodeCircleClasses}
+                        >
+                          {isCompleted ? (
+                            <Check className="h-8 w-8 stroke-[3.5] text-primary" />
+                          ) : (
+                            <NodeIcon className="h-7 w-7 stroke-[2.5]" />
+                          )}
+                        </Link>
+                      )}
                     </div>
 
                     {/* Balanced lesson title under node (optical center) */}
-                    <Link
-                      href={`/lesson/${lesson.slug}`}
-                      className="mt-2.5 max-w-[200px] text-center"
-                    >
-                      <p
-                        className={cn(
-                          'text-balance text-xs font-bold leading-snug',
-                          isCurrentTarget
-                            ? 'text-[#F8FAFC]'
-                            : isCompleted
-                              ? 'text-primary'
-                              : 'text-[#CBD5E1]'
-                        )}
+                    {isLocked ? (
+                      <div className="mt-2.5 max-w-[200px] text-center">
+                        <p className="text-balance text-xs font-bold leading-snug text-[#64748B]">
+                          {lessonTitleText}
+                        </p>
+                      </div>
+                    ) : (
+                      <Link
+                        href={`/lesson/${lesson.slug}`}
+                        className="mt-2.5 max-w-[200px] text-center"
                       >
-                        {lesson.order_index}. {lesson.title_ru.split(':')[0]}
-                      </p>
-                      {lesson.best_score !== null && (
-                        <span className="mt-1 inline-block text-[11px] font-extrabold text-primary">
-                          ★ {lesson.best_score}%
-                        </span>
-                      )}
-                    </Link>
+                        <p
+                          className={cn(
+                            'text-balance text-xs font-bold leading-snug',
+                            isCurrentTarget
+                              ? 'text-[#F8FAFC]'
+                              : isCompleted
+                                ? 'text-primary'
+                                : 'text-[#CBD5E1]'
+                          )}
+                        >
+                          {lessonTitleText}
+                        </p>
+                        {lesson.best_score !== null && (
+                          <span className="mt-1 inline-block text-[11px] font-extrabold text-primary">
+                            ★ {lesson.best_score}%
+                          </span>
+                        )}
+                      </Link>
+                    )}
                   </div>
                 );
               })}
