@@ -58,51 +58,51 @@ export function MobileShell({
       <header className="sticky top-0 z-20 flex h-16 items-center justify-between gap-2 border-b-2 border-border bg-background/95 px-4 backdrop-blur">
         <Link
           href="/learn"
-          className="flex shrink-0 items-center gap-2 rounded-xl py-1 transition-transform active:scale-95"
+          className="flex shrink-0 items-center gap-2.5 rounded-xl py-1 transition-transform active:scale-95"
         >
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl border-b-4 border-[#B92B1C] bg-primary text-xs font-black text-[#F8FAFC]">
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl border-b-4 border-[#B92B1C] bg-primary pt-[1px] text-xs font-extrabold tracking-tighter text-[#F8FAFC]">
             ЛӀ
           </span>
-          <span className="text-sm font-black uppercase tracking-wider text-[#F8FAFC]">
+          <span className="text-sm font-extrabold uppercase tracking-wider text-[#F8FAFC]">
             Лезги
           </span>
         </Link>
 
         <div className="flex shrink-0 items-center gap-3.5">
           <div
-            className="flex items-center gap-1 text-sm font-black text-primary"
+            className="flex items-center gap-1.5 text-sm font-extrabold text-primary"
             title="Ударный режим (дней подряд)"
           >
-            <Flame className="h-5 w-5 fill-primary text-primary" />
-            <span>{streakDays}</span>
+            <Flame className="h-[18px] w-[18px] -translate-y-[0.5px] fill-primary text-primary" />
+            <span className="tabular-nums">{streakDays}</span>
           </div>
 
           <div
-            className="flex items-center gap-1 text-sm font-black text-[#F8FAFC]"
+            className="flex items-center gap-1 text-sm font-extrabold text-[#F8FAFC]"
             title="Очки опыта (XP)"
           >
-            <Zap className="h-5 w-5 fill-[#FFC800] text-[#FFC800]" />
-            <span>{xp}</span>
+            <Zap className="h-[18px] w-[18px] -translate-y-[0.5px] fill-[#FFC800] text-[#FFC800]" />
+            <span className="tabular-nums">{xp}</span>
           </div>
         </div>
 
         <Link
           href={isAuthenticated ? '/profile' : '/login'}
           className={cn(
-            'flex h-10 shrink-0 items-center gap-1.5 rounded-xl border-2 border-b-4 px-3 text-xs font-extrabold uppercase tracking-wide transition-all active:translate-y-[1px] active:border-b-2',
+            'flex h-10 shrink-0 items-center gap-1.5 rounded-xl border-2 border-b-4 px-3 pt-[1px] text-xs font-extrabold uppercase tracking-wide transition-all active:translate-y-[1px] active:border-b-2',
             isAuthenticated
               ? 'border-border bg-card text-[#F8FAFC]'
               : 'border-[#CBD5E1] bg-[#F8FAFC] text-[#0B132B]'
           )}
         >
-          <User className="h-4 w-4 shrink-0" />
+          <User className="h-4 w-4 shrink-0 -translate-y-[0.5px]" />
           <span className="max-w-[96px] truncate">
             {isAuthenticated ? (displayName ?? 'Профиль') : 'Войти'}
           </span>
         </Link>
       </header>
 
-      <main className="flex-1 px-4 py-5 pb-28">{children}</main>
+      <main className="flex-1 px-4 py-6 pb-28">{children}</main>
 
       {/* Bottom Tab Bar (5 equal-width tactile tabs) */}
       <nav className="fixed bottom-0 left-1/2 z-20 grid h-20 w-full max-w-md -translate-x-1/2 grid-cols-5 items-center gap-1 border-x-2 border-t-2 border-border bg-background px-2">

@@ -28,7 +28,6 @@ import { AudioPlayerButton } from '@/features/shared/components/audio-player-but
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
 
 const QUICK_EXAMPLES_RU = [
   'Я учу лезгинский язык.',
@@ -151,11 +150,11 @@ export function TranslatorWorkspace({
       <Card className="border-border/90">
         <CardHeader className="space-y-3 pb-3">
           <div className="flex items-center justify-between gap-2">
-            <Badge variant="secondary">
+            <span className="text-xs font-extrabold uppercase tracking-wider text-[#F8FAFC]">
               {direction === 'ru_to_lez'
                 ? 'Русский → Лезгинский'
                 : 'Лезгинский → Русский'}
-            </Badge>
+            </span>
 
             <Button
               type="button"
@@ -164,7 +163,7 @@ export function TranslatorWorkspace({
               onClick={handleToggleDirection}
             >
               <ArrowLeftRight className="h-3.5 w-3.5" />
-              <span>Сменить направление</span>
+              <span>Поменять</span>
             </Button>
           </div>
 
@@ -235,19 +234,15 @@ export function TranslatorWorkspace({
           <CardHeader className="space-y-2 pb-3">
             <div className="flex items-center justify-between gap-2">
               {result.isVerified ? (
-                <Badge variant="verified">
-                  <ShieldCheck className="h-3.5 w-3.5" />
-                  <span>
-                    {result.matchTier === 'verified_phrase'
-                      ? 'Проверено носителем'
-                      : 'Из проверенного словаря'}
-                  </span>
-                </Badge>
+                <span className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-emerald-300">
+                  <ShieldCheck className="h-4 w-4" />
+                  <span>Проверено носителем</span>
+                </span>
               ) : (
-                <Badge variant="warning">
-                  <AlertTriangle className="h-3.5 w-3.5" />
-                  <span>Черновик • Требует проверки</span>
-                </Badge>
+                <span className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-primary">
+                  <AlertTriangle className="h-4 w-4" />
+                  <span>Черновик · требует проверки</span>
+                </span>
               )}
 
               <AudioPlayerButton
@@ -416,50 +411,49 @@ export function TranslatorWorkspace({
       )}
 
       {/* Moderation Queue Section */}
-      <Card className="border-border/80">
+      <Card className="border-border">
         <CardHeader className="pb-2.5">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-sm">
-              Очередь модерации переводов
-            </CardTitle>
-            <Badge variant="outline">
-              {isReviewerOrAdmin ? `Роль: ${userRole}` : 'Только чтение своих'}
-            </Badge>
-          </div>
-          <p className="text-xs font-bold text-muted-foreground">
+          <CardTitle className="text-sm font-extrabold text-[#F8FAFC]">
+            Очередь модерации переводов
+          </CardTitle>
+          <p className="text-xs font-bold text-[#CBD5E1]">
             Предложенные пользователями переводы проходят проверку носителями языка перед публикацией.
           </p>
         </CardHeader>
 
-        <CardContent className="space-y-2.5 text-xs">
+        <CardContent className="space-y-3 text-xs">
           {!isAuthenticated ? (
-            <p className="text-muted-foreground">
+            <p className="text-[#CBD5E1]">
               Войдите в аккаунт, чтобы предлагать переводы и отслеживать статус
               модерации.
             </p>
           ) : initialSuggestions.length === 0 ? (
-            <p className="text-muted-foreground">
+            <p className="text-[#CBD5E1]">
               Пока нет отправленных предложений.
             </p>
           ) : (
             initialSuggestions.map((item) => (
               <div
                 key={item.id}
-                className="space-y-2 rounded-xl border border-border bg-background/60 p-3"
+                className="space-y-2 rounded-xl border border-border bg-background/70 p-3.5"
               >
-                <div className="flex items-center justify-between">
-                  <Badge
-                    variant={
+                <div className="flex items-center justify-between text-[11px] font-bold">
+                  <span
+                    className={
                       item.status === 'published'
-                        ? 'verified'
-                        : item.status === 'pending_review'
-                          ? 'warning'
-                          : 'secondary'
+                        ? 'text-emerald-300'
+                        : item.status === 'rejected'
+                          ? 'text-primary'
+                          : 'text-[#CBD5E1]'
                     }
                   >
-                    {item.status}
-                  </Badge>
-                  <span className="text-[10px] text-muted-foreground">
+                    {item.status === 'published'
+                      ? 'Одобрено'
+                      : item.status === 'rejected'
+                        ? 'Отклонено'
+                        : 'На проверке'}
+                  </span>
+                  <span className="text-[#CBD5E1]">
                     {new Date(item.created_at).toLocaleDateString('ru-RU')}
                   </span>
                 </div>

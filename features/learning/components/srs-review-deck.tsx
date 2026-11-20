@@ -19,7 +19,6 @@ import { AudioPlayerButton } from '@/features/shared/components/audio-player-but
 import { LessonProgressBar } from '@/components/ui/progress-bar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
 interface SrsReviewDeckProps {
@@ -74,16 +73,16 @@ export function SrsReviewDeck({
 
   if (!currentCard) {
     return (
-      <Card className="border-primary/30 bg-gradient-to-b from-primary/10 via-card to-card">
+      <Card className="border-primary/50 bg-card">
         <CardHeader className="text-center">
-          <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary text-primary-foreground">
+          <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-2xl border-b-4 border-[#B92B1C] bg-primary text-[#F8FAFC]">
             <CheckCircle2 className="h-6 w-6" />
           </div>
-          <CardTitle className="text-lg">
-            Сессия повторения завершена!
+          <CardTitle className="text-lg font-extrabold text-[#F8FAFC]">
+            Повторение завершено!
           </CardTitle>
-          <p className="text-xs text-muted-foreground">
-            Повторено карточек по алгоритму FSRS: {reviewedCount}
+          <p className="text-xs font-bold text-[#CBD5E1]">
+            Пройдено карточек: {reviewedCount}
           </p>
         </CardHeader>
         <CardContent className="space-y-3">
@@ -170,7 +169,9 @@ export function SrsReviewDeck({
       <Card className="min-h-64 border-border/90">
         <CardHeader className="space-y-3 pb-3">
           <div className="flex items-center justify-between">
-            <Badge variant="verified">Повторение: {currentCard.cardState.reps}</Badge>
+            <span className="text-xs font-bold uppercase tracking-wider text-[#CBD5E1]">
+              {currentCard.part_of_speech ?? 'слово'}
+            </span>
             <AudioPlayerButton
               textLez={currentCard.lemma_lez}
               transcriptionRu={currentCard.transcription_ru}

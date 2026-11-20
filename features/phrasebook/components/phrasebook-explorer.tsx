@@ -7,7 +7,6 @@ import { normalizeLezgiInputForComparison } from '@/lib/lezgi-utils';
 import { AudioPlayerButton } from '@/features/shared/components/audio-player-button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
 const CATEGORIES = [
@@ -96,18 +95,18 @@ export function PhrasebookExplorer({ phrases }: PhrasebookExplorerProps) {
         })}
       </div>
 
-      <p className="text-xs text-muted-foreground">
-        Проверенных фраз: {filtered.length}
+      <p className="text-xs font-semibold text-[#CBD5E1]">
+        Фраз: {filtered.length}
       </p>
 
-      <div className="space-y-3">
+      <div className="space-y-3.5">
         {filtered.map((item) => (
           <Card key={item.slug}>
-            <CardHeader className="space-y-1.5 pb-2.5">
+            <CardHeader className="space-y-2 pb-2.5">
               <div className="flex items-center justify-between gap-2">
-                <Badge variant="verified">
+                <span className="text-xs font-extrabold uppercase tracking-wider text-primary">
                   {CATEGORY_BADGES[item.category] ?? item.category}
-                </Badge>
+                </span>
                 <AudioPlayerButton
                   textLez={item.target_lez}
                   transcriptionRu={item.transcription_ru}
@@ -116,24 +115,24 @@ export function PhrasebookExplorer({ phrases }: PhrasebookExplorerProps) {
                 />
               </div>
 
-              <CardTitle className="pt-1 text-base font-bold text-primary">
+              <CardTitle className="pt-0.5 text-base font-extrabold text-[#F8FAFC]">
                 {item.target_lez}
               </CardTitle>
 
               {item.transcription_ru && (
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs font-medium text-[#CBD5E1]">
                   [{item.transcription_ru}]
                 </p>
               )}
 
-              <p className="text-sm font-medium text-foreground">
+              <p className="text-sm font-bold text-[#F8FAFC]">
                 {item.source_ru}
               </p>
             </CardHeader>
 
             {item.context_note_ru && (
-              <CardContent className="pt-0 text-xs text-muted-foreground">
-                <div className="rounded-lg border border-border/70 bg-background/60 p-2.5">
+              <CardContent className="pt-0 text-xs text-[#CBD5E1]">
+                <div className="rounded-xl border border-border bg-background/70 p-3 leading-relaxed">
                   {item.context_note_ru}
                 </div>
               </CardContent>

@@ -7,7 +7,6 @@ import type { DictionaryWordItem } from '@/features/dictionary/queries';
 import { normalizeLezgiInputForComparison } from '@/lib/lezgi-utils';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { ReportMistakeTrigger } from '@/features/shared/components/report-mistake-trigger';
 import { AudioPlayerButton } from '@/features/shared/components/audio-player-button';
 import { cn } from '@/lib/utils';
@@ -115,57 +114,55 @@ export function DictionaryExplorer({ words }: DictionaryExplorerProps) {
         })}
       </div>
 
-      <div className="flex items-center justify-between text-xs text-muted-foreground">
+      <div className="flex items-center justify-between text-xs font-semibold text-[#CBD5E1]">
         <span>{t('foundCount', { count: filteredWords.length })}</span>
-        <span className="font-mono text-[11px]">Ӏ = 1 / I</span>
+        <span className="text-[11px]">1 / I → Ӏ</span>
       </div>
 
       {/* Word cards */}
       {filteredWords.length === 0 ? (
         <Card>
-          <CardContent className="py-8 text-center text-xs text-muted-foreground">
+          <CardContent className="py-8 text-center text-xs font-semibold text-[#CBD5E1]">
             {t('emptyResults')}
           </CardContent>
         </Card>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-3.5">
           {filteredWords.map((word) => (
             <Card key={word.slug} className="overflow-hidden">
               <CardHeader className="pb-2.5">
                 <div className="flex items-start justify-between gap-2">
-                  <div className="space-y-0.5">
-                    <div className="flex items-baseline gap-2">
-                      <CardTitle className="text-xl font-bold text-primary">
+                  <div className="space-y-1">
+                    <div className="flex flex-wrap items-baseline gap-2">
+                      <CardTitle className="text-xl font-extrabold text-primary">
                         {word.lemma_lez}
                       </CardTitle>
                       {word.transcription_ru && (
-                        <span className="text-xs text-muted-foreground">
+                        <span className="text-xs font-medium text-[#CBD5E1]">
                           [{word.transcription_ru}]
                         </span>
                       )}
+                      {word.part_of_speech && (
+                        <span className="text-xs font-bold text-[#CBD5E1]">
+                          · {POS_LABELS[word.part_of_speech] ?? word.part_of_speech}
+                        </span>
+                      )}
                     </div>
-                    <p className="text-sm font-semibold text-foreground">
+                    <p className="text-sm font-bold text-[#F8FAFC]">
                       {word.translation_ru}
                     </p>
                   </div>
 
-                  <div className="flex flex-col items-end gap-1.5">
-                    {word.part_of_speech && (
-                      <Badge variant="secondary">
-                        {POS_LABELS[word.part_of_speech] ?? word.part_of_speech}
-                      </Badge>
-                    )}
-                    <AudioPlayerButton
-                      textLez={word.lemma_lez}
-                      transcriptionRu={word.transcription_ru}
-                      audioPath={word.audio_path}
-                      audioStatus={word.audio_status}
-                    />
-                  </div>
+                  <AudioPlayerButton
+                    textLez={word.lemma_lez}
+                    transcriptionRu={word.transcription_ru}
+                    audioPath={word.audio_path}
+                    audioStatus={word.audio_status}
+                  />
                 </div>
               </CardHeader>
 
-              <CardContent className="space-y-2.5 text-xs text-muted-foreground">
+              <CardContent className="space-y-3 text-xs text-[#CBD5E1]">
                 {word.grammar_notes_ru && (
                   <p className="leading-relaxed">{word.grammar_notes_ru}</p>
                 )}

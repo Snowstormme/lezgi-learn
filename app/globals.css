@@ -5,7 +5,7 @@
 @layer base {
   :root,
   .dark {
-    /* Midnight Navy + Cloud White + Vermillion Palette */
+    /* Midnight Navy + Cloud White + Vermillion Design System */
     --background: 225 59% 11%;        /* #0B132B Midnight Navy */
     --foreground: 210 40% 98%;        /* #F8FAFC Cloud White */
     --card: 223 48% 16%;              /* #16213E Deep Navy Surface */
@@ -15,22 +15,33 @@
     --secondary: 221 44% 19%;         /* #1B2845 Elevated Navy */
     --secondary-foreground: 210 40% 98%;
     --muted: 223 39% 25%;             /* #273659 Muted Navy */
-    --muted-foreground: 214 28% 72%;  /* #A3B5CC Soft Cloud */
+    --muted-foreground: 214 32% 82%;  /* #C1D0E4 High-Contrast Slate */
     --accent: 210 40% 98%;            /* #F8FAFC Cloud White Accent */
     --accent-foreground: 225 59% 11%; /* #0B132B Midnight Navy */
     --destructive: 0 84% 58%;         /* #EE3F3F Alert Red */
     --destructive-foreground: 210 40% 98%;
     --border: 223 39% 28%;            /* #2B3B63 Navy Border */
     --input: 223 39% 28%;
-    --ring: 6 86% 57%;                /* Vermillion focus ring */
+    --ring: 6 86% 57%;
     --radius: 1rem;
   }
 
   * {
     @apply border-border;
+    font-style: normal;
   }
 
   body {
-    @apply bg-background text-foreground antialiased selection:bg-primary/30 selection:text-foreground;
+    @apply bg-background font-mono text-foreground antialiased selection:bg-primary/30 selection:text-foreground;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
   }
 }

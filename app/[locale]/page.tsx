@@ -24,39 +24,36 @@ export default async function StartScreenPage() {
       {/* Top logo bar */}
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl border-b-4 border-[#B92B1C] bg-primary text-base font-black text-[#F8FAFC]">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl border-b-4 border-[#B92B1C] bg-primary pt-[1px] text-sm font-extrabold tracking-tighter text-[#F8FAFC]">
             ЛӀ
           </div>
-          <span className="text-xl font-black tracking-tight text-[#F8FAFC]">
+          <span className="text-lg font-extrabold tracking-tight text-[#F8FAFC]">
             lezgi <span className="text-primary">learn</span>
           </span>
         </div>
 
         <Link
           href="/dictionary"
-          className="flex h-10 items-center rounded-xl border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC] px-3.5 text-xs font-black uppercase tracking-wider text-[#0B132B] transition-all hover:bg-white active:translate-y-[2px] active:border-b-2"
+          className="flex h-10 items-center rounded-xl border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC] px-3.5 pt-[1px] text-xs font-extrabold uppercase tracking-wider text-[#0B132B] transition-all hover:bg-white active:translate-y-[2px] active:border-b-2"
         >
-          150 слов
+          Словарь
         </Link>
       </div>
 
-      {/* Center mascot emblem & hero */}
+      {/* Center emblem & hero */}
       <div className="my-auto space-y-6 py-6 text-center">
         {/* Tactile Vermillion & Cloud White Emblem */}
-        <div className="mx-auto flex h-36 w-40 flex-col items-center justify-center rounded-3xl border-2 border-b-[6px] border-[#B92B1C] bg-primary px-4 text-[#F8FAFC]">
-          <span className="text-4xl font-black leading-none tracking-tight">
+        <div className="mx-auto flex h-32 w-40 flex-col items-center justify-center rounded-3xl border-2 border-b-[6px] border-[#B92B1C] bg-primary px-4 pt-[2px] text-[#F8FAFC]">
+          <span className="text-3xl font-extrabold leading-none tracking-tight">
             Салам!
-          </span>
-          <span className="mt-2.5 rounded-xl bg-[#0B132B]/25 px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-[#F8FAFC]">
-            Лезги чӀал
           </span>
         </div>
 
         <div className="space-y-3">
-          <h1 className="text-3xl font-black leading-tight tracking-tight text-[#F8FAFC]">
+          <h1 className="text-balance text-2xl font-extrabold leading-[1.2] tracking-tight text-[#F8FAFC]">
             Учи лезгинский язык шаг за шагом!
           </h1>
-          <p className="mx-auto max-w-xs text-base font-bold text-muted-foreground">
+          <p className="mx-auto max-w-xs text-pretty text-sm font-semibold leading-relaxed text-[#CBD5E1]">
             Короткие игровые уроки, умное повторение слов и живой словарь,
             проверенный носителями.
           </p>

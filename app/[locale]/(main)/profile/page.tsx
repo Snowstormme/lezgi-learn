@@ -4,7 +4,6 @@ import { signOutAction } from '@/features/auth/actions';
 import { Link } from '@/lib/i18n/routing';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 
 export default async function ProfilePage() {
   const tProfile = await getTranslations('profile');
@@ -13,18 +12,17 @@ export default async function ProfilePage() {
 
   return (
     <div className="space-y-5">
-      <h1 className="text-2xl font-black tracking-tight">{tProfile('title')}</h1>
+      <h1 className="text-2xl font-black tracking-tight text-[#F8FAFC]">
+        {tProfile('title')}
+      </h1>
 
       {session.isAuthenticated ? (
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-between gap-2">
-              <CardTitle className="text-lg font-black">
-                {session.displayName}
-              </CardTitle>
-              <Badge variant="default">{session.role}</Badge>
-            </div>
-            <p className="text-xs font-bold text-muted-foreground">
+            <CardTitle className="text-lg font-black text-[#F8FAFC]">
+              {session.displayName}
+            </CardTitle>
+            <p className="text-xs font-bold text-[#CBD5E1]">
               {session.email}
             </p>
           </CardHeader>
