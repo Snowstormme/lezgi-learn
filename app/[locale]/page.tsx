@@ -1,13 +1,5 @@
-import {
-  Flame,
-  ShieldCheck,
-  Volume2,
-} from 'lucide-react';
 import { Link } from '@/lib/i18n/routing';
 import { buildPageMetadata, getSiteUrl } from '@/lib/seo';
-import { getPublishedDictionaryWords } from '@/features/dictionary/queries';
-import { getCurrentUserSession } from '@/features/profile/queries';
-import { AudioPlayerButton } from '@/features/shared/components/audio-player-button';
 
 export const metadata = buildPageMetadata({
   title: 'Lezgi Learn — Изучение лезгинского языка онлайн бесплатно',
@@ -22,17 +14,7 @@ export const metadata = buildPageMetadata({
   ],
 });
 
-export default async function StartScreenPage() {
-  const [words, session] = await Promise.all([
-    getPublishedDictionaryWords(),
-    getCurrentUserSession(),
-  ]);
-
-  const featuredWord =
-    words.find((w) => w.slug === 'salam') ??
-    words.find((w) => w.slug === 'chal') ??
-    words[0];
-
+export default function StartScreenPage() {
   const siteUrl = getSiteUrl();
   const websiteJsonLd = {
     '@context': 'https://schema.org',
@@ -45,118 +27,125 @@ export default async function StartScreenPage() {
   };
 
   return (
-    <div className="mx-auto flex min-h-dvh max-w-md flex-col justify-between border-x-2 border-border bg-background px-6 py-8">
+    <main className="relative mx-auto flex min-h-dvh max-w-md flex-col items-center justify-center overflow-hidden border-x-2 border-[#16213E] bg-[#080E22] px-6 py-12 select-none">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
       />
-      {/* Top logo bar */}
-      <div className="flex items-center justify-between gap-3">
-        <div className="flex items-center gap-2.5">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl border-b-4 border-[#B92B1C] bg-primary pt-[1px] text-sm font-extrabold tracking-tighter text-[#F8FAFC]">
-            ЛӀ
-          </div>
-          <span className="text-lg font-extrabold tracking-tight text-[#F8FAFC]">
-            lezgi <span className="text-primary">learn</span>
-          </span>
-        </div>
 
-        <Link
-          href="/dictionary"
-          className="flex h-10 items-center rounded-xl border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC] px-3.5 pt-[1px] text-xs font-extrabold uppercase tracking-wider text-[#0B132B] transition-all hover:bg-white active:translate-y-[2px] active:border-b-2"
-        >
-          Словарь
-        </Link>
+      {/* Subtle corner carpet frame brackets */}
+      <svg
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 h-full w-full"
+        viewBox="0 0 410 912"
+        preserveAspectRatio="none"
+      >
+        <path
+          d="M24 36 H58 M24 36 V70 M386 36 H352 M386 36 V70 M24 876 H58 M24 876 V842 M386 876 H352 M386 876 V842"
+          stroke="#263859"
+          strokeWidth="1.5"
+          fill="none"
+        />
+      </svg>
+
+      {/* Top minimal title block */}
+      <div className="mb-10 space-y-2.5 text-center">
+        <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-[#94A3B8]">
+          ДРЕВНИЙ ЯЗЫК КАВКАЗА
+        </p>
+        <h1 className="text-3xl font-extrabold tracking-tight text-[#F8FAFC]">
+          Lezgi Learn
+        </h1>
       </div>
 
-      {/* Center emblem & hero */}
-      <div className="my-auto space-y-6 py-6 text-center">
-        {/* Tactile Vermillion & Cloud White Emblem */}
-        <div className="mx-auto flex h-32 w-40 flex-col items-center justify-center rounded-3xl border-2 border-b-[6px] border-[#B92B1C] bg-primary px-4 pt-[2px] text-[#F8FAFC]">
-          <span className="text-3xl font-extrabold leading-none tracking-tight">
-            Салам!
-          </span>
-        </div>
+      {/* Central Living 3D Sumag Carpet Medallion Portal */}
+      <Link
+        href="/learn"
+        aria-label="Lezgi Learn — Перейти к курсу"
+        className="group relative flex items-center justify-center rounded-full focus:outline-none"
+      >
+        <svg
+          viewBox="-185 -185 370 370"
+          className="h-[320px] w-[320px] overflow-visible transition-transform duration-300 ease-out group-hover:scale-[1.04] group-active:scale-[0.96]"
+          aria-hidden="true"
+        >
+          <defs>
+            <radialGradient id="sumagCoreGlow">
+              <stop offset="0%" stopColor="#F04E37" stopOpacity="0.34" />
+              <stop offset="55%" stopColor="#FFC800" stopOpacity="0.11" />
+              <stop offset="100%" stopColor="#080E22" stopOpacity="0" />
+            </radialGradient>
+          </defs>
 
-        <div className="space-y-3">
-          <h1 className="text-balance text-2xl font-extrabold leading-[1.2] tracking-tight text-[#F8FAFC]">
-            Учи лезгинский язык шаг за шагом!
-          </h1>
-          <p className="mx-auto max-w-xs text-pretty text-sm font-semibold leading-relaxed text-[#CBD5E1]">
-            Короткие игровые уроки, умное повторение слов и живой словарь,
-            проверенный носителями.
-          </p>
-        </div>
+          {/* Breathing ambient glow */}
+          <circle
+            cx="0"
+            cy="0"
+            r="180"
+            fill="url(#sumagCoreGlow)"
+            className="ld-sun-glow"
+          />
 
-        {/* Cloud White contrast word card */}
-        {featuredWord && (
-          <div className="mx-auto flex items-center justify-between gap-3 rounded-2xl border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC] px-4 py-3.5 text-left text-[#0B132B]">
-            <div className="min-w-0">
-              <div className="flex flex-wrap items-baseline gap-1.5">
-                <span className="text-lg font-black text-primary">
-                  {featuredWord.lemma_lez}
-                </span>
-                <span className="text-sm font-extrabold text-[#0B132B]">
-                  — {featuredWord.translation_ru}
-                </span>
-              </div>
-              {featuredWord.examples[0] && (
-                <p className="mt-0.5 text-xs font-bold text-[#334155]">
-                  «{featuredWord.examples[0].sentence_lez}» —{' '}
-                  {featuredWord.examples[0].translation_ru}
-                </p>
-              )}
-            </div>
-            <AudioPlayerButton
-              textLez={featuredWord.lemma_lez}
-              transcriptionRu={featuredWord.transcription_ru}
+          {/* Slowly rotating outer dashed geometric ring */}
+          <g className="ld-rays">
+            <circle
+              cx="0"
+              cy="0"
+              r="148"
+              fill="none"
+              stroke="#1E2D52"
+              strokeWidth="1.6"
+              strokeDasharray="6 6"
             />
-          </div>
-        )}
+          </g>
 
-        {/* 3 feature tiles */}
-        <div className="grid grid-cols-3 gap-2.5 text-center">
-          <div className="rounded-2xl border-2 border-b-4 border-border bg-card p-3">
-            <Flame className="mx-auto h-5 w-5 text-primary" />
-            <p className="mt-1.5 text-xs font-extrabold text-[#F8FAFC]">
-              10 уроков
-            </p>
-          </div>
-          <div className="rounded-2xl border-2 border-b-4 border-border bg-card p-3">
-            <ShieldCheck className="mx-auto h-5 w-5 text-[#F8FAFC]" />
-            <p className="mt-1.5 text-xs font-extrabold text-[#F8FAFC]">
-              Носители
-            </p>
-          </div>
-          <div className="rounded-2xl border-2 border-b-4 border-border bg-card p-3">
-            <Volume2 className="mx-auto h-5 w-5 text-primary" />
-            <p className="mt-1.5 text-xs font-extrabold text-[#F8FAFC]">
-              Озвучка
-            </p>
-          </div>
-        </div>
-      </div>
+          {/* 8 outer star tips */}
+          <polygon
+            points="0,-136 24,-96 96,-96 96,-24 136,0 96,24 96,96 24,96 0,136 -24,96 -96,96 -96,24 -136,0 -96,-24 -96,-96 -24,-96"
+            fill="#111C3B"
+            stroke="#3B5284"
+            strokeWidth="2"
+          />
 
-      {/* Bottom full-height 3D CTAs */}
-      <div className="space-y-3">
-        <Link
-          href="/learn"
-          className="flex min-h-[56px] w-full items-center justify-center rounded-2xl border-2 border-b-4 border-[#B92B1C] bg-primary px-6 py-3.5 text-center text-base font-black uppercase tracking-wider text-[#F8FAFC] transition-all hover:brightness-105 active:translate-y-[2px] active:border-b-2"
-        >
-          {session.isAuthenticated
-            ? `ПРОДОЛЖИТЬ (${session.displayName})`
-            : 'НАЧАТЬ ОБУЧЕНИЕ'}
-        </Link>
+          {/* Stepped Sumag Diamond Layer 1 (Navy & Gold border) */}
+          <polygon
+            points="0,-116 28,-88 48,-88 48,-68 68,-68 68,-48 88,-48 88,-28 116,0 88,28 88,48 68,48 68,68 48,68 48,88 28,88 0,116 -28,88 -48,88 -48,68 -68,68 -68,48 -88,48 -88,28 -116,0 -88,-28 -88,-48 -68,-48 -68,-68 -48,-68 -48,-88 -28,-88"
+            fill="#16244B"
+            stroke="#FFC800"
+            strokeWidth="2.2"
+          />
 
-        <Link
-          href={session.isAuthenticated ? '/profile' : '/login'}
-          className="flex min-h-[56px] w-full items-center justify-center rounded-2xl border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC] px-6 py-3.5 text-center text-sm font-black uppercase tracking-wider text-[#0B132B] transition-all hover:bg-white active:translate-y-[2px] active:border-b-2"
-        >
-          {session.isAuthenticated
-            ? 'МОЙ ПРОФИЛЬ'
-            : 'У МЕНЯ УЖЕ ЕСТЬ АККАУНТ'}
-        </Link>
-      </div>
-    </div>
+          {/* Stepped Sumag Diamond Layer 2 (Vermillion 3D base + top face) */}
+          <polygon
+            points="0,-84 84,0 0,84 -84,0"
+            fill="#B92B1C"
+            transform="translate(0, 6)"
+          />
+          <polygon
+            points="0,-84 84,0 0,84 -84,0"
+            fill="#F04E37"
+            stroke="#FF8A75"
+            strokeWidth="2"
+          />
+
+          {/* Inner Cloud White Star Core */}
+          <polygon
+            points="0,-48 16,-16 48,0 16,16 0,48 -16,16 -48,0 -16,-16"
+            fill="#F8FAFC"
+          />
+
+          {/* Center Shalbuzdag Mini Emblem */}
+          <circle cx="0" cy="-10" r="5" fill="#F04E37" />
+          <polygon points="-16,12 -3,-6 8,12" fill="#0B132B" />
+          <polygon points="-2,12 8,-2 17,12" fill="#16213E" />
+
+          {/* 4 cardinal gold latch dots */}
+          <circle cx="0" cy="-100" r="4" fill="#FFC800" />
+          <circle cx="100" cy="0" r="4" fill="#FFC800" />
+          <circle cx="0" cy="100" r="4" fill="#FFC800" />
+          <circle cx="-100" cy="0" r="4" fill="#FFC800" />
+        </svg>
+      </Link>
+    </main>
   );
 }
