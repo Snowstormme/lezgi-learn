@@ -22,7 +22,11 @@ function useUid(prefix: string) {
 export function PathDecor({ decor }: { decor: PathDecorItem }) {
   const { kind, x, y } = decor;
   return (
-    <g transform={`translate(${x}, ${y})`} className="ld-scene" aria-hidden="true">
+    <g
+      transform={`translate(${x}, ${y}) scale(1.5)`}
+      className="ld-scene"
+      aria-hidden="true"
+    >
       {kind === "campfire" ? (
         <Campfire />
       ) : kind === "watchtower" ? (
