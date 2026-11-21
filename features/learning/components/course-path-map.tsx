@@ -29,35 +29,69 @@ function ChestIcon({
 }) {
   return (
     <svg
-      viewBox="-12 -12 24 24"
+      viewBox="-14 -14 28 28"
       className={className}
       fill="none"
       aria-hidden="true"
     >
+      {/* Chest Base */}
       <rect
-        x="-9"
-        y={isOpen ? '-6.5' : '-5'}
-        width="18"
-        height="12"
+        x="-10"
+        y="-1"
+        width="20"
+        height="10.5"
         rx="2.5"
-        stroke="currentColor"
-        strokeWidth="2.2"
+        fill="#92400E"
+        stroke="#451A03"
+        strokeWidth="1.5"
       />
-      <line
-        x1="-9"
-        y1={isOpen ? '-2' : '-0.5'}
-        x2="9"
-        y2={isOpen ? '-2' : '-0.5'}
-        stroke="currentColor"
-        strokeWidth="2.2"
+      {/* Vertical Gold Straps */}
+      <rect x="-6.5" y="-1" width="2.4" height="10.5" fill="#FDE047" />
+      <rect x="4.1" y="-1" width="2.4" height="10.5" fill="#FDE047" />
+
+      {/* Chest Lid (tilted up when opened) */}
+      <path
+        d={
+          isOpen
+            ? 'M-10.5 -3.5 C-10.5 -9.5 10.5 -9.5 10.5 -3.5 Z'
+            : 'M-10.5 -1 C-10.5 -7.5 10.5 -7.5 10.5 -1 Z'
+        }
+        fill="#B45309"
+        stroke="#451A03"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
       />
+      {/* Bright Gold Lid Trim */}
+      <path
+        d={
+          isOpen
+            ? 'M-6.5 -4 V-8 M4.1 -4 V-8'
+            : 'M-6.5 -1.2 V-5.8 M4.1 -1.2 V-5.8'
+        }
+        stroke="#FEF08A"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+      />
+      {/* Open Treasure Glow */}
+      {isOpen && (
+        <ellipse cx="0" cy="-1.5" rx="7" ry="2.2" fill="#FEF9C3" />
+      )}
+      {/* Center Lock Plate */}
       <rect
-        x="-2"
-        y={isOpen ? '-3.5' : '-2.5'}
-        width="4"
-        height="5"
-        rx="0.8"
-        fill="currentColor"
+        x="-2.6"
+        y={isOpen ? '-2.2' : '-2.8'}
+        width="5.2"
+        height="5.6"
+        rx="1.2"
+        fill="#FEF08A"
+        stroke="#451A03"
+        strokeWidth="1.3"
+      />
+      <circle
+        cx="0"
+        cy={isOpen ? '0.6' : '0'}
+        r="1"
+        fill="#451A03"
       />
     </svg>
   );
@@ -475,18 +509,23 @@ export function CoursePathMap({ lessons }: CoursePathMapProps) {
                   aria-label="Сундук этапа"
                   onClick={() => handleToggleNode(item.key)}
                   className={cn(
-                    'duo-node-3d relative flex h-[58px] w-[68px] cursor-pointer items-center justify-center rounded-2xl border-2',
+                    'duo-node-3d duo-node-gold relative flex h-[58px] w-[68px] cursor-pointer items-center justify-center rounded-2xl border-2 border-[#B45309] text-[#451A03]',
                     isSelected && 'is-pressed',
-                    item.reached
-                      ? 'duo-node-completed border-[#FFC800] bg-[#16213E] text-[#FFC800]'
-                      : 'duo-node-locked border-[#1D2B4D] bg-[#111A33] text-[#64748B]'
+                    !item.reached && 'opacity-90'
                   )}
                 >
                   <span
                     aria-hidden="true"
-                    className="pointer-events-none absolute inset-x-2.5 top-1 h-2 rounded-full bg-white/[0.06]"
+                    className="duo-node-shine duo-node-shine-completed pointer-events-none absolute inset-0 overflow-hidden rounded-[14px]"
                   />
-                  <ChestIcon className="h-7 w-7" isOpen={isClaimed} />
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-x-2.5 top-1 h-2.5 rounded-full bg-gradient-to-b from-white/80 to-transparent"
+                  />
+                  <ChestIcon
+                    className="relative z-10 h-8 w-8 drop-shadow-[0_1px_2px_rgba(69,26,3,0.35)]"
+                    isOpen={isClaimed}
+                  />
                   {isClaimed && (
                     <span className="animate-duo-pop absolute -right-1.5 -top-1.5 flex h-6 w-6 items-center justify-center rounded-full border-2 border-background bg-[#FFC800] text-[#0B132B]">
                       <Check className="h-3.5 w-3.5 stroke-[3.5]" />
