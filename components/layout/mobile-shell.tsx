@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { Link, usePathname } from '@/lib/i18n/routing';
 import { useTranslations } from 'next-intl';
+import { LezgiBrandIcon } from '@/components/ui/lezgi-brand-icon';
 import { cn } from '@/lib/utils';
 
 interface MobileShellProps {
@@ -60,9 +61,7 @@ export function MobileShell({
           href="/learn"
           className="flex shrink-0 items-center gap-2.5 rounded-xl py-1 transition-transform active:scale-95"
         >
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl border-b-4 border-[#B92B1C] bg-primary pt-[1px] text-xs font-extrabold tracking-tighter text-[#F8FAFC]">
-            ЛӀ
-          </span>
+          <LezgiBrandIcon size="sm" />
           <span className="text-sm font-extrabold uppercase tracking-wider text-[#F8FAFC]">
             Лезги
           </span>

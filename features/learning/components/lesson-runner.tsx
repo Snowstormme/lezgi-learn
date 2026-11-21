@@ -22,6 +22,7 @@ import { isLezgiAnswerCorrect } from '@/lib/lezgi-utils';
 import { LessonProgressBar } from '@/components/ui/progress-bar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { LezgiBrandIcon } from '@/components/ui/lezgi-brand-icon';
 import { ReportMistakeTrigger } from '@/features/shared/components/report-mistake-trigger';
 import { AudioPlayerButton } from '@/features/shared/components/audio-player-button';
 import { cn } from '@/lib/utils';
@@ -513,9 +514,7 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
                   {/* Emblem + Speech Bubble with Tappable Dotted Hints */}
                   <div className="space-y-1.5">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border-2 border-b-4 border-[#B92B1C] bg-primary text-lg font-black text-[#F8FAFC]">
-                        ЛӀ
-                      </div>
+                      <LezgiBrandIcon size="lg" />
                       <div className="flex min-w-0 flex-1 items-center justify-between gap-3 rounded-2xl border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC] px-4 py-3.5 text-[#0B132B]">
                         {renderInteractiveBubbleText(
                           currentExercise.payload.question

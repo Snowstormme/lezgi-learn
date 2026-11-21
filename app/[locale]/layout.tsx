@@ -17,6 +17,11 @@ export const metadata: Metadata = {
   title: 'Lezgi Learn — Изучение лезгинского языка',
   description:
     'Изучайте лезгинский язык с русского по проверенным носителями урокам и словарю.',
+  icons: {
+    icon: '/icon.svg',
+    shortcut: '/icon.svg',
+    apple: '/icon.svg',
+  },
 };
 
 export const viewport: Viewport = {
