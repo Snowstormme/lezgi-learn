@@ -332,19 +332,12 @@ export function CoursePathMap({ lessons }: CoursePathMapProps) {
                 )}
                 onClick={(e) => e.stopPropagation()}
               >
-                <div
-                  className={cn(
-                    'relative transition-all',
-                    isExam ? 'rounded-3xl' : 'rounded-full',
-                    isCurrent &&
-                      'border-4 border-[#F8FAFC]/35 bg-background p-2.5 pb-3.5'
-                  )}
-                >
+                <div className="relative">
                   {isCurrent && !isSelected && (
                     <button
                       type="button"
                       onClick={() => handleToggleNode(item.key)}
-                      className="animate-duo-float absolute bottom-full left-1/2 mb-1.5 flex cursor-pointer flex-col items-center"
+                      className="animate-duo-float absolute bottom-full left-1/2 mb-2.5 flex cursor-pointer flex-col items-center"
                     >
                       <div className="rounded-xl border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC] px-4 py-1.5 pt-[7px] text-xs font-extrabold uppercase tracking-wider text-primary shadow-md">
                         {isCompleted
