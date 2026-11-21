@@ -4,9 +4,23 @@ import {
   Volume2,
 } from 'lucide-react';
 import { Link } from '@/lib/i18n/routing';
+import { buildPageMetadata, getSiteUrl } from '@/lib/seo';
 import { getPublishedDictionaryWords } from '@/features/dictionary/queries';
 import { getCurrentUserSession } from '@/features/profile/queries';
 import { AudioPlayerButton } from '@/features/shared/components/audio-player-button';
+
+export const metadata = buildPageMetadata({
+  title: 'Lezgi Learn — Изучение лезгинского языка онлайн бесплатно',
+  description:
+    'Изучайте лезгинский язык с русского шаг за шагом: 11 игровых уроков, умное повторение слов, словарь с озвучкой и переводчик.',
+  path: '/',
+  keywords: [
+    'лезгинский язык онлайн',
+    'учить лезгинский язык с нуля',
+    'лезги чӀал уроки',
+    'самоучитель лезгинского языка',
+  ],
+});
 
 export default async function StartScreenPage() {
   const [words, session] = await Promise.all([
@@ -19,8 +33,23 @@ export default async function StartScreenPage() {
     words.find((w) => w.slug === 'chal') ??
     words[0];
 
+  const siteUrl = getSiteUrl();
+  const websiteJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Lezgi Learn',
+    url: siteUrl,
+    inLanguage: 'ru',
+    description:
+      'Платформа для изучения лезгинского языка с русского: уроки, словарь, повторение слов и переводчик.',
+  };
+
   return (
     <div className="mx-auto flex min-h-dvh max-w-md flex-col justify-between border-x-2 border-border bg-background px-6 py-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+      />
       {/* Top logo bar */}
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">

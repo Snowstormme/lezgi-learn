@@ -4,6 +4,14 @@ import { signOutAction } from '@/features/auth/actions';
 import { Link } from '@/lib/i18n/routing';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { buildPageMetadata } from '@/lib/seo';
+
+export const metadata = buildPageMetadata({
+  title: 'Профиль ученика',
+  description: 'Статистика прогресса, опыта и серии дней в Lezgi Learn.',
+  path: '/profile',
+  noIndex: true,
+});
 
 export default async function ProfilePage() {
   const tProfile = await getTranslations('profile');

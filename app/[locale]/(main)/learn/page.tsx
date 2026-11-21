@@ -2,12 +2,43 @@ import { BookOpen } from 'lucide-react';
 import { getPublishedUnitsWithLessons } from '@/features/learning/queries';
 import { CoursePathMap } from '@/features/learning/components/course-path-map';
 import { Link } from '@/lib/i18n/routing';
+import { buildPageMetadata, getAbsoluteUrl } from '@/lib/seo';
+
+export const metadata = buildPageMetadata({
+  title: 'Курс лезгинского языка — уроки и модули',
+  description:
+    'Интерактивная карта уроков лезгинского языка: приветствия, знакомство, местоимения, повседневные диалоги и экзамен раздела.',
+  path: '/learn',
+  keywords: [
+    'курс лезгинского языка',
+    'уроки лезгинского языка онлайн',
+    'лезгинский язык для начинающих',
+  ],
+});
 
 export default async function UnitMapPage() {
   const units = await getPublishedUnitsWithLessons();
+  const courseJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Course',
+    name: 'Курс лезгинского языка с нуля',
+    description:
+      'Пошаговые игровые уроки лезгинского языка для русскоязычных учеников.',
+    provider: {
+      '@type': 'Organization',
+      name: 'Lezgi Learn',
+      url: getAbsoluteUrl('/'),
+    },
+    inLanguage: ['ru', 'lez'],
+    url: getAbsoluteUrl('/learn'),
+  };
 
   return (
     <div className="space-y-8 overflow-x-hidden">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(courseJsonLd) }}
+      />
       {units.map((unit) => (
         <div key={unit.slug} className="space-y-6">
           {/* Vermillion Unit Header Banner with Cloud White action button */}

@@ -1,5 +1,18 @@
 import { getSrsReviewDeck } from '@/features/learning/srs-queries';
 import { SrsReviewDeck } from '@/features/learning/components/srs-review-deck';
+import { buildPageMetadata } from '@/lib/seo';
+
+export const metadata = buildPageMetadata({
+  title: 'Тренировка и повторение лезгинских слов',
+  description:
+    'Умные карточки интервального повторения (SRS) для быстрого запоминания лезгинских слов и выражений.',
+  path: '/review',
+  keywords: [
+    'повторение лезгинских слов',
+    'карточки лезгинский язык',
+    'учить лезгинские слова',
+  ],
+});
 
 export default async function SrsReviewPage() {
   const deck = await getSrsReviewDeck();

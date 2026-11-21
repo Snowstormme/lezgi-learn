@@ -8,6 +8,14 @@ import { getPublishedLessonDetail } from '@/features/learning/queries';
 import { AnimatedResultStats } from '@/features/learning/components/animated-result-stats';
 import { Link } from '@/lib/i18n/routing';
 import { AudioPlayerButton } from '@/features/shared/components/audio-player-button';
+import { buildPageMetadata } from '@/lib/seo';
+
+export const metadata = buildPageMetadata({
+  title: 'Результаты урока',
+  description: 'Итоги прохождения урока лезгинского языка на Lezgi Learn.',
+  path: '/learn',
+  noIndex: true,
+});
 
 export default async function LessonResultScreenPage({
   params,

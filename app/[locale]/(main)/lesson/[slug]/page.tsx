@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { Lock } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import {
@@ -6,6 +7,35 @@ import {
 } from '@/features/learning/queries';
 import { LessonRunner } from '@/features/learning/components/lesson-runner';
 import { Link } from '@/lib/i18n/routing';
+import { buildPageMetadata } from '@/lib/seo';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const [lesson, access] = await Promise.all([
+    getPublishedLessonDetail(slug),
+    getLessonAccessStatus(slug),
+  ]);
+
+  if (!lesson) {
+    return buildPageMetadata({
+      title: 'Урок не найден',
+      description: 'Запрошенный урок лезгинского языка не найден.',
+      path: `/lesson/${slug}`,
+      noIndex: true,
+    });
+  }
+
+  return buildPageMetadata({
+    title: `Урок ${lesson.order_index}: ${lesson.title_ru}`,
+    description: `Интерактивный урок лезгинского языка «${lesson.title_ru}» (${lesson.unit_title_ru}) на Lezgi Learn.`,
+    path: `/lesson/${slug}`,
+    noIndex: !access.isUnlocked,
+  });
+}
 
 export default async function LessonScreenPage({
   params,

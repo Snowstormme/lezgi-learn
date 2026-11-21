@@ -2,6 +2,14 @@ import { getTranslations } from 'next-intl/server';
 import { Link } from '@/lib/i18n/routing';
 import { AuthForm } from '@/features/auth/components/auth-form';
 import { LezgiBrandIcon } from '@/components/ui/lezgi-brand-icon';
+import { buildPageMetadata } from '@/lib/seo';
+
+export const metadata = buildPageMetadata({
+  title: 'Вход и сохранение прогресса',
+  description: 'Войдите в аккаунт Lezgi Learn, чтобы сохранять прогресс изучения лезгинского языка.',
+  path: '/login',
+  noIndex: true,
+});
 
 export default async function LoginPage() {
   const tAuth = await getTranslations('auth');
