@@ -29,10 +29,19 @@ export interface RoadSegment {
   lit: boolean;
 }
 
+export type LandmarkKind =
+  | 'campfire'
+  | 'watchtower'
+  | 'bridge'
+  | 'samovar'
+  | 'shalbuzdag';
+
 export interface MountainDecor {
   key: string;
+  kind: LandmarkKind;
   x: number;
   y: number;
+  reached: boolean;
 }
 
 interface RawPathItem {
@@ -130,19 +139,42 @@ export function getMapHeight(items: PathItem[]): number {
 }
 
 /**
- * Places subtle flat mountain silhouettes in outer side pockets away from node labels.
+ * Places 5 animated 3D Dagestan cultural landmarks (campfire beacon, watchtower,
+ * Samur bridge, hospitality samovar, and Mount Shalbuzdag with sun & soaring eagle)
+ * in the vertical gaps (`cy + ROW_HEIGHT / 2`) on the open side opposite the road bend,
+ * guaranteeing zero overlap with any lesson node or text label.
  */
 export function getMountainDecor(items: PathItem[]): MountainDecor[] {
+  const specs: Array<{
+    afterIndex: number;
+    kind: LandmarkKind;
+  }> = [
+    { afterIndex: 0, kind: 'campfire' },
+    { afterIndex: 2, kind: 'watchtower' },
+    { afterIndex: 4, kind: 'bridge' },
+    { afterIndex: 6, kind: 'samovar' },
+    { afterIndex: 9, kind: 'shalbuzdag' },
+  ];
+
   const decors: MountainDecor[] = [];
 
-  for (const item of items) {
-    if (Math.abs(item.offset) >= 64 && item.index % 2 === 1) {
-      decors.push({
-        key: `mountain-${item.key}`,
-        x: item.offset < 0 ? 8 : MAP_WIDTH - 52,
-        y: item.cy - 18,
-      });
-    }
+  for (const spec of specs) {
+    const a = items[spec.afterIndex];
+    const b = items[spec.afterIndex + 1];
+    if (!a || !b) continue;
+
+    const avgCx = (a.cx + b.cx) / 2;
+    // Place on the wide-open opposite margin from the road curve
+    const x = avgCx < MAP_CENTER ? MAP_WIDTH - 46 : 46;
+    const y = Math.round((a.cy + b.cy) / 2);
+
+    decors.push({
+      key: `landmark-${spec.kind}-${spec.afterIndex}`,
+      kind: spec.kind,
+      x,
+      y,
+      reached: a.reached,
+    });
   }
 
   return decors;

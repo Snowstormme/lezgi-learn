@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   buildCoursePathItems,
   buildRoadSegments,
+  getMountainDecor,
   LABEL_GAP,
   LABEL_WIDTH,
   MAP_WIDTH,
@@ -93,6 +94,31 @@ describe('course path layout geometry and milestones', () => {
         );
       } else {
         expect(item.cx - LABEL_GAP - LABEL_WIDTH).toBeGreaterThanOrEqual(0);
+      }
+    }
+  });
+
+  it('places all 5 animated cultural landmarks in vertical row gaps within MAP_WIDTH bounds', () => {
+    const items = buildCoursePathItems([
+      ...makeLessons(10, 2),
+      { slug: 'u1-l11-unit-exam', is_completed: false },
+    ]);
+    const landmarks = getMountainDecor(items);
+
+    expect(landmarks.map((l) => l.kind)).toEqual([
+      'campfire',
+      'watchtower',
+      'bridge',
+      'samovar',
+      'shalbuzdag',
+    ]);
+
+    for (const lm of landmarks) {
+      expect(lm.x - 30).toBeGreaterThanOrEqual(0);
+      expect(lm.x + 30).toBeLessThanOrEqual(MAP_WIDTH);
+      // Every landmark sits halfway between two consecutive path rows (min 60px vertical clearance from any node center)
+      for (const item of items) {
+        expect(Math.abs(lm.y - item.cy)).toBeGreaterThanOrEqual(60);
       }
     }
   });
