@@ -200,6 +200,63 @@
   }
 }
 
+@keyframes duoNodeSheen {
+  0% {
+    transform: translateX(-160%) skewX(-22deg);
+  }
+  38%,
+  100% {
+    transform: translateX(220%) skewX(-22deg);
+  }
+}
+
+.duo-node-shine::after {
+  content: '';
+  position: absolute;
+  inset: -15% 0;
+  width: 55%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.12) 35%,
+    rgba(255, 255, 255, 0.55) 50%,
+    rgba(255, 255, 255, 0.12) 65%,
+    transparent 100%
+  );
+  animation: duoNodeSheen 3.6s ease-in-out infinite;
+}
+
+.duo-node-shine-completed::after {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 200, 0, 0.14) 35%,
+    rgba(255, 255, 255, 0.9) 50%,
+    rgba(255, 200, 0, 0.14) 65%,
+    transparent 100%
+  );
+  animation: duoNodeSheen 4.4s ease-in-out 0.8s infinite;
+}
+
+.duo-node-shine-locked::after {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.04) 35%,
+    rgba(255, 255, 255, 0.14) 50%,
+    rgba(255, 255, 255, 0.04) 65%,
+    transparent 100%
+  );
+  animation: duoNodeSheen 6s ease-in-out 1.5s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .duo-node-shine::after {
+    animation: none;
+    opacity: 0;
+  }
+}
+
 .animate-duo-shake {
   animation: duoShake 340ms ease-in-out;
 }

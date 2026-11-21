@@ -242,22 +242,31 @@ export function CoursePathMap({ lessons }: CoursePathMapProps) {
 
           const nodeInner = (
             <>
-              {/* Subtle top crescent highlight for 3D depth */}
+              {/* Glossy sweeping sheen clipped strictly to the 3D oval puck */}
               <span
                 aria-hidden="true"
                 className={cn(
-                  'pointer-events-none absolute inset-x-3 top-1.5 h-2.5 rounded-full',
+                  'duo-node-shine pointer-events-none absolute inset-0 overflow-hidden rounded-[32px]',
+                  isCompleted && 'duo-node-shine-completed',
+                  isLocked && 'duo-node-shine-locked'
+                )}
+              />
+              {/* Glossy top specular crescent for lacquered 3D depth */}
+              <span
+                aria-hidden="true"
+                className={cn(
+                  'pointer-events-none absolute inset-x-3 top-1.5 h-3 rounded-full bg-gradient-to-b',
                   isCompleted
-                    ? 'bg-white/70'
+                    ? 'from-white via-white/80 to-white/10'
                     : isLocked
-                      ? 'bg-white/[0.04]'
-                      : 'bg-white/20'
+                      ? 'from-white/15 to-transparent'
+                      : 'from-white/55 via-white/25 to-transparent'
                 )}
               />
               {isExam ? (
-                <Trophy className="h-7 w-7 stroke-[2.5]" />
+                <Trophy className="relative z-10 h-7 w-7 stroke-[2.5] drop-shadow-[0_1px_2px_rgba(0,0,0,0.28)]" />
               ) : (
-                <Star className="h-7 w-7 fill-current stroke-[2.2]" />
+                <Star className="relative z-10 h-7 w-7 fill-current stroke-[2.2] drop-shadow-[0_1px_2px_rgba(0,0,0,0.25)]" />
               )}
               {isCompleted && (
                 <span className="absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-background bg-primary shadow-sm">
