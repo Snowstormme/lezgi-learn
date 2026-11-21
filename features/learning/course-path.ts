@@ -43,13 +43,19 @@ interface RawPathItem {
 }
 
 /**
- * Builds ordered nodes (lessons, intermediate bonus chests every 5 lessons, and unit finish flag)
+ * Builds ordered nodes (lessons, intermediate bonus chests every 5 regular lessons,
+ * and a trailing finish flag if the unit does not already end with a Unit Exam lesson)
  * positioned along the winding mountain road coordinate grid.
  */
 export function buildCoursePathItems<
   T extends { slug: string; is_completed: boolean },
 >(lessons: T[]): PathItem[] {
   if (lessons.length === 0) return [];
+
+  const endsWithUnitExam = lessons[lessons.length - 1]?.slug.includes('exam');
+  const regularLessonsEnd = endsWithUnitExam
+    ? lessons.length - 1
+    : lessons.length;
 
   const raw: RawPathItem[] = [];
 
@@ -62,7 +68,7 @@ export function buildCoursePathItems<
       reached: lesson.is_completed,
     });
 
-    if ((i + 1) % CHEST_EVERY === 0 && i < lessons.length - 1) {
+    if ((i + 1) % CHEST_EVERY === 0 && i < regularLessonsEnd - 1) {
       raw.push({
         kind: 'chest',
         key: `chest-after-${i + 1}`,
@@ -72,12 +78,14 @@ export function buildCoursePathItems<
     }
   }
 
-  raw.push({
-    kind: 'finish',
-    key: 'unit-finish',
-    lessonIdx: null,
-    reached: lessons.every((l) => l.is_completed),
-  });
+  if (!endsWithUnitExam) {
+    raw.push({
+      kind: 'finish',
+      key: 'unit-finish',
+      lessonIdx: null,
+      reached: lessons.every((l) => l.is_completed),
+    });
+  }
 
   return raw.map((item, index) => {
     const offset = OFFSETS[index % OFFSETS.length] ?? 0;

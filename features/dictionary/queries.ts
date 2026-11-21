@@ -1,6 +1,3 @@
-import { isSupabaseConfigured } from '@/lib/env';
-import { CONTENT_TTL_MS, memoizeAsync } from '@/lib/server-memo';
-import { createSupabasePublicClient } from '@/lib/supabase/public';
 import { loadAndValidateContentBundle } from '@/content/loader';
 import type { ContentStatus } from '@/features/shared/types';
 
@@ -21,81 +18,23 @@ export interface DictionaryWordItem {
   }>;
 }
 
+let cachedDictionaryWords: DictionaryWordItem[] | null = null;
+
 /**
- * Fetches ONLY published words and published usage examples.
- * Works for guests (anon) and logged-in users alike.
+ * Returns published dictionary words and examples from the validated in-memory bundle.
+ * Sorted alphabetically by Lezgi lemma and cached per isolate for 0ms reads.
  */
 export async function getPublishedDictionaryWords(): Promise<
   DictionaryWordItem[]
 > {
-  if (isSupabaseConfigured()) {
-    try {
-      return await memoizeAsync('dictionary-v1', CONTENT_TTL_MS, async () => {
-        const supabase = createSupabasePublicClient();
-        const [
-          { data: words, error: wordsError },
-          { data: examples, error: exError },
-        ] = await Promise.all([
-          supabase
-            .from('words')
-            .select(
-              'id, slug, lemma_lez, translation_ru, transcription_ru, part_of_speech, grammar_notes_ru, audio_path, audio_status'
-            )
-            .eq('status', 'published')
-            .order('lemma_lez', { ascending: true }),
-          supabase
-            .from('word_examples')
-            .select('word_id, slug, sentence_lez, translation_ru')
-            .eq('status', 'published'),
-        ]);
-
-        if (wordsError || exError || !words || words.length === 0) {
-          throw new Error(
-            wordsError?.message ??
-              exError?.message ??
-              'Published dictionary words unavailable'
-          );
-        }
-
-        const examplesByWordId = new Map<
-          string,
-          Array<{ slug: string; sentence_lez: string; translation_ru: string }>
-        >();
-        for (const ex of examples ?? []) {
-          const list = examplesByWordId.get(ex.word_id);
-          const item = {
-            slug: ex.slug,
-            sentence_lez: ex.sentence_lez,
-            translation_ru: ex.translation_ru,
-          };
-          if (list) {
-            list.push(item);
-          } else {
-            examplesByWordId.set(ex.word_id, [item]);
-          }
-        }
-
-        return words.map((w) => ({
-          id: w.id,
-          slug: w.slug,
-          lemma_lez: w.lemma_lez,
-          translation_ru: w.translation_ru,
-          transcription_ru: w.transcription_ru,
-          part_of_speech: w.part_of_speech,
-          grammar_notes_ru: w.grammar_notes_ru,
-          audio_path: w.audio_path,
-          audio_status: w.audio_status,
-          examples: examplesByWordId.get(w.id) ?? [],
-        }));
-      });
-    } catch {
-      // Fallback to local content bundle
-    }
+  if (cachedDictionaryWords) {
+    return cachedDictionaryWords;
   }
 
   const bundle = loadAndValidateContentBundle();
-  return bundle.words
+  cachedDictionaryWords = bundle.words
     .filter((w) => w.status === 'published')
+    .sort((a, b) => a.lemma_lez.localeCompare(b.lemma_lez, 'ru'))
     .map((w) => ({
       slug: w.slug,
       lemma_lez: w.lemma_lez,
@@ -113,4 +52,6 @@ export async function getPublishedDictionaryWords(): Promise<
           translation_ru: ex.translation_ru,
         })),
     }));
+
+  return cachedDictionaryWords;
 }

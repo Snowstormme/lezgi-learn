@@ -7,7 +7,6 @@ import { isSupabaseConfigured } from '@/lib/env';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import type { ActionResult } from '@/features/shared/types';
 import { createInitialSrsCardState } from './fsrs';
-import { getPublishedContentSnapshot } from './queries';
 import {
   GUEST_COMPLETED_COOKIE,
   mergeGuestProgress,
@@ -97,62 +96,28 @@ export async function completeLessonAction(
     };
   }
 
-  let lessonId: string | null = null;
-  let uniqueWordIds: string[] = [];
+  const { data: lesson } = await supabase
+    .from('lessons')
+    .select('id')
+    .eq('slug', parsed.data.lessonSlug)
+    .eq('status', 'published')
+    .single();
 
-  try {
-    const snapshot = await getPublishedContentSnapshot();
-    const matchedLesson = snapshot.lessons.find(
-      (l) => l.slug === parsed.data.lessonSlug
-    );
-    if (matchedLesson) {
-      lessonId = matchedLesson.id;
-      uniqueWordIds = [
-        ...new Set(
-          snapshot.exercises
-            .filter((ex) => ex.lesson_id === matchedLesson.id && ex.word_id)
-            .map((ex) => ex.word_id as string)
-        ),
-      ];
-    }
-  } catch {
-    // Fallback to direct DB lookup below
+  if (!lesson) {
+    return {
+      ok: false,
+      error: 'Урок не найден в базе данных',
+      code: 'NOT_FOUND',
+    };
   }
 
-  if (!lessonId) {
-    const { data: lesson } = await supabase
-      .from('lessons')
-      .select('id')
-      .eq('slug', parsed.data.lessonSlug)
-      .eq('status', 'published')
-      .single();
+  const lessonId = lesson.id;
 
-    if (!lesson) {
-      return {
-        ok: false,
-        error: 'Урок не найден в базе данных',
-        code: 'NOT_FOUND',
-      };
-    }
-
-    lessonId = lesson.id;
-
-    const { data: lessonExercises } = await supabase
-      .from('exercises')
-      .select('word_id')
-      .eq('lesson_id', lessonId)
-      .not('word_id', 'is', null);
-
-    uniqueWordIds = [
-      ...new Set(
-        (lessonExercises ?? [])
-          .map((ex) => ex.word_id)
-          .filter((wid): wid is string => Boolean(wid))
-      ),
-    ];
-  }
-
-  const [{ data: existingProgress }, { data: profile }] = await Promise.all([
+  const [
+    { data: existingProgress },
+    { data: profile },
+    { data: lessonExercises },
+  ] = await Promise.all([
     supabase
       .from('user_progress')
       .select('id, score, attempts_count')
@@ -164,7 +129,20 @@ export async function completeLessonAction(
       .select('xp, streak_days, last_active_date')
       .eq('id', user.id)
       .single(),
+    supabase
+      .from('exercises')
+      .select('word_id')
+      .eq('lesson_id', lessonId)
+      .not('word_id', 'is', null),
   ]);
+
+  const uniqueWordIds = [
+    ...new Set(
+      (lessonExercises ?? [])
+        .map((ex) => ex.word_id)
+        .filter((wid): wid is string => Boolean(wid))
+    ),
+  ];
 
   const bestScore = Math.max(
     parsed.data.score,

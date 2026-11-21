@@ -6,12 +6,12 @@ import {
 } from '@/content/schema';
 
 describe('Content JSON bundle & Zod schema integrity (Stage 3)', () => {
-  it('loads and validates all 155 words, 10 lessons, and 60 exercises in Unit 1 without errors', () => {
+  it('loads and validates all 155 words, 11 lessons (10 lessons + 1 unit exam), and 66 exercises in Unit 1 without errors', () => {
     const bundle = loadAndValidateContentBundle();
 
     expect(bundle.words.length).toBe(155);
     expect(bundle.units.length).toBe(1);
-    expect(bundle.lessons.length).toBe(10);
+    expect(bundle.lessons.length).toBe(11);
     expect(bundle.phrases.length).toBe(40);
 
     const publishedWords = bundle.words.filter((w) => w.status === 'published');
@@ -23,7 +23,7 @@ describe('Content JSON bundle & Zod schema integrity (Stage 3)', () => {
     expect(nonPublishedWords.length).toBe(5);
 
     const allExercises = bundle.lessons.flatMap((l) => l.exercises);
-    expect(allExercises.length).toBe(60);
+    expect(allExercises.length).toBe(66);
 
     const mcCount = allExercises.filter(
       (e) => e.type === 'multiple_choice'
@@ -35,9 +35,9 @@ describe('Content JSON bundle & Zod schema integrity (Stage 3)', () => {
       (e) => e.type === 'word_input'
     ).length;
 
-    expect(mcCount).toBe(20);
-    expect(matchingCount).toBe(20);
-    expect(inputCount).toBe(20);
+    expect(mcCount).toBe(22);
+    expect(matchingCount).toBe(22);
+    expect(inputCount).toBe(22);
   });
 
   it('normalizes palochka automatically when parsing a word via wordSeedSchema', () => {

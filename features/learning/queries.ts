@@ -1,18 +1,12 @@
 import { cache } from 'react';
 import { cookies } from 'next/headers';
 import { isSupabaseConfigured } from '@/lib/env';
-import { CONTENT_TTL_MS, memoizeAsync } from '@/lib/server-memo';
-import { createSupabasePublicClient } from '@/lib/supabase/public';
 import {
   createSupabaseServerClient,
   getCurrentAuthUser,
 } from '@/lib/supabase/server';
 import { loadAndValidateContentBundle } from '@/content/loader';
-import {
-  exerciseSeedSchema,
-  type ExerciseSeed,
-} from '@/content/schema';
-import type { ContentStatus } from '@/features/shared/types';
+import { type ExerciseSeed } from '@/content/schema';
 import {
   applySequentialUnlockAcrossUnits,
   GUEST_COMPLETED_COOKIE,
@@ -74,42 +68,6 @@ export interface LessonDetail {
   next_lesson_slug: string | null;
 }
 
-export interface PublishedContentSnapshot {
-  units: Array<{
-    id: string;
-    slug: string;
-    order_index: number;
-    title_ru: string;
-    description_ru: string | null;
-  }>;
-  lessons: Array<{
-    id: string;
-    unit_id: string;
-    slug: string;
-    order_index: number;
-    title_ru: string;
-    grammar_tip_ru: string | null;
-  }>;
-  exercises: Array<{
-    id: string;
-    lesson_id: string;
-    slug: string;
-    order_index: number;
-    type: string;
-    word_id: string | null;
-    prompt_ru: string;
-    payload: unknown;
-    status: ContentStatus;
-  }>;
-  words: Array<{
-    id: string;
-    slug: string;
-    lemma_lez: string;
-    translation_ru: string;
-    transcription_ru: string | null;
-  }>;
-}
-
 async function readGuestProgressSafe(): Promise<GuestProgressMap> {
   try {
     const cookieStore = await cookies();
@@ -121,141 +79,65 @@ async function readGuestProgressSafe(): Promise<GuestProgressMap> {
   }
 }
 
-export async function getPublishedContentSnapshot(): Promise<PublishedContentSnapshot> {
-  return memoizeAsync('learning-content-v1', CONTENT_TTL_MS, async () => {
-    const supabase = createSupabasePublicClient();
-    const [unitsRes, lessonsRes, exercisesRes, wordsRes] = await Promise.all([
-      supabase
-        .from('units')
-        .select('id, slug, order_index, title_ru, description_ru')
-        .eq('status', 'published')
-        .order('order_index', { ascending: true }),
-      supabase
-        .from('lessons')
-        .select('id, unit_id, slug, order_index, title_ru, grammar_tip_ru')
-        .eq('status', 'published')
-        .order('order_index', { ascending: true }),
-      supabase
-        .from('exercises')
-        .select(
-          'id, lesson_id, slug, order_index, type, word_id, prompt_ru, payload, status'
-        )
-        .eq('status', 'published')
-        .order('order_index', { ascending: true }),
-      supabase
-        .from('words')
-        .select('id, slug, lemma_lez, translation_ru, transcription_ru')
-        .eq('status', 'published'),
-    ]);
-
-    if (
-      unitsRes.error ||
-      lessonsRes.error ||
-      exercisesRes.error ||
-      wordsRes.error ||
-      !unitsRes.data?.length
-    ) {
-      throw new Error(
-        unitsRes.error?.message ??
-          lessonsRes.error?.message ??
-          exercisesRes.error?.message ??
-          wordsRes.error?.message ??
-          'Published learning content snapshot unavailable'
-      );
-    }
-
-    return {
-      units: unitsRes.data,
-      lessons: lessonsRes.data ?? [],
-      exercises: exercisesRes.data ?? [],
-      words: wordsRes.data ?? [],
-    };
-  });
-}
-
 export const getPublishedUnitsWithLessons = cache(
   async (): Promise<UnitWithLessons[]> => {
-    if (isSupabaseConfigured()) {
+    const bundle = loadAndValidateContentBundle();
+    const user = await getCurrentAuthUser();
+
+    const progressBySlug = new Map<
+      string,
+      { status: string; score: number | null }
+    >();
+
+    if (user && isSupabaseConfigured()) {
       try {
-        const [snapshot, user] = await Promise.all([
-          getPublishedContentSnapshot(),
-          getCurrentAuthUser(),
-        ]);
+        const supabase = await createSupabaseServerClient();
+        const [{ data: dbLessons }, { data: progressRows }] = await Promise.all(
+          [
+            supabase
+              .from('lessons')
+              .select('id, slug')
+              .eq('status', 'published'),
+            supabase
+              .from('user_progress')
+              .select('lesson_id, status, score')
+              .eq('user_id', user.id),
+          ]
+        );
 
-        const progressByLessonId = new Map<
-          string,
-          { status: string; score: number | null }
-        >();
+        const slugByLessonId = new Map(
+          (dbLessons ?? []).map((l) => [l.id, l.slug])
+        );
 
-        if (user) {
-          const supabase = await createSupabaseServerClient();
-          const { data: progressRows } = await supabase
-            .from('user_progress')
-            .select('lesson_id, status, score')
-            .eq('user_id', user.id);
-
-          for (const row of progressRows ?? []) {
-            progressByLessonId.set(row.lesson_id, {
+        for (const row of progressRows ?? []) {
+          const lessonSlug = slugByLessonId.get(row.lesson_id);
+          if (lessonSlug) {
+            progressBySlug.set(lessonSlug, {
               status: row.status,
               score: row.score,
             });
           }
         }
-
-        const guestProgress = user ? {} : await readGuestProgressSafe();
-
-        const rawUnits = snapshot.units.map((u) => {
-          const unitLessons = snapshot.lessons
-            .filter((l) => l.unit_id === u.id)
-            .map((l) => {
-              const exCount = snapshot.exercises.filter(
-                (ex) => ex.lesson_id === l.id
-              ).length;
-              const prog = progressByLessonId.get(l.id);
-              const guestScore = user ? undefined : guestProgress[l.slug];
-              const isCompleted =
-                prog?.status === 'completed' || guestScore !== undefined;
-              return {
-                id: l.id,
-                slug: l.slug,
-                order_index: l.order_index,
-                title_ru: l.title_ru,
-                grammar_tip_ru: l.grammar_tip_ru,
-                exercises_count: exCount || 3,
-                is_completed: isCompleted,
-                best_score: prog?.score ?? guestScore ?? null,
-              };
-            });
-
-          return {
-            slug: u.slug,
-            order_index: u.order_index,
-            title_ru: u.title_ru,
-            description_ru: u.description_ru,
-            source: 'supabase' as const,
-            lessons: unitLessons,
-            completed_count: unitLessons.filter((l) => l.is_completed).length,
-          };
-        });
-
-        return applySequentialUnlockAcrossUnits(rawUnits);
       } catch {
-        // Fallback to local content bundle
+        // Fallback to local progress
       }
     }
 
-    const bundle = loadAndValidateContentBundle();
-    const guestProgress = await readGuestProgressSafe();
+    const guestProgress = user ? {} : await readGuestProgressSafe();
+
     const publishedUnits = [...bundle.units]
       .filter((u) => u.status === 'published')
       .sort((a, b) => a.order_index - b.order_index);
 
-    const fallbackUnits = publishedUnits.map((unit) => {
-      const unitLessons = bundle.lessons
+    const units = publishedUnits.map((unit) => {
+      const unitLessons = [...bundle.lessons]
         .filter((l) => l.unit_slug === unit.slug && l.status === 'published')
         .sort((a, b) => a.order_index - b.order_index)
         .map((l) => {
-          const guestScore = guestProgress[l.slug];
+          const prog = progressBySlug.get(l.slug);
+          const guestScore = user ? undefined : guestProgress[l.slug];
+          const isCompleted =
+            prog?.status === 'completed' || guestScore !== undefined;
           return {
             slug: l.slug,
             order_index: l.order_index,
@@ -263,8 +145,8 @@ export const getPublishedUnitsWithLessons = cache(
             grammar_tip_ru: l.grammar_tip_ru ?? null,
             exercises_count: l.exercises.filter((e) => e.status === 'published')
               .length,
-            is_completed: guestScore !== undefined,
-            best_score: guestScore ?? null,
+            is_completed: isCompleted,
+            best_score: prog?.score ?? guestScore ?? null,
           };
         });
 
@@ -273,13 +155,13 @@ export const getPublishedUnitsWithLessons = cache(
         order_index: unit.order_index,
         title_ru: unit.title_ru,
         description_ru: unit.description_ru ?? null,
-        source: 'local-seed-preview' as const,
+        source: user ? ('supabase' as const) : ('local-seed-preview' as const),
         lessons: unitLessons,
         completed_count: unitLessons.filter((l) => l.is_completed).length,
       };
     });
 
-    return applySequentialUnlockAcrossUnits(fallbackUnits);
+    return applySequentialUnlockAcrossUnits(units);
   }
 );
 
@@ -314,129 +196,70 @@ export async function getLessonAccessStatus(
   };
 }
 
-export const getPublishedLessonDetail = cache(
-  async (slug: string): Promise<LessonDetail | null> => {
-    if (isSupabaseConfigured()) {
-      try {
-        const snapshot = await getPublishedContentSnapshot();
-        const lesson = snapshot.lessons.find((l) => l.slug === slug);
+let cachedLessonDetailsBySlug: Map<string, LessonDetail> | null = null;
 
-        if (lesson) {
-          const unit =
-            snapshot.units.find((u) => u.id === lesson.unit_id) ?? null;
-          const unitLessons = snapshot.lessons
-            .filter((l) => l.unit_id === lesson.unit_id)
-            .sort((a, b) => a.order_index - b.order_index);
-          const exercisesRows = snapshot.exercises
-            .filter((ex) => ex.lesson_id === lesson.id)
-            .sort((a, b) => a.order_index - b.order_index);
-
-          const wordById = new Map(snapshot.words.map((w) => [w.id, w]));
-
-          const parsedExercises: LessonExerciseItem[] = [];
-          const practiceWordMap = new Map<string, LessonPracticeWord>();
-
-          for (const row of exercisesRows) {
-            const linkedWord = row.word_id
-              ? wordById.get(row.word_id)
-              : undefined;
-            if (linkedWord) {
-              practiceWordMap.set(linkedWord.slug, {
-                id: linkedWord.id,
-                slug: linkedWord.slug,
-                lemma_lez: linkedWord.lemma_lez,
-                translation_ru: linkedWord.translation_ru,
-                transcription_ru: linkedWord.transcription_ru,
-              });
-            }
-
-            const parsed = exerciseSeedSchema.safeParse({
-              slug: row.slug,
-              order_index: row.order_index,
-              type: row.type,
-              word_slug: linkedWord?.slug ?? null,
-              prompt_ru: row.prompt_ru,
-              status: row.status,
-              payload: row.payload,
-            });
-
-            if (parsed.success) {
-              parsedExercises.push({
-                ...parsed.data,
-                id: row.id,
-              });
-            }
-          }
-
-          const nextLesson =
-            unitLessons.find((l) => l.order_index > lesson.order_index) ??
-            null;
-
-          if (parsedExercises.length > 0) {
-            return {
-              id: lesson.id,
-              slug: lesson.slug,
-              unit_slug: unit?.slug ?? 'unit-01-greetings',
-              unit_title_ru: unit?.title_ru ?? 'Курс лезгинского языка',
-              order_index: lesson.order_index,
-              title_ru: lesson.title_ru,
-              grammar_tip_ru: lesson.grammar_tip_ru,
-              exercises: parsedExercises,
-              practice_words: Array.from(practiceWordMap.values()),
-              next_lesson_slug: nextLesson?.slug ?? null,
-            };
-          }
-        }
-      } catch {
-        // Fallback to local bundle
-      }
-    }
-
+export async function getPublishedLessonDetail(
+  slug: string
+): Promise<LessonDetail | null> {
+  if (!cachedLessonDetailsBySlug) {
     const bundle = loadAndValidateContentBundle();
-    const lesson = bundle.lessons.find(
-      (l) => l.slug === slug && l.status === 'published'
+    const wordBySlug = new Map(
+      bundle.words
+        .filter((w) => w.status === 'published')
+        .map((w) => [w.slug, w])
     );
-    if (!lesson) return null;
+    const unitBySlug = new Map(bundle.units.map((u) => [u.slug, u]));
 
-    const unit = bundle.units.find((u) => u.slug === lesson.unit_slug);
-    const unitLessons = bundle.lessons
-      .filter((l) => l.unit_slug === lesson.unit_slug && l.status === 'published')
-      .sort((a, b) => a.order_index - b.order_index);
-
-    const nextLesson =
-      unitLessons.find((l) => l.order_index > lesson.order_index) ?? null;
-
-    const publishedExercises = lesson.exercises.filter(
-      (ex) => ex.status === 'published'
+    const map = new Map<string, LessonDetail>();
+    const publishedLessons = bundle.lessons.filter(
+      (l) => l.status === 'published'
     );
 
-    const practiceWords: LessonPracticeWord[] = [];
-    const seenSlugs = new Set<string>();
-    for (const ex of publishedExercises) {
-      if (ex.word_slug && !seenSlugs.has(ex.word_slug)) {
-        const word = bundle.words.find((w) => w.slug === ex.word_slug);
-        if (word && word.status === 'published') {
-          seenSlugs.add(word.slug);
-          practiceWords.push({
-            slug: word.slug,
-            lemma_lez: word.lemma_lez,
-            translation_ru: word.translation_ru,
-            transcription_ru: word.transcription_ru ?? null,
-          });
+    for (const lesson of publishedLessons) {
+      const unit = unitBySlug.get(lesson.unit_slug);
+      const unitLessons = publishedLessons
+        .filter((l) => l.unit_slug === lesson.unit_slug)
+        .sort((a, b) => a.order_index - b.order_index);
+
+      const nextLesson =
+        unitLessons.find((l) => l.order_index > lesson.order_index) ?? null;
+
+      const publishedExercises = lesson.exercises.filter(
+        (ex) => ex.status === 'published'
+      );
+
+      const practiceWords: LessonPracticeWord[] = [];
+      const seenSlugs = new Set<string>();
+      for (const ex of publishedExercises) {
+        if (ex.word_slug && !seenSlugs.has(ex.word_slug)) {
+          const word = wordBySlug.get(ex.word_slug);
+          if (word) {
+            seenSlugs.add(word.slug);
+            practiceWords.push({
+              slug: word.slug,
+              lemma_lez: word.lemma_lez,
+              translation_ru: word.translation_ru,
+              transcription_ru: word.transcription_ru ?? null,
+            });
+          }
         }
       }
+
+      map.set(lesson.slug, {
+        slug: lesson.slug,
+        unit_slug: lesson.unit_slug,
+        unit_title_ru: unit?.title_ru ?? 'Курс лезгинского языка',
+        order_index: lesson.order_index,
+        title_ru: lesson.title_ru,
+        grammar_tip_ru: lesson.grammar_tip_ru ?? null,
+        exercises: publishedExercises,
+        practice_words: practiceWords,
+        next_lesson_slug: nextLesson?.slug ?? null,
+      });
     }
 
-    return {
-      slug: lesson.slug,
-      unit_slug: lesson.unit_slug,
-      unit_title_ru: unit?.title_ru ?? 'Курс лезгинского языка',
-      order_index: lesson.order_index,
-      title_ru: lesson.title_ru,
-      grammar_tip_ru: lesson.grammar_tip_ru ?? null,
-      exercises: publishedExercises,
-      practice_words: practiceWords,
-      next_lesson_slug: nextLesson?.slug ?? null,
-    };
+    cachedLessonDetailsBySlug = map;
   }
-);
+
+  return cachedLessonDetailsBySlug.get(slug) ?? null;
+}

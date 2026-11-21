@@ -10,6 +10,14 @@ export async function updateSupabaseSession(
     return response;
   }
 
+  // Fast-path for guests: skip Supabase client creation if no sb-* auth cookie exists
+  const hasAuthCookie = request.cookies
+    .getAll()
+    .some((cookie) => cookie.name.startsWith('sb-'));
+  if (!hasAuthCookie) {
+    return response;
+  }
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
@@ -35,7 +43,6 @@ export async function updateSupabaseSession(
     },
   });
 
-  // Refresh session token if needed. Guests are allowed to browse /learn and /dictionary.
   await supabase.auth.getUser();
 
   return response;

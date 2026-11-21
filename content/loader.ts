@@ -16,6 +16,7 @@ import lesson07LanguagesJson from './courses/ru-lez/unit-01-greetings/lessons/07
 import lesson08PolitenessJson from './courses/ru-lez/unit-01-greetings/lessons/08-politeness.json';
 import lesson09HospitalityJson from './courses/ru-lez/unit-01-greetings/lessons/09-hospitality.json';
 import lesson10FarewellJson from './courses/ru-lez/unit-01-greetings/lessons/10-farewell.json';
+import lesson11UnitExamJson from './courses/ru-lez/unit-01-greetings/lessons/11-unit-exam.json';
 
 import {
   type ContentBundle,
@@ -53,14 +54,20 @@ const RAW_LESSON_FILES: unknown[] = [
   lesson08PolitenessJson,
   lesson09HospitalityJson,
   lesson10FarewellJson,
+  lesson11UnitExamJson,
 ];
 
+let cachedContentBundle: ContentBundle | null = null;
+
 /**
- * Loads and validates the entire Lezgi Learn content bundle.
- * Uses static JSON imports so it works seamlessly across Node.js (seed scripts, Vitest),
- * Next.js Server Components, and Cloudflare Workers runtime.
+ * Loads, validates, and caches the Lezgi Learn content bundle in memory.
+ * Runs Zod parsing once per isolate so subsequent reads take 0ms of CPU.
  */
 export function loadAndValidateContentBundle(): ContentBundle {
+  if (cachedContentBundle) {
+    return cachedContentBundle;
+  }
+
   const words: WordSeed[] = [];
   for (const rawDict of RAW_DICTIONARY_FILES) {
     const parsed = dictionaryFileSchema.parse(rawDict);
@@ -86,5 +93,6 @@ export function loadAndValidateContentBundle(): ContentBundle {
   const bundle: ContentBundle = { words, units, lessons, phrases };
   validateContentBundleIntegrity(bundle);
 
+  cachedContentBundle = bundle;
   return bundle;
 }

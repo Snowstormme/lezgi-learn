@@ -3,7 +3,7 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import type { SupabaseClient, User } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 import type { Database } from './database.types';
-import { getPublicEnv } from '@/lib/env';
+import { getPublicEnv, isSupabaseConfigured } from '@/lib/env';
 
 export async function createSupabaseServerClient(): Promise<
   SupabaseClient<Database>
@@ -31,8 +31,7 @@ export async function createSupabaseServerClient(): Promise<
               cookieStore.set(name, value, options)
             );
           } catch {
-            // setAll can be called from a Server Component where setting cookies
-            // is ignored because middleware refreshes the session.
+            // Ignored inside Server Components
           }
         },
       },
@@ -41,12 +40,29 @@ export async function createSupabaseServerClient(): Promise<
 }
 
 /**
- * Per-request deduplicated auth lookup shared across layout and page queries.
+ * Per-request deduplicated auth lookup.
+ * Returns null immediately in 0ms for guests without any `sb-*` session cookie.
  */
 export const getCurrentAuthUser = cache(async (): Promise<User | null> => {
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  return user;
+  if (!isSupabaseConfigured()) {
+    return null;
+  }
+
+  try {
+    const cookieStore = await cookies();
+    const hasAuthCookie = cookieStore
+      .getAll()
+      .some((cookie) => cookie.name.startsWith('sb-'));
+    if (!hasAuthCookie) {
+      return null;
+    }
+
+    const supabase = await createSupabaseServerClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    return user;
+  } catch {
+    return null;
+  }
 });

@@ -7,19 +7,27 @@ describe('Duolingo-style pedagogical progression across all lessons', () => {
     (a, b) => a.order_index - b.order_index
   );
 
-  it('starts every lesson wave with explicit teach_words cards before testing', () => {
+  it('starts every regular lesson wave with explicit teach_words cards and keeps the final unit exam free of intro cheat cards', () => {
     for (const lesson of orderedLessons) {
       const waveIntros = lesson.exercises.filter(
         (ex) => (ex.payload.teach_words?.length ?? 0) > 0
       );
-      expect(
-        waveIntros.length,
-        `Lesson ${lesson.slug} should have at least 2 teaching waves`
-      ).toBeGreaterThanOrEqual(2);
-      expect(
-        lesson.exercises[0]?.payload.teach_words?.length ?? 0,
-        `First exercise of ${lesson.slug} must introduce new words first`
-      ).toBeGreaterThan(0);
+
+      if (lesson.slug.includes('exam')) {
+        expect(
+          waveIntros.length,
+          `Unit exam ${lesson.slug} should test without intro teach_words cards`
+        ).toBe(0);
+      } else {
+        expect(
+          waveIntros.length,
+          `Lesson ${lesson.slug} should have at least 2 teaching waves`
+        ).toBeGreaterThanOrEqual(2);
+        expect(
+          lesson.exercises[0]?.payload.teach_words?.length ?? 0,
+          `First exercise of ${lesson.slug} must introduce new words first`
+        ).toBeGreaterThan(0);
+      }
     }
   });
 

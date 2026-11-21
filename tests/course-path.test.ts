@@ -25,6 +25,20 @@ describe('course path layout geometry and milestones', () => {
     expect(items.filter((item) => item.kind === 'chest')).toHaveLength(1);
   });
 
+  it('uses the final unit exam lesson as the capstone node when the unit ends with an exam slug', () => {
+    const lessonsWithExam = [
+      ...makeLessons(10, 5),
+      { slug: 'u1-l11-unit-exam', is_completed: false },
+    ];
+    const items = buildCoursePathItems(lessonsWithExam);
+
+    expect(items).toHaveLength(12);
+    expect(items[5].kind).toBe('chest');
+    expect(items[11].kind).toBe('lesson');
+    expect(items[11].key).toBe('u1-l11-unit-exam');
+    expect(items.filter((item) => item.kind === 'finish')).toHaveLength(0);
+  });
+
   it('produces no chest for 3 lessons, only 3 lessons plus finish', () => {
     const items = buildCoursePathItems(makeLessons(3, 1));
 

@@ -44,4 +44,9 @@
   p {
     text-wrap: pretty;
   }
+
+  button,
+  a {
+    touch-action: manipulation;
+  }
 }

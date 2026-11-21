@@ -1,20 +1,5 @@
 import { Fragment } from 'react';
-import {
-  BookOpen,
-  Check,
-  Coffee,
-  Contact,
-  Flag,
-  Footprints,
-  Hand,
-  Heart,
-  HeartHandshake,
-  House,
-  Lock,
-  Star,
-  SunMoon,
-  Users,
-} from 'lucide-react';
+import { Check, Flag, Lock, Star, Trophy } from 'lucide-react';
 import {
   buildCoursePathItems,
   buildRoadSegments,
@@ -27,19 +12,6 @@ import {
 import type { LessonSummary } from '@/features/learning/queries';
 import { Link } from '@/lib/i18n/routing';
 import { cn } from '@/lib/utils';
-
-const TOPIC_ICONS = [
-  Hand,
-  SunMoon,
-  Heart,
-  Users,
-  Contact,
-  House,
-  BookOpen,
-  HeartHandshake,
-  Coffee,
-  Footprints,
-];
 
 function ChestIcon({ className }: { className?: string }) {
   return (
@@ -209,16 +181,18 @@ export function CoursePathMap({ lessons }: CoursePathMapProps) {
           const lesson = lessons[item.lessonIdx];
           if (!lesson) return null;
 
+          const isExam = lesson.slug.includes('exam');
           const isLocked = !lesson.is_unlocked;
           const isCurrent = !isLocked && item.lessonIdx === activeLessonIndex;
           const isCompleted = lesson.is_completed;
-          const TopicIcon =
-            TOPIC_ICONS[item.lessonIdx % TOPIC_ICONS.length] ?? Star;
 
           const circleClasses = cn(
-            'relative flex h-[74px] w-[74px] items-center justify-center rounded-full border-2 border-b-[6px] pt-[2px] transition-all',
+            'relative flex h-[74px] w-[74px] items-center justify-center border-2 border-b-[6px] pt-[2px] transition-[transform,colors,filter] duration-75',
+            isExam ? 'rounded-3xl' : 'rounded-full',
             isLocked &&
-              'cursor-not-allowed border-[#1D2B4D] bg-[#111A33] text-[#64748B]',
+              (isExam
+                ? 'cursor-not-allowed border-[#263859] bg-[#16213E] text-[#FFC800]/65'
+                : 'cursor-not-allowed border-[#1D2B4D] bg-[#111A33] text-[#64748B]'),
             !isLocked && 'active:translate-y-[4px]',
             !isLocked &&
               isCompleted &&
@@ -235,7 +209,11 @@ export function CoursePathMap({ lessons }: CoursePathMapProps) {
 
           const nodeInner = (
             <>
-              <TopicIcon className="h-7 w-7 stroke-[2.5]" />
+              {isExam ? (
+                <Trophy className="h-7 w-7 stroke-[2.5]" />
+              ) : (
+                <Star className="h-7 w-7 stroke-[2.5]" />
+              )}
               {isCompleted && (
                 <span className="absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-background bg-primary">
                   <Check className="h-3.5 w-3.5 stroke-[3.5] text-[#F8FAFC]" />
@@ -249,21 +227,32 @@ export function CoursePathMap({ lessons }: CoursePathMapProps) {
             </>
           );
 
-          const labelTitle = `${lesson.order_index}. ${lesson.title_ru.split(':')[0]}`;
+          const labelTitle = isExam
+            ? 'Экзамен раздела'
+            : `${lesson.order_index}. ${lesson.title_ru.split(':')[0]}`;
+
           const labelContent = (
             <>
               <p
                 className={cn(
-                  'text-balance text-xs font-bold leading-snug',
+                  'text-balance text-xs font-extrabold leading-snug',
+                  isExam && 'uppercase tracking-wider',
                   isCurrent
                     ? 'text-[#F8FAFC]'
                     : isCompleted
                       ? 'text-primary'
-                      : 'text-[#64748B]'
+                      : isExam
+                        ? 'text-[#FFC800]/80'
+                        : 'text-[#64748B]'
                 )}
               >
                 {labelTitle}
               </p>
+              {isExam && !isCompleted && (
+                <p className="mt-0.5 text-[11px] font-bold text-[#94A3B8]">
+                  Итоговый тест модуля
+                </p>
+              )}
               {lesson.best_score !== null && (
                 <span className="mt-1 inline-block text-[11px] font-extrabold text-primary">
                   ★ {lesson.best_score}%
@@ -280,7 +269,8 @@ export function CoursePathMap({ lessons }: CoursePathMapProps) {
               >
                 <div
                   className={cn(
-                    'relative rounded-full transition-all',
+                    'relative transition-all',
+                    isExam ? 'rounded-3xl' : 'rounded-full',
                     isCurrent &&
                       'border-4 border-[#F8FAFC]/35 bg-background p-2'
                   )}
@@ -288,7 +278,11 @@ export function CoursePathMap({ lessons }: CoursePathMapProps) {
                   {isCurrent && (
                     <div className="pointer-events-none absolute bottom-full left-1/2 mb-1 flex -translate-x-1/2 flex-col items-center">
                       <div className="rounded-xl border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC] px-4 py-1.5 pt-[7px] text-xs font-extrabold uppercase tracking-wider text-primary shadow-md">
-                        {isCompleted ? 'Повторить' : 'Начать'}
+                        {isCompleted
+                          ? 'Повторить'
+                          : isExam
+                            ? 'Экзамен'
+                            : 'Начать'}
                       </div>
                       <div className="h-0 w-0 border-x-[7px] border-t-[7px] border-x-transparent border-t-[#CBD5E1]" />
                     </div>
@@ -297,7 +291,11 @@ export function CoursePathMap({ lessons }: CoursePathMapProps) {
                   {isLocked ? (
                     <div
                       aria-disabled="true"
-                      title="Сначала завершите предыдущий урок"
+                      title={
+                        isExam
+                          ? 'Пройдите все 10 уроков модуля, чтобы открыть экзамен раздела'
+                          : 'Сначала завершите предыдущий урок'
+                      }
                       className={circleClasses}
                     >
                       {nodeInner}
@@ -328,7 +326,7 @@ export function CoursePathMap({ lessons }: CoursePathMapProps) {
                   href={`/lesson/${lesson.slug}`}
                   style={labelStyle}
                   className={cn(
-                    'absolute -translate-y-1/2 transition-opacity hover:opacity-90',
+                    'absolute -translate-y-1/2 transition-opacity duration-75 hover:opacity-90',
                     labelAlignClass
                   )}
                 >

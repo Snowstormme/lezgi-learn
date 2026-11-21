@@ -1,6 +1,3 @@
-import { isSupabaseConfigured } from '@/lib/env';
-import { CONTENT_TTL_MS, memoizeAsync } from '@/lib/server-memo';
-import { createSupabasePublicClient } from '@/lib/supabase/public';
 import { loadAndValidateContentBundle } from '@/content/loader';
 import type { ContentStatus } from '@/features/shared/types';
 
@@ -16,32 +13,15 @@ export interface PhrasebookEntry {
   audio_status: ContentStatus;
 }
 
+let cachedPhrases: PhrasebookEntry[] | null = null;
+
 export async function getPublishedPhrases(): Promise<PhrasebookEntry[]> {
-  if (isSupabaseConfigured()) {
-    try {
-      return await memoizeAsync('phrasebook-v1', CONTENT_TTL_MS, async () => {
-        const supabase = createSupabasePublicClient();
-        const { data, error } = await supabase
-          .from('verified_phrases')
-          .select(
-            'id, slug, category, source_ru, target_lez, transcription_ru, context_note_ru, audio_path, audio_status'
-          )
-          .eq('status', 'published')
-          .order('created_at', { ascending: true });
-
-        if (error || !data || data.length === 0) {
-          throw new Error(error?.message ?? 'Published phrases unavailable');
-        }
-
-        return data;
-      });
-    } catch {
-      // Fallback to local bundle
-    }
+  if (cachedPhrases) {
+    return cachedPhrases;
   }
 
   const bundle = loadAndValidateContentBundle();
-  return bundle.phrases
+  cachedPhrases = bundle.phrases
     .filter((p) => p.status === 'published')
     .map((p) => ({
       slug: p.slug,
@@ -53,4 +33,6 @@ export async function getPublishedPhrases(): Promise<PhrasebookEntry[]> {
       audio_path: p.audio_path ?? null,
       audio_status: p.audio_status ?? 'draft',
     }));
+
+  return cachedPhrases;
 }
