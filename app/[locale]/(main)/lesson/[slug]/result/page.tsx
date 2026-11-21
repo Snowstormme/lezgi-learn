@@ -1,13 +1,11 @@
 import { notFound } from 'next/navigation';
 import {
-  Check,
   RotateCcw,
-  Target,
   Trophy,
-  Zap,
 } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 import { getPublishedLessonDetail } from '@/features/learning/queries';
+import { AnimatedResultStats } from '@/features/learning/components/animated-result-stats';
 import { Link } from '@/lib/i18n/routing';
 import { AudioPlayerButton } from '@/features/shared/components/audio-player-button';
 
@@ -46,7 +44,7 @@ export default async function LessonResultScreenPage({
     <div className="space-y-6 py-4">
       {/* Vermillion & Cloud White Trophy Celebration */}
       <div className="space-y-3 text-center">
-        <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-3xl border-2 border-b-[6px] border-[#B92B1C] bg-primary text-[#F8FAFC]">
+        <div className="animate-duo-pop mx-auto flex h-24 w-24 items-center justify-center rounded-3xl border-2 border-b-[6px] border-[#B92B1C] bg-primary text-[#F8FAFC]">
           <Trophy className="h-12 w-12 stroke-[2.5]" />
         </div>
 
@@ -58,43 +56,13 @@ export default async function LessonResultScreenPage({
         </p>
       </div>
 
-      {/* 3 Tactile Stat Boxes (Vermillion / Cloud White / Navy) */}
-      <div className="grid grid-cols-3 gap-3">
-        {/* XP Box (Vermillion) */}
-        <div className="overflow-hidden rounded-2xl border-2 border-b-4 border-[#B92B1C] bg-primary">
-          <p className="py-1.5 text-center text-[11px] font-black uppercase tracking-wider text-[#F8FAFC]">
-            ОПЫТ
-          </p>
-          <div className="flex items-center justify-center gap-1 rounded-xl bg-background py-3 text-lg font-black text-primary">
-            <Zap className="h-5 w-5 fill-primary text-primary" />
-            <span>+{xpEarned}</span>
-          </div>
-        </div>
-
-        {/* Accuracy Box (Cloud White) */}
-        <div className="overflow-hidden rounded-2xl border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC]">
-          <p className="py-1.5 text-center text-[11px] font-black uppercase tracking-wider text-[#0B132B]">
-            ТОЧНОСТЬ
-          </p>
-          <div className="flex items-center justify-center gap-1 rounded-xl bg-background py-3 text-lg font-black text-[#F8FAFC]">
-            <Target className="h-5 w-5 text-[#F8FAFC]" />
-            <span>{score}%</span>
-          </div>
-        </div>
-
-        {/* Correct Answers Box (Navy + Cloud) */}
-        <div className="overflow-hidden rounded-2xl border-2 border-b-4 border-border bg-secondary">
-          <p className="py-1.5 text-center text-[11px] font-black uppercase tracking-wider text-[#F8FAFC]">
-            ВЕРНО
-          </p>
-          <div className="flex items-center justify-center gap-1 rounded-xl bg-background py-3 text-lg font-black text-[#F8FAFC]">
-            <Check className="h-5 w-5 stroke-[3] text-primary" />
-            <span>
-              {correct}/{total}
-            </span>
-          </div>
-        </div>
-      </div>
+      {/* 3 Tactile Animated Stat Boxes (Vermillion / Cloud White / Navy) */}
+      <AnimatedResultStats
+        xpEarned={xpEarned}
+        score={score}
+        correct={correct}
+        total={total}
+      />
 
       {/* Save prompt if guest */}
       {!savedToAccount && (

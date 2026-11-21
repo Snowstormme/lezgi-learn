@@ -4,10 +4,12 @@ import { useMemo, useState, useTransition } from 'react';
 import {
   BookOpen,
   Check,
+  Flame,
   Keyboard,
   LayoutGrid,
   Lightbulb,
   RotateCcw,
+  Trophy,
   X,
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -57,6 +59,7 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
 
   const exercises = lesson.exercises;
   const baseExerciseCount = exercises.length;
+  const isUnitExam = lesson.slug.includes('exam');
 
   // Queue of exercise indices; wrong answers get pushed to the end for Duolingo-style mistake review
   const [exerciseQueue, setExerciseQueue] = useState<number[]>(() =>
@@ -69,6 +72,7 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
 
   const [showGrammarTip, setShowGrammarTip] = useState(false);
   const [firstPassCorrectCount, setFirstPassCorrectCount] = useState(0);
+  const [comboStreak, setComboStreak] = useState(0);
 
   // Per-exercise state
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
@@ -208,14 +212,19 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
       if (nextMatched.length === currentExercise.payload.pairs.length) {
         const isCleanRun = !hadMatchingMistake;
         setCheckResult('correct');
-        if (isCleanRun && !isMistakeReviewPass) {
-          setFirstPassCorrectCount((c) => c + 1);
-        } else if (!isCleanRun) {
+        if (isCleanRun) {
+          setComboStreak((s) => s + 1);
+          if (!isMistakeReviewPass) {
+            setFirstPassCorrectCount((c) => c + 1);
+          }
+        } else {
+          setComboStreak(0);
           setExerciseQueue((q) => [...q, currentExerciseIndex]);
         }
       }
     } else {
       setHadMatchingMistake(true);
+      setComboStreak(0);
       setMismatchRight(rightValue);
       setTimeout(() => {
         setMismatchRight(null);
@@ -232,10 +241,12 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
         selectedOption === currentExercise.payload.correct_index;
       setCheckResult(isRight ? 'correct' : 'wrong');
       if (isRight) {
+        setComboStreak((s) => s + 1);
         if (!isMistakeReviewPass) {
           setFirstPassCorrectCount((c) => c + 1);
         }
       } else {
+        setComboStreak(0);
         setExerciseQueue((q) => [...q, currentExerciseIndex]);
       }
       return;
@@ -249,10 +260,12 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
       );
       setCheckResult(isRight ? 'correct' : 'wrong');
       if (isRight) {
+        setComboStreak((s) => s + 1);
         if (!isMistakeReviewPass) {
           setFirstPassCorrectCount((c) => c + 1);
         }
       } else {
+        setComboStreak(0);
         setExerciseQueue((q) => [...q, currentExerciseIndex]);
       }
     }
@@ -343,7 +356,7 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
         </div>
 
         {activeHintToken && (
-          <div className="inline-flex items-center gap-2 rounded-xl border-2 border-[#0B132B] bg-[#0B132B] px-3 py-1.5 text-xs font-bold text-[#F8FAFC]">
+          <div className="animate-duo-pop inline-flex items-center gap-2 rounded-xl border-2 border-[#0B132B] bg-[#0B132B] px-3 py-1.5 text-xs font-bold text-[#F8FAFC]">
             <span className="text-primary">
               {cleanTokenForLookup(activeHintToken.token)}:
             </span>
@@ -356,13 +369,13 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
 
   return (
     <div className="flex min-h-[calc(100dvh-2rem)] flex-col justify-between">
-      {/* Top Bar: X + Chunky Progress Bar + Step Counter */}
+      {/* Top Bar: X + Chunky Progress Bar + Combo Streak + Step Counter */}
       <div className="space-y-4">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5">
           <Link
             href="/learn"
             aria-label={t('exitToMap')}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border-2 border-border bg-card text-muted-foreground transition-colors hover:text-[#F8FAFC]"
+            className="duo-card-3d flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border-2 border-b-4 border-border bg-card text-muted-foreground hover:text-[#F8FAFC]"
           >
             <X className="h-5 w-5 stroke-[2.5]" />
           </Link>
@@ -378,6 +391,16 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
             total={exerciseQueue.length}
             className="flex-1"
           />
+
+          {comboStreak >= 2 && (
+            <span
+              key={`combo-${comboStreak}`}
+              className="animate-duo-pop inline-flex shrink-0 items-center gap-1 rounded-xl border-2 border-[#B92B1C] bg-primary px-2.5 py-1 text-xs font-black uppercase text-[#F8FAFC]"
+            >
+              <Flame className="h-3.5 w-3.5 fill-[#F8FAFC] text-[#F8FAFC]" />
+              <span>{comboStreak} ПОДРЯД!</span>
+            </span>
+          )}
 
           <span className="shrink-0 rounded-xl border-2 border-border bg-card px-2.5 py-1 text-xs font-black tabular-nums text-[#F8FAFC]">
             {Math.min(queueCursor + 1, exerciseQueue.length)} /{' '}
@@ -410,7 +433,7 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
               {currentTeachWords.map((item) => (
                 <div
                   key={item.lez}
-                  className="rounded-2xl border-2 border-b-4 border-border bg-card p-4"
+                  className="duo-card-3d rounded-2xl border-2 border-b-4 border-border bg-card p-4"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="space-y-1">
@@ -453,6 +476,13 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
           <>
             {/* Prompt Header + Theory Toggle */}
             <div className="space-y-3 pt-2">
+              {isUnitExam && !isMistakeReviewPass && (
+                <div className="inline-flex items-center gap-1.5 rounded-xl border-2 border-[#FFC800] bg-[#16213E] px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-[#FFC800]">
+                  <Trophy className="h-3.5 w-3.5 stroke-[2.5]" />
+                  <span>Экзамен раздела</span>
+                </div>
+              )}
+
               {isMistakeReviewPass && (
                 <div className="inline-flex items-center gap-1.5 rounded-xl border-2 border-[#B92B1C] bg-primary/20 px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-primary">
                   <RotateCcw className="h-3.5 w-3.5 stroke-[2.5]" />
@@ -465,27 +495,28 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
                   {currentExercise.prompt_ru}
                 </h1>
 
-                {(lesson.grammar_tip_ru ||
-                  currentTeachWords.length > 0) && (
-                  <button
-                    type="button"
-                    onClick={() => setShowGrammarTip((v) => !v)}
-                    title="Показать шпаргалку к уроку"
-                    className={cn(
-                      'flex h-10 shrink-0 items-center gap-1.5 rounded-xl border-2 border-b-4 px-3 text-xs font-black uppercase tracking-wider transition-all active:translate-y-[1px] active:border-b-2',
-                      showGrammarTip
-                        ? 'border-[#CBD5E1] bg-[#F8FAFC] text-[#0B132B]'
-                        : 'border-border bg-card text-[#F8FAFC] hover:border-primary'
-                    )}
-                  >
-                    <Lightbulb className="h-4 w-4 stroke-[2.5] text-primary" />
-                    <span>Шпаргалка</span>
-                  </button>
-                )}
+                {!isUnitExam &&
+                  (lesson.grammar_tip_ru ||
+                    currentTeachWords.length > 0) && (
+                    <button
+                      type="button"
+                      onClick={() => setShowGrammarTip((v) => !v)}
+                      title="Показать шпаргалку к уроку"
+                      className={cn(
+                        'duo-card-3d flex h-10 shrink-0 items-center gap-1.5 rounded-xl border-2 border-b-4 px-3 text-xs font-black uppercase tracking-wider',
+                        showGrammarTip
+                          ? 'border-[#CBD5E1] bg-[#F8FAFC] text-[#0B132B]'
+                          : 'border-border bg-card text-[#F8FAFC] hover:border-primary'
+                      )}
+                    >
+                      <Lightbulb className="h-4 w-4 stroke-[2.5] text-primary" />
+                      <span>Шпаргалка</span>
+                    </button>
+                  )}
               </div>
 
-              {showGrammarTip && (
-                <div className="space-y-2 rounded-2xl border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC] p-4 text-sm font-bold leading-relaxed text-[#0B132B]">
+              {showGrammarTip && !isUnitExam && (
+                <div className="animate-duo-popover space-y-2 rounded-2xl border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC] p-4 text-sm font-bold leading-relaxed text-[#0B132B]">
                   {lesson.grammar_tip_ru && <p>{lesson.grammar_tip_ru}</p>}
                   {currentTeachWords.length > 0 && (
                     <div className="grid grid-cols-1 gap-1.5 border-t border-[#CBD5E1] pt-2 text-xs">
@@ -511,7 +542,6 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
               {/* 1. MULTIPLE CHOICE */}
               {currentExercise.type === 'multiple_choice' && (
                 <div className="space-y-5">
-                  {/* Emblem + Speech Bubble with Tappable Dotted Hints */}
                   <div className="space-y-1.5">
                     <div className="flex items-center gap-3">
                       <LezgiBrandIcon size="lg" />
@@ -529,12 +559,16 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
                     </p>
                   </div>
 
-                  {/* 3D Option Cards */}
+                  {/* 3D Option Cards with hover-sink and wrong-answer shake */}
                   <div className="space-y-3">
                     {currentExercise.payload.options.map((option, idx) => {
                       const isSelected = selectedOption === idx;
                       const isCorrectOption =
                         idx === currentExercise.payload.correct_index;
+                      const isWrongSelected =
+                        checkResult === 'wrong' &&
+                        isSelected &&
+                        !isCorrectOption;
 
                       return (
                         <button
@@ -543,7 +577,8 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
                           disabled={checkResult !== null}
                           onClick={() => setSelectedOption(idx)}
                           className={cn(
-                            'flex min-h-[56px] w-full items-center justify-between gap-3 rounded-2xl border-2 border-b-4 px-4 py-3 text-left text-base font-extrabold transition-all active:translate-y-[2px]',
+                            'duo-card-3d flex min-h-[56px] w-full items-center justify-between gap-3 rounded-2xl border-2 border-b-4 px-4 py-3 text-left text-base font-extrabold',
+                            isWrongSelected && 'animate-duo-shake',
                             checkResult === null &&
                               !isSelected &&
                               'border-border bg-card text-[#F8FAFC] hover:bg-secondary',
@@ -553,9 +588,7 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
                             checkResult !== null &&
                               isCorrectOption &&
                               'border-emerald-500 bg-emerald-500/20 text-emerald-200',
-                            checkResult === 'wrong' &&
-                              isSelected &&
-                              !isCorrectOption &&
+                            isWrongSelected &&
                               'border-primary bg-primary/20 text-primary'
                           )}
                         >
@@ -598,7 +631,7 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
                             disabled={isMatched}
                             onClick={() => setSelectedLeft(pair.left)}
                             className={cn(
-                              'flex min-h-[58px] w-full items-center justify-center rounded-2xl border-2 border-b-4 px-3 py-2.5 text-center text-base font-black transition-all active:translate-y-[2px]',
+                              'duo-card-3d flex min-h-[58px] w-full items-center justify-center rounded-2xl border-2 border-b-4 px-3 py-2.5 text-center text-base font-black',
                               isMatched &&
                                 'border-border/40 bg-card/30 text-muted-foreground/40',
                               !isMatched &&
@@ -634,11 +667,11 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
                             disabled={isMatched || !selectedLeft}
                             onClick={() => handleSelectRightPair(rightText)}
                             className={cn(
-                              'flex min-h-[58px] w-full items-center justify-center rounded-2xl border-2 border-b-4 px-3 py-2.5 text-center text-sm font-extrabold transition-all active:translate-y-[2px]',
+                              'duo-card-3d flex min-h-[58px] w-full items-center justify-center rounded-2xl border-2 border-b-4 px-3 py-2.5 text-center text-sm font-extrabold',
                               isMatched &&
                                 'border-border/40 bg-card/30 text-muted-foreground/40',
                               isMismatch &&
-                                'border-primary bg-primary/25 text-primary',
+                                'animate-duo-shake border-primary bg-primary/25 text-primary',
                               !isMatched &&
                                 !isMismatch &&
                                 'border-border bg-card text-[#F8FAFC] hover:bg-secondary'
@@ -659,9 +692,7 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
                   {currentExercise.payload.question_ru && (
                     <div className="space-y-1.5">
                       <div className="flex items-center gap-3">
-                        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border-2 border-b-4 border-[#B92B1C] bg-primary text-lg font-black text-[#F8FAFC]">
-                          ЛӀ
-                        </div>
+                        <LezgiBrandIcon size="lg" />
                         <div className="flex min-w-0 flex-1 items-center justify-between gap-3 rounded-2xl border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC] px-4 py-3.5 text-[#0B132B]">
                           {renderInteractiveBubbleText(
                             currentExercise.payload.question_ru
@@ -677,7 +708,12 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
                   {isWordBankMode ? (
                     <div className="space-y-4">
                       {/* Assembly Tray */}
-                      <div className="min-h-[68px] rounded-2xl border-2 border-dashed border-border bg-card/60 p-3">
+                      <div
+                        className={cn(
+                          'min-h-[68px] rounded-2xl border-2 border-dashed border-border bg-card/60 p-3',
+                          checkResult === 'wrong' && 'animate-duo-shake'
+                        )}
+                      >
                         {selectedBankIndices.length === 0 ? (
                           <p className="py-2 text-center text-xs font-bold text-[#94A3B8]">
                             Нажимайте на плашки со словами ниже, чтобы собрать ответ
@@ -690,7 +726,7 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
                                 type="button"
                                 disabled={checkResult !== null}
                                 onClick={() => handleToggleBankTile(tileIdx)}
-                                className="flex h-11 items-center justify-center rounded-xl border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC] px-3.5 pt-[1px] text-base font-extrabold text-[#0B132B] transition-all active:translate-y-[2px]"
+                                className="animate-duo-pop duo-card-3d flex h-11 items-center justify-center rounded-xl border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC] px-3.5 pt-[1px] text-base font-extrabold text-[#0B132B]"
                               >
                                 {wordBankTiles[tileIdx]}
                               </button>
@@ -711,10 +747,10 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
                               disabled={isUsed || checkResult !== null}
                               onClick={() => handleToggleBankTile(tileIdx)}
                               className={cn(
-                                'flex h-12 min-w-[64px] items-center justify-center rounded-xl border-2 border-b-4 px-4 pt-[1px] text-base font-extrabold transition-all',
+                                'duo-card-3d flex h-12 min-w-[64px] items-center justify-center rounded-xl border-2 border-b-4 px-4 pt-[1px] text-base font-extrabold',
                                 isUsed
                                   ? 'border-border/30 bg-card/20 text-transparent'
-                                  : 'border-border bg-card text-[#F8FAFC] hover:border-[#F8FAFC]/60 active:translate-y-[2px]'
+                                  : 'border-border bg-card text-[#F8FAFC] hover:border-[#F8FAFC]/60'
                               )}
                             >
                               {tile}
@@ -751,7 +787,10 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
                           }
                         }}
                         placeholder={t('inputPlaceholder')}
-                        className="h-14 text-lg font-extrabold"
+                        className={cn(
+                          'h-14 text-lg font-extrabold',
+                          checkResult === 'wrong' && 'animate-duo-shake'
+                        )}
                         autoComplete="off"
                         autoCorrect="off"
                         spellCheck={false}
@@ -783,7 +822,7 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
                               onClick={() =>
                                 setTextAnswer((prev) => `${prev}${char}`)
                               }
-                              className="flex h-11 min-w-[44px] items-center justify-center rounded-xl border-2 border-b-4 border-border bg-card px-3 text-sm font-black text-[#F8FAFC] transition-all hover:border-primary active:translate-y-[2px] disabled:opacity-50"
+                              className="duo-card-3d flex h-11 min-w-[44px] items-center justify-center rounded-xl border-2 border-b-4 border-border bg-card px-3 text-sm font-black text-[#F8FAFC] hover:border-primary disabled:opacity-50"
                             >
                               {char}
                             </button>
@@ -825,7 +864,7 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
         ) : (
           <div
             className={cn(
-              '-mx-4 -mb-4 space-y-4 rounded-t-3xl border-t-2 p-5',
+              'animate-duo-popover -mx-4 -mb-4 space-y-4 rounded-t-3xl border-t-2 p-5',
               checkResult === 'correct'
                 ? 'border-emerald-500/40 bg-[#102926]'
                 : 'border-primary/50 bg-[#2A1419]'

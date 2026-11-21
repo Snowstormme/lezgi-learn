@@ -137,3 +137,69 @@
 .animate-duo-popover {
   animation: duoPopoverIn 180ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+/* Tactile 3D Cards & Word Tiles inside Lesson Runner */
+.duo-card-3d {
+  transition:
+    transform 110ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    background-color 110ms ease,
+    border-color 110ms ease;
+}
+.duo-card-3d:not(:disabled):hover {
+  transform: translateY(2px);
+}
+.duo-card-3d:not(:disabled):active {
+  transform: translateY(4px);
+}
+
+@keyframes duoFloat {
+  0%,
+  100% {
+    transform: translate(-50%, 0);
+  }
+  50% {
+    transform: translate(-50%, -4px);
+  }
+}
+
+.animate-duo-float {
+  animation: duoFloat 2.2s ease-in-out infinite;
+}
+
+@keyframes duoPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.82);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-duo-pop {
+  animation: duoPop 200ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes duoShake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-6px);
+  }
+  40%,
+  80% {
+    transform: translateX(6px);
+  }
+}
+
+.animate-duo-shake {
+  animation: duoShake 340ms ease-in-out;
+}

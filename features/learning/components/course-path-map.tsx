@@ -1,7 +1,7 @@
 'use client';
 
-import { Fragment, useState } from 'react';
-import { Check, Flag, Lock, Star, Trophy } from 'lucide-react';
+import { Fragment, useState, useTransition } from 'react';
+import { Check, Flag, Lock, Sparkles, Star, Trophy, Zap } from 'lucide-react';
 import {
   buildCoursePathItems,
   buildRoadSegments,
@@ -11,14 +11,21 @@ import {
   LABEL_WIDTH,
   MAP_WIDTH,
 } from '@/features/learning/course-path';
+import { claimMilestoneChestAction } from '@/features/learning/actions';
 import type { LessonSummary } from '@/features/learning/queries';
-import { Link } from '@/lib/i18n/routing';
+import { Link, useRouter } from '@/lib/i18n/routing';
 import { cn } from '@/lib/utils';
 
 const POPOVER_WIDTH = 272;
 const POPOVER_LEFT = (MAP_WIDTH - POPOVER_WIDTH) / 2;
 
-function ChestIcon({ className }: { className?: string }) {
+function ChestIcon({
+  className,
+  isOpen = false,
+}: {
+  className?: string;
+  isOpen?: boolean;
+}) {
   return (
     <svg
       viewBox="-12 -12 24 24"
@@ -28,7 +35,7 @@ function ChestIcon({ className }: { className?: string }) {
     >
       <rect
         x="-9"
-        y="-5"
+        y={isOpen ? '-6.5' : '-5'}
         width="18"
         height="12"
         rx="2.5"
@@ -37,13 +44,20 @@ function ChestIcon({ className }: { className?: string }) {
       />
       <line
         x1="-9"
-        y1="-0.5"
+        y1={isOpen ? '-2' : '-0.5'}
         x2="9"
-        y2="-0.5"
+        y2={isOpen ? '-2' : '-0.5'}
         stroke="currentColor"
         strokeWidth="2.2"
       />
-      <rect x="-2" y="-2.5" width="4" height="5" rx="0.8" fill="currentColor" />
+      <rect
+        x="-2"
+        y={isOpen ? '-3.5' : '-2.5'}
+        width="4"
+        height="5"
+        rx="0.8"
+        fill="currentColor"
+      />
     </svg>
   );
 }
@@ -53,6 +67,9 @@ interface CoursePathMapProps {
 }
 
 export function CoursePathMap({ lessons }: CoursePathMapProps) {
+  const router = useRouter();
+  const [isClaimingChest, startChestTransition] = useTransition();
+
   const firstIncompleteIndex = lessons.findIndex(
     (l) => l.is_unlocked && !l.is_completed
   );
@@ -60,6 +77,7 @@ export function CoursePathMap({ lessons }: CoursePathMapProps) {
     firstIncompleteIndex === -1 ? 0 : firstIncompleteIndex;
 
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
+  const [claimedChests, setClaimedChests] = useState<string[]>([]);
 
   const items = buildCoursePathItems(lessons);
   const segments = buildRoadSegments(items);
@@ -72,9 +90,21 @@ export function CoursePathMap({ lessons }: CoursePathMapProps) {
 
   const darkSegments = segments.filter((s) => !s.lit);
   const litSegments = segments.filter((s) => s.lit);
+  const completedFirstFiveCount = lessons
+    .slice(0, 5)
+    .filter((l) => l.is_completed).length;
 
   function handleToggleNode(key: string) {
     setSelectedKey((prev) => (prev === key ? null : key));
+  }
+
+  function handleClaimChest(chestKey: string) {
+    if (claimedChests.includes(chestKey)) return;
+    setClaimedChests((prev) => [...prev, chestKey]);
+    startChestTransition(async () => {
+      await claimMilestoneChestAction({ chestKey });
+      router.refresh();
+    });
   }
 
   return (
@@ -188,6 +218,12 @@ export function CoursePathMap({ lessons }: CoursePathMapProps) {
 
         const labelAlignClass =
           item.labelSide === 'right' ? 'text-left' : 'text-right';
+        const isSelected = selectedKey === item.key;
+        const showPopoverAbove = item.index >= items.length - 1;
+        const arrowOffsetLeft = Math.max(
+          22,
+          Math.min(POPOVER_WIDTH - 22, item.cx - POPOVER_LEFT)
+        );
 
         if (item.kind === 'lesson' && item.lessonIdx !== null) {
           const lesson = lessons[item.lessonIdx];
@@ -197,7 +233,6 @@ export function CoursePathMap({ lessons }: CoursePathMapProps) {
           const isLocked = !lesson.is_unlocked;
           const isCurrent = !isLocked && item.lessonIdx === activeLessonIndex;
           const isCompleted = lesson.is_completed;
-          const isSelected = selectedKey === item.key;
 
           // Duolingo-style 3D elliptical puck (78x70) with 8px 3D base that lowers on hover & press
           const puckClasses = cn(
@@ -287,13 +322,6 @@ export function CoursePathMap({ lessons }: CoursePathMapProps) {
             </>
           );
 
-          // Position popover below node (or above if it's the last node in the path)
-          const showPopoverAbove = item.index >= items.length - 1;
-          const arrowOffsetLeft = Math.max(
-            22,
-            Math.min(POPOVER_WIDTH - 22, item.cx - POPOVER_LEFT)
-          );
-
           return (
             <Fragment key={item.key}>
               <div
@@ -316,7 +344,7 @@ export function CoursePathMap({ lessons }: CoursePathMapProps) {
                     <button
                       type="button"
                       onClick={() => handleToggleNode(item.key)}
-                      className=" absolute bottom-full left-1/2 mb-1.5 flex -translate-x-1/2 cursor-pointer flex-col items-center transition-transform duration-150 hover:translate-y-[2px]"
+                      className="animate-duo-float absolute bottom-full left-1/2 mb-1.5 flex cursor-pointer flex-col items-center"
                     >
                       <div className="rounded-xl border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC] px-4 py-1.5 pt-[7px] text-xs font-extrabold uppercase tracking-wider text-primary shadow-md">
                         {isCompleted
@@ -367,7 +395,6 @@ export function CoursePathMap({ lessons }: CoursePathMapProps) {
                   onClick={(e) => e.stopPropagation()}
                   className="animate-duo-popover absolute z-30"
                 >
-                  {/* Top pointer triangle */}
                   {!showPopoverAbove && (
                     <div
                       style={{ left: arrowOffsetLeft }}
@@ -428,7 +455,6 @@ export function CoursePathMap({ lessons }: CoursePathMapProps) {
                     )}
                   </div>
 
-                  {/* Bottom pointer triangle when shown above */}
                   {showPopoverAbove && (
                     <div
                       style={{ left: arrowOffsetLeft }}
@@ -445,40 +471,151 @@ export function CoursePathMap({ lessons }: CoursePathMapProps) {
         }
 
         if (item.kind === 'chest') {
+          const isClaimed = claimedChests.includes(item.key);
+
           return (
             <Fragment key={item.key}>
               <div
                 style={{ left: item.cx, top: item.cy }}
-                className="absolute -translate-x-1/2 -translate-y-1/2"
+                className={cn(
+                  'absolute -translate-x-1/2 -translate-y-1/2',
+                  isSelected ? 'z-30' : 'z-10'
+                )}
+                onClick={(e) => e.stopPropagation()}
               >
-                <div
+                <button
+                  type="button"
+                  aria-expanded={isSelected}
+                  aria-label="Сундук этапа"
+                  onClick={() => handleToggleNode(item.key)}
                   className={cn(
-                    'duo-node-3d flex h-[54px] w-[62px] items-center justify-center rounded-2xl border-2',
+                    'duo-node-3d relative flex h-[58px] w-[68px] cursor-pointer items-center justify-center rounded-2xl border-2',
+                    isSelected && 'is-pressed',
                     item.reached
                       ? 'duo-node-completed border-[#FFC800] bg-[#16213E] text-[#FFC800]'
                       : 'duo-node-locked border-[#1D2B4D] bg-[#111A33] text-[#64748B]'
                   )}
                 >
-                  <ChestIcon className="h-7 w-7" />
-                </div>
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-x-2.5 top-1 h-2 rounded-full bg-white/[0.06]"
+                  />
+                  <ChestIcon className="h-7 w-7" isOpen={isClaimed} />
+                  {isClaimed && (
+                    <span className="animate-duo-pop absolute -right-1.5 -top-1.5 flex h-6 w-6 items-center justify-center rounded-full border-2 border-background bg-[#FFC800] text-[#0B132B]">
+                      <Check className="h-3.5 w-3.5 stroke-[3.5]" />
+                    </span>
+                  )}
+                </button>
               </div>
 
-              <div
+              <button
+                type="button"
                 style={labelStyle}
-                className={cn('absolute -translate-y-1/2', labelAlignClass)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleToggleNode(item.key);
+                }}
+                className={cn(
+                  'absolute -translate-y-1/2 cursor-pointer transition-opacity duration-75 hover:opacity-90',
+                  labelAlignClass
+                )}
               >
                 <p
                   className={cn(
                     'text-balance text-xs font-extrabold leading-snug',
-                    item.reached ? 'text-[#FFC800]' : 'text-[#64748B]'
+                    item.reached || isSelected
+                      ? 'text-[#FFC800]'
+                      : 'text-[#64748B]'
                   )}
                 >
                   Сундук этапа
                 </p>
                 <p className="mt-0.5 text-[11px] font-bold text-[#94A3B8]">
-                  {item.reached ? 'Этап пройден' : 'Пройдите 5 уроков'}
+                  {isClaimed
+                    ? 'Награда получена!'
+                    : item.reached
+                      ? 'Открыть · +25 XP'
+                      : 'Пройдите 5 уроков'}
                 </p>
-              </div>
+              </button>
+
+              {/* Animated Chest Reward Popover Card */}
+              {isSelected && (
+                <div
+                  style={{
+                    left: POPOVER_LEFT,
+                    width: POPOVER_WIDTH,
+                    top: item.cy + 48,
+                  }}
+                  onClick={(e) => e.stopPropagation()}
+                  className="animate-duo-popover absolute z-30"
+                >
+                  <div
+                    style={{ left: arrowOffsetLeft }}
+                    className={cn(
+                      'absolute -top-[9px] h-0 w-0 -translate-x-1/2 border-x-[10px] border-b-[10px] border-x-transparent',
+                      item.reached
+                        ? 'border-b-[#FFC800]'
+                        : 'border-b-[#263859]'
+                    )}
+                  />
+
+                  <div
+                    className={cn(
+                      'space-y-3 rounded-2xl border-2 border-b-[6px] p-4 shadow-2xl',
+                      item.reached
+                        ? 'border-[#FFC800] bg-[#16213E] text-[#F8FAFC]'
+                        : 'border-[#263859] bg-[#16213E] text-[#F8FAFC]'
+                    )}
+                  >
+                    <div className="space-y-1">
+                      <p className="flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-wider text-[#FFC800]">
+                        <Sparkles className="h-3.5 w-3.5" />
+                        <span>Бонус за 5 уроков · +25 XP</span>
+                      </p>
+                      <h3 className="text-balance text-sm font-extrabold leading-snug text-[#F8FAFC]">
+                        Сундук первого этапа
+                      </h3>
+                      <p className="pt-0.5 text-xs font-bold leading-snug text-[#C1D0E4]">
+                        {isClaimed
+                          ? 'Вы уже открыли этот сундук и получили +25 очков опыта!'
+                          : item.reached
+                            ? 'Отличная работа! Первые 5 уроков пройдены — заберите заслуженный бонус опыта.'
+                            : 'Завершите первые 5 уроков модуля, чтобы разблокировать сундук с бонусным опытом.'}
+                      </p>
+                    </div>
+
+                    {isClaimed ? (
+                      <div className="animate-duo-pop flex h-11 w-full items-center justify-center gap-2 rounded-xl border-2 border-[#FFC800] bg-[#FFC800]/15 text-xs font-extrabold uppercase tracking-wider text-[#FFC800]">
+                        <Check className="h-4 w-4 stroke-[3]" />
+                        <span>+25 XP получено</span>
+                      </div>
+                    ) : item.reached ? (
+                      <button
+                        type="button"
+                        disabled={isClaimingChest}
+                        onClick={() => handleClaimChest(item.key)}
+                        className="duo-node-3d duo-node-completed flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-[#CBD5E1] bg-[#FFC800] pt-[1px] text-xs font-extrabold uppercase tracking-wider text-[#0B132B]"
+                      >
+                        <Zap className="h-4 w-4 fill-[#0B132B] text-[#0B132B]" />
+                        <span>
+                          {isClaimingChest
+                            ? 'Открываем...'
+                            : 'Открыть сундук · +25 XP'}
+                        </span>
+                      </button>
+                    ) : (
+                      <div className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border-2 border-b-4 border-[#1D2B4D] bg-[#111A33] text-xs font-extrabold uppercase tracking-wider text-[#64748B]">
+                        <Lock className="h-4 w-4 stroke-[2.5]" />
+                        <span>
+                          Пройдено {completedFirstFiveCount} из 5 уроков
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </Fragment>
           );
         }

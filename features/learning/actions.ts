@@ -223,6 +223,80 @@ export async function completeLessonAction(
   };
 }
 
+const claimChestSchema = z.object({
+  chestKey: z.string().regex(/^chest-after-\d+$/),
+});
+
+export async function claimMilestoneChestAction(
+  input: z.infer<typeof claimChestSchema>
+): Promise<ActionResult<{ xpAwarded: number; alreadyClaimed: boolean }>> {
+  const parsed = claimChestSchema.safeParse(input);
+  if (!parsed.success) {
+    return {
+      ok: false,
+      error: 'Некорректный ключ сундука',
+      code: 'VALIDATION_ERROR',
+    };
+  }
+
+  const cookieStore = await cookies();
+  const currentGuest = parseGuestProgressCookie(
+    cookieStore.get(GUEST_COMPLETED_COOKIE)?.value
+  );
+  const alreadyInCookie = currentGuest[parsed.data.chestKey] !== undefined;
+
+  if (!alreadyInCookie) {
+    const updated = mergeGuestProgress(
+      currentGuest,
+      parsed.data.chestKey,
+      100
+    );
+    cookieStore.set(GUEST_COMPLETED_COOKIE, JSON.stringify(updated), {
+      httpOnly: true,
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 60 * 60 * 24 * 30,
+    });
+  }
+
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = await createSupabaseServerClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user && !alreadyInCookie) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('xp')
+          .eq('id', user.id)
+          .single();
+
+        if (profile) {
+          await supabase
+            .from('profiles')
+            .update({ xp: profile.xp + 25 })
+            .eq('id', user.id);
+        }
+      }
+    } catch {
+      // Guest cookie already persisted
+    }
+  }
+
+  revalidatePath('/learn');
+  revalidatePath('/[locale]/(main)/learn', 'page');
+
+  return {
+    ok: true,
+    data: {
+      xpAwarded: alreadyInCookie ? 0 : 25,
+      alreadyClaimed: alreadyInCookie,
+    },
+  };
+}
+
 const reportSchema = z.object({
   entityType: z.enum(['word', 'word_example', 'exercise', 'lesson']),
   entityId: z.string().uuid('Для отправки репорта нужен UUID записи в БД'),

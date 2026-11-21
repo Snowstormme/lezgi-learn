@@ -1,8 +1,13 @@
+import { cookies } from 'next/headers';
 import { isSupabaseConfigured } from '@/lib/env';
 import {
   createSupabaseServerClient,
   getCurrentAuthUser,
 } from '@/lib/supabase/server';
+import {
+  GUEST_COMPLETED_COOKIE,
+  parseGuestProgressCookie,
+} from '@/features/learning/progression';
 import type { UserRole } from '@/features/shared/types';
 
 export interface CurrentUserSession {
@@ -14,15 +19,44 @@ export interface CurrentUserSession {
   streakDays: number;
 }
 
+async function computeGuestStatsFromCookie(): Promise<{
+  xp: number;
+  streakDays: number;
+}> {
+  try {
+    const cookieStore = await cookies();
+    const guestMap = parseGuestProgressCookie(
+      cookieStore.get(GUEST_COMPLETED_COOKIE)?.value
+    );
+    const entries = Object.entries(guestMap);
+    if (entries.length === 0) {
+      return { xp: 0, streakDays: 0 };
+    }
+
+    let xp = 0;
+    for (const [key, score] of entries) {
+      if (key.startsWith('chest-')) {
+        xp += 25;
+      } else {
+        xp += Math.max(5, Math.round(score * 0.15));
+      }
+    }
+    return { xp, streakDays: 1 };
+  } catch {
+    return { xp: 0, streakDays: 0 };
+  }
+}
+
 export async function getCurrentUserSession(): Promise<CurrentUserSession> {
   if (!isSupabaseConfigured()) {
+    const guest = await computeGuestStatsFromCookie();
     return {
       isAuthenticated: false,
       email: null,
       displayName: null,
       role: 'learner',
-      xp: 0,
-      streakDays: 0,
+      xp: guest.xp,
+      streakDays: guest.streakDays,
     };
   }
 
@@ -30,13 +64,14 @@ export async function getCurrentUserSession(): Promise<CurrentUserSession> {
     const user = await getCurrentAuthUser();
 
     if (!user) {
+      const guest = await computeGuestStatsFromCookie();
       return {
         isAuthenticated: false,
         email: null,
         displayName: null,
         role: 'learner',
-        xp: 0,
-        streakDays: 0,
+        xp: guest.xp,
+        streakDays: guest.streakDays,
       };
     }
 
@@ -60,13 +95,14 @@ export async function getCurrentUserSession(): Promise<CurrentUserSession> {
       streakDays: profile?.streak_days ?? 0,
     };
   } catch {
+    const guest = await computeGuestStatsFromCookie();
     return {
       isAuthenticated: false,
       email: null,
       displayName: null,
       role: 'learner',
-      xp: 0,
-      streakDays: 0,
+      xp: guest.xp,
+      streakDays: guest.streakDays,
     };
   }
 }
