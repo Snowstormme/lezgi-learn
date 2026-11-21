@@ -218,6 +218,5 @@ export async function moderateSuggestionAction(
   }
 
   revalidatePath('/translate');
-  revalidatePath('/phrasebook');
   return { ok: true, data: { status: parsed.data.decision } };
 }

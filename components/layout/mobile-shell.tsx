@@ -7,7 +7,6 @@ import {
   Flame,
   GraduationCap,
   Languages,
-  MessageSquare,
   User,
   Zap,
 } from 'lucide-react';
@@ -47,7 +46,6 @@ export function MobileShell({
     { href: '/learn', label: tNav('learn'), icon: GraduationCap, prefetch: true },
     { href: '/review', label: tNav('review'), icon: Brain, prefetch: false },
     { href: '/dictionary', label: tNav('dictionary'), icon: BookOpen, prefetch: false },
-    { href: '/phrasebook', label: tNav('phrasebook'), icon: MessageSquare, prefetch: false },
     { href: '/translate', label: tNav('translate'), icon: Languages, prefetch: true },
   ];
 
@@ -112,8 +110,8 @@ export function MobileShell({
 
       <main className="flex-1 px-4 py-6 pb-28">{children}</main>
 
-      {/* Bottom Tab Bar (5 equal-width tactile tabs with instant optimistic highlight) */}
-      <nav className="fixed bottom-0 left-1/2 z-20 grid h-20 w-full max-w-md -translate-x-1/2 grid-cols-5 items-center gap-1 border-x-2 border-t-2 border-border bg-background px-2">
+      {/* Bottom Tab Bar (4 equal-width tactile tabs with instant optimistic highlight) */}
+      <nav className="fixed bottom-0 left-1/2 z-20 grid h-20 w-full max-w-md -translate-x-1/2 grid-cols-4 items-center gap-1.5 border-x-2 border-t-2 border-border bg-background px-2.5">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive =
