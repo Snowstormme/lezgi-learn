@@ -6,6 +6,7 @@ import {
 import { getTranslations } from 'next-intl/server';
 import { getPublishedLessonDetail } from '@/features/learning/queries';
 import { AnimatedResultStats } from '@/features/learning/components/animated-result-stats';
+import { ConfettiBurst } from '@/components/course/ConfettiBurst';
 import { Link } from '@/lib/i18n/routing';
 import { AudioPlayerButton } from '@/features/shared/components/audio-player-button';
 import { buildPageMetadata } from '@/lib/seo';
@@ -52,8 +53,11 @@ export default async function LessonResultScreenPage({
     <div className="space-y-6 py-4">
       {/* Vermillion & Cloud White Trophy Celebration */}
       <div className="space-y-3 text-center">
-        <div className="animate-duo-pop mx-auto flex h-24 w-24 items-center justify-center rounded-3xl border-2 border-b-[6px] border-[#B92B1C] bg-primary text-[#F8FAFC]">
-          <Trophy className="h-12 w-12 stroke-[2.5]" />
+        <div className="relative mx-auto flex h-24 w-24 items-center justify-center">
+          {score >= 70 && <ConfettiBurst />}
+          <div className="animate-duo-pop relative z-10 flex h-24 w-24 items-center justify-center rounded-3xl border-2 border-b-[6px] border-[#B92B1C] bg-primary text-[#F8FAFC]">
+            <Trophy className="h-12 w-12 stroke-[2.5]" />
+          </div>
         </div>
 
         <h1 className="text-3xl font-black tracking-tight text-[#F8FAFC]">

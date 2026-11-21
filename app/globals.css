@@ -273,8 +273,46 @@
   animation: duoNodeSheen 6s ease-in-out 1.5s infinite;
 }
 
+@keyframes duoConfettiBurst {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.3) rotate(0deg);
+  }
+  18% {
+    opacity: 1;
+    transform: translate(calc(var(--cx) * 0.45), calc(var(--cy) * 0.45)) scale(1.1)
+      rotate(calc(var(--cr) * 0.5));
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--cx), var(--cy)) scale(0.75) rotate(var(--cr));
+  }
+}
+
+.duo-confetti-piece {
+  position: absolute;
+  opacity: 0;
+  animation: duoConfettiBurst 950ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes duoSkyTwinkle {
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.72;
+  }
+}
+
+.duo-sky-twinkle {
+  animation: duoSkyTwinkle 4.2s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .duo-node-shine::after {
+  .duo-node-shine::after,
+  .duo-confetti-piece,
+  .duo-sky-twinkle {
     animation: none;
     opacity: 0;
   }
