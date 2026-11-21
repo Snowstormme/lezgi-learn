@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation';
 import { routing } from '@/lib/i18n/routing';
 import { getSiteUrl } from '@/lib/seo';
 import '@/app/globals.css';
+import '@/app/path-decor.css';
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ['cyrillic', 'latin'],
