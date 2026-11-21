@@ -1,5 +1,6 @@
 import { isSupabaseConfigured } from '@/lib/env';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { CONTENT_TTL_MS, memoizeAsync } from '@/lib/server-memo';
+import { createSupabasePublicClient } from '@/lib/supabase/public';
 import { loadAndValidateContentBundle } from '@/content/loader';
 import type { ContentStatus } from '@/features/shared/types';
 
@@ -18,18 +19,22 @@ export interface PhrasebookEntry {
 export async function getPublishedPhrases(): Promise<PhrasebookEntry[]> {
   if (isSupabaseConfigured()) {
     try {
-      const supabase = await createSupabaseServerClient();
-      const { data, error } = await supabase
-        .from('verified_phrases')
-        .select(
-          'id, slug, category, source_ru, target_lez, transcription_ru, context_note_ru, audio_path, audio_status'
-        )
-        .eq('status', 'published')
-        .order('created_at', { ascending: true });
+      return await memoizeAsync('phrasebook-v1', CONTENT_TTL_MS, async () => {
+        const supabase = createSupabasePublicClient();
+        const { data, error } = await supabase
+          .from('verified_phrases')
+          .select(
+            'id, slug, category, source_ru, target_lez, transcription_ru, context_note_ru, audio_path, audio_status'
+          )
+          .eq('status', 'published')
+          .order('created_at', { ascending: true });
 
-      if (!error && data && data.length > 0) {
+        if (error || !data || data.length === 0) {
+          throw new Error(error?.message ?? 'Published phrases unavailable');
+        }
+
         return data;
-      }
+      });
     } catch {
       // Fallback to local bundle
     }

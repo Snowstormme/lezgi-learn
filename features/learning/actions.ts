@@ -7,6 +7,7 @@ import { isSupabaseConfigured } from '@/lib/env';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import type { ActionResult } from '@/features/shared/types';
 import { createInitialSrsCardState } from './fsrs';
+import { getPublishedContentSnapshot } from './queries';
 import {
   GUEST_COMPLETED_COOKIE,
   mergeGuestProgress,
@@ -96,27 +97,74 @@ export async function completeLessonAction(
     };
   }
 
-  const { data: lesson } = await supabase
-    .from('lessons')
-    .select('id')
-    .eq('slug', parsed.data.lessonSlug)
-    .eq('status', 'published')
-    .single();
+  let lessonId: string | null = null;
+  let uniqueWordIds: string[] = [];
 
-  if (!lesson) {
-    return {
-      ok: false,
-      error: 'Урок не найден в базе данных',
-      code: 'NOT_FOUND',
-    };
+  try {
+    const snapshot = await getPublishedContentSnapshot();
+    const matchedLesson = snapshot.lessons.find(
+      (l) => l.slug === parsed.data.lessonSlug
+    );
+    if (matchedLesson) {
+      lessonId = matchedLesson.id;
+      uniqueWordIds = [
+        ...new Set(
+          snapshot.exercises
+            .filter((ex) => ex.lesson_id === matchedLesson.id && ex.word_id)
+            .map((ex) => ex.word_id as string)
+        ),
+      ];
+    }
+  } catch {
+    // Fallback to direct DB lookup below
   }
 
-  const { data: existingProgress } = await supabase
-    .from('user_progress')
-    .select('id, score, attempts_count')
-    .eq('user_id', user.id)
-    .eq('lesson_id', lesson.id)
-    .maybeSingle();
+  if (!lessonId) {
+    const { data: lesson } = await supabase
+      .from('lessons')
+      .select('id')
+      .eq('slug', parsed.data.lessonSlug)
+      .eq('status', 'published')
+      .single();
+
+    if (!lesson) {
+      return {
+        ok: false,
+        error: 'Урок не найден в базе данных',
+        code: 'NOT_FOUND',
+      };
+    }
+
+    lessonId = lesson.id;
+
+    const { data: lessonExercises } = await supabase
+      .from('exercises')
+      .select('word_id')
+      .eq('lesson_id', lessonId)
+      .not('word_id', 'is', null);
+
+    uniqueWordIds = [
+      ...new Set(
+        (lessonExercises ?? [])
+          .map((ex) => ex.word_id)
+          .filter((wid): wid is string => Boolean(wid))
+      ),
+    ];
+  }
+
+  const [{ data: existingProgress }, { data: profile }] = await Promise.all([
+    supabase
+      .from('user_progress')
+      .select('id, score, attempts_count')
+      .eq('user_id', user.id)
+      .eq('lesson_id', lessonId)
+      .maybeSingle(),
+    supabase
+      .from('profiles')
+      .select('xp, streak_days, last_active_date')
+      .eq('id', user.id)
+      .single(),
+  ]);
 
   const bestScore = Math.max(
     parsed.data.score,
@@ -124,76 +172,63 @@ export async function completeLessonAction(
   );
   const attemptsCount = (existingProgress?.attempts_count ?? 0) + 1;
 
-  const { error: progressError } = await supabase
-    .from('user_progress')
-    .upsert(
-      {
-        user_id: user.id,
-        lesson_id: lesson.id,
-        status: 'completed',
-        score: bestScore,
-        attempts_count: attemptsCount,
-        completed_at: new Date().toISOString(),
-      },
-      { onConflict: 'user_id,lesson_id' }
-    );
+  const progressUpsertPromise = supabase.from('user_progress').upsert(
+    {
+      user_id: user.id,
+      lesson_id: lessonId,
+      status: 'completed',
+      score: bestScore,
+      attempts_count: attemptsCount,
+      completed_at: new Date().toISOString(),
+    },
+    { onConflict: 'user_id,lesson_id' }
+  );
 
-  if (progressError) {
+  const cardsUpsertPromise =
+    uniqueWordIds.length > 0
+      ? (() => {
+          const initialCard = createInitialSrsCardState();
+          const cardRows = uniqueWordIds.map((wordId) => ({
+            user_id: user.id,
+            word_id: wordId,
+            ...initialCard,
+          }));
+          return supabase.from('user_word_cards').upsert(cardRows, {
+            onConflict: 'user_id,word_id',
+            ignoreDuplicates: true,
+          });
+        })()
+      : Promise.resolve({ error: null });
+
+  const profileUpdatePromise = profile
+    ? (() => {
+        const todayStr = new Date().toISOString().slice(0, 10);
+        const isNewActiveDay = profile.last_active_date !== todayStr;
+        return supabase
+          .from('profiles')
+          .update({
+            xp: profile.xp + xpEarned,
+            streak_days: isNewActiveDay
+              ? Math.max(1, profile.streak_days + 1)
+              : Math.max(1, profile.streak_days),
+            last_active_date: todayStr,
+          })
+          .eq('id', user.id);
+      })()
+    : Promise.resolve({ error: null });
+
+  const [progressResult] = await Promise.all([
+    progressUpsertPromise,
+    cardsUpsertPromise,
+    profileUpdatePromise,
+  ]);
+
+  if (progressResult.error) {
     return {
       ok: false,
       error: 'Не удалось сохранить прогресс урока',
       code: 'DB_ERROR',
     };
-  }
-
-  // Enroll practiced lesson words into user_word_cards (FSRS)
-  const { data: lessonExercises } = await supabase
-    .from('exercises')
-    .select('word_id')
-    .eq('lesson_id', lesson.id)
-    .not('word_id', 'is', null);
-
-  const uniqueWordIds = [
-    ...new Set(
-      (lessonExercises ?? [])
-        .map((ex) => ex.word_id)
-        .filter((wid): wid is string => Boolean(wid))
-    ),
-  ];
-
-  if (uniqueWordIds.length > 0) {
-    const initialCard = createInitialSrsCardState();
-    const cardRows = uniqueWordIds.map((wordId) => ({
-      user_id: user.id,
-      word_id: wordId,
-      ...initialCard,
-    }));
-
-    await supabase
-      .from('user_word_cards')
-      .upsert(cardRows, { onConflict: 'user_id,word_id', ignoreDuplicates: true });
-  }
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('xp, streak_days, last_active_date')
-    .eq('id', user.id)
-    .single();
-
-  if (profile) {
-    const todayStr = new Date().toISOString().slice(0, 10);
-    const isNewActiveDay = profile.last_active_date !== todayStr;
-
-    await supabase
-      .from('profiles')
-      .update({
-        xp: profile.xp + xpEarned,
-        streak_days: isNewActiveDay
-          ? Math.max(1, profile.streak_days + 1)
-          : Math.max(1, profile.streak_days),
-        last_active_date: todayStr,
-      })
-      .eq('id', user.id);
   }
 
   revalidatePath('/learn');

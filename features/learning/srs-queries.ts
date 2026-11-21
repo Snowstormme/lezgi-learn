@@ -1,5 +1,8 @@
 import { isSupabaseConfigured } from '@/lib/env';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import {
+  createSupabaseServerClient,
+  getCurrentAuthUser,
+} from '@/lib/supabase/server';
 import { getPublishedDictionaryWords } from '@/features/dictionary/queries';
 import {
   createInitialSrsCardState,
@@ -31,19 +34,17 @@ export interface SrsDeckSummary {
 }
 
 export async function getSrsReviewDeck(): Promise<SrsDeckSummary> {
-  const allWords = await getPublishedDictionaryWords();
+  const [allWords, user] = await Promise.all([
+    getPublishedDictionaryWords(),
+    isSupabaseConfigured() ? getCurrentAuthUser().catch(() => null) : Promise.resolve(null),
+  ]);
   const now = new Date();
   const defaultState = createInitialSrsCardState(now);
 
-  if (isSupabaseConfigured()) {
+  if (isSupabaseConfigured() && user) {
     try {
       const supabase = await createSupabaseServerClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (user) {
-        const { data: userCards } = await supabase
+      const { data: userCards } = await supabase
           .from('user_word_cards')
           .select('*')
           .eq('user_id', user.id)
@@ -113,7 +114,6 @@ export async function getSrsReviewDeck(): Promise<SrsDeckSummary> {
           dueCount: dueCards.length,
           isAuthenticated: true,
         };
-      }
     } catch {
       // Fallback to starter deck
     }

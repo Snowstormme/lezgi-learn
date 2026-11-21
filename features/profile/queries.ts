@@ -1,5 +1,8 @@
 import { isSupabaseConfigured } from '@/lib/env';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import {
+  createSupabaseServerClient,
+  getCurrentAuthUser,
+} from '@/lib/supabase/server';
 import type { UserRole } from '@/features/shared/types';
 
 export interface CurrentUserSession {
@@ -24,10 +27,7 @@ export async function getCurrentUserSession(): Promise<CurrentUserSession> {
   }
 
   try {
-    const supabase = await createSupabaseServerClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    const user = await getCurrentAuthUser();
 
     if (!user) {
       return {
@@ -40,6 +40,7 @@ export async function getCurrentUserSession(): Promise<CurrentUserSession> {
       };
     }
 
+    const supabase = await createSupabaseServerClient();
     const { data: profile } = await supabase
       .from('profiles')
       .select('display_name, role, xp, streak_days')
