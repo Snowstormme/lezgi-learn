@@ -158,10 +158,6 @@ export function CoursePathMap({ lessons }: CoursePathMapProps) {
         style={{ overflow: 'visible' }}
         aria-hidden="true"
       >
-        {mountains.map((m) => (
-          <PathDecor key={m.key} decor={m} />
-        ))}
-
         {/* Upcoming dark road segments first */}
         {darkSegments.map((seg) => (
           <g key={seg.key}>
@@ -218,6 +214,11 @@ export function CoursePathMap({ lessons }: CoursePathMapProps) {
           </g>
         ))}
       </svg>
+
+      {/* Self-contained HTML/SVG + Pure CSS Scenery Animations (v3) */}
+      {mountains.map((m) => (
+        <PathDecor key={m.key} decor={m} />
+      ))}
 
       {/* Path Nodes, Sibling Labels & Animated Start Popovers */}
       {items.map((item) => {
