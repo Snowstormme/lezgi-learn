@@ -9,7 +9,6 @@ import {
   Clock,
   Eye,
   RotateCcw,
-  Sparkles,
   X,
 } from 'lucide-react';
 import { Link } from '@/lib/i18n/routing';
@@ -301,13 +300,99 @@ export function SrsReviewDeck({
         </CardContent>
       </Card>
 
-      <p className="flex items-center justify-center gap-1.5 text-center text-[11px] font-bold text-muted-foreground">
-        <Sparkles className="h-3.5 w-3.5 text-[#FFC800]" />
-        <span>
-          Интервальное повторение возвращает слова прямо перед тем, как они
-          забудутся
-        </span>
-      </p>
+      {/* Subtle, non-intrusive Spaced Repetition Retention Curve widget */}
+      <div className="rounded-2xl border border-[#1E2D52] bg-[#0D1630]/80 px-4 py-3">
+        <div className="mb-2 flex items-center justify-between text-[11px] font-bold">
+          <span className="uppercase tracking-wider text-[#94A3B8]">
+            Кривая памяти · SRS
+          </span>
+          <span className="tabular-nums text-[#64748B]">
+            Повторений: {currentCard.cardState.reps}
+          </span>
+        </div>
+
+        <svg
+          viewBox="0 0 320 76"
+          className="h-[72px] w-full overflow-visible"
+          aria-hidden="true"
+        >
+          {/* Subtle horizontal reference lines */}
+          <line
+            x1="8"
+            y1="14"
+            x2="312"
+            y2="14"
+            stroke="#1E2D52"
+            strokeWidth="1"
+            strokeDasharray="3 4"
+          />
+          <line
+            x1="8"
+            y1="60"
+            x2="312"
+            y2="60"
+            stroke="#1E2D52"
+            strokeWidth="1"
+          />
+
+          {/* Fading curve without review (dashed muted vermillion) */}
+          <path
+            d="M 12 14 Q 44 54 124 58"
+            fill="none"
+            stroke="#F04E37"
+            strokeWidth="1.6"
+            strokeDasharray="4 4"
+            opacity="0.55"
+          />
+
+          {/* Reinforced SRS retention curve (1d -> 4d -> 10d -> 30d) */}
+          <path
+            d="M 12 14 Q 36 38 66 42 L 66 14 Q 108 32 150 36 L 150 14 Q 202 27 244 30 L 244 14 Q 280 20 310 22"
+            fill="none"
+            stroke="#34D399"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+
+          {/* Review checkpoint dots */}
+          {[
+            { x: 66, label: '1д' },
+            { x: 150, label: '4д' },
+            { x: 244, label: '10д' },
+            { x: 306, label: '30д' },
+          ].map((pt) => (
+            <g key={pt.label}>
+              <circle
+                cx={pt.x}
+                cy={pt.x === 306 ? 22 : 14}
+                r="3.2"
+                fill="#FFC800"
+                stroke="#0D1630"
+                strokeWidth="1.4"
+              />
+              <text
+                x={pt.x}
+                y="72"
+                textAnchor="middle"
+                fill="#64748B"
+                fontSize="9.5"
+                fontWeight="700"
+                fontFamily="var(--font-mono), monospace"
+              >
+                {pt.label}
+              </text>
+            </g>
+          ))}
+        </svg>
+
+        <p className="mt-1.5 text-[11px] font-semibold leading-relaxed text-[#94A3B8]">
+          Каждое <span className="font-extrabold text-emerald-400">«Помню»</span>{' '}
+          поднимает память до 100% и увеличивает интервал, а{' '}
+          <span className="font-extrabold text-primary">«Не помню»</span>{' '}
+          возвращает слово сразу.
+        </p>
+      </div>
     </div>
   );
 }
