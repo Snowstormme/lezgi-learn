@@ -208,10 +208,7 @@ export function SrsReviewDeck({
       {/* Interactive Flashcard — spacious full-focus card */}
       <Card className="flex min-h-[440px] flex-col justify-between border-2 border-b-[6px] border-border bg-card">
         <CardHeader className="flex flex-1 flex-col justify-between space-y-4 pb-4">
-          <div className="flex items-center justify-between">
-            <span className="rounded-lg border border-[#263859] bg-[#111A33] px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-[#CBD5E1]">
-              {currentCard.part_of_speech ?? 'изученное слово'}
-            </span>
+          <div className="flex items-center justify-end">
             <AudioPlayerButton
               textLez={currentCard.lemma_lez}
               transcriptionRu={currentCard.transcription_ru}
