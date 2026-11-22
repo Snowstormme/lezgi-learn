@@ -205,11 +205,11 @@ export function SrsReviewDeck({
 
       <LessonProgressBar current={currentIndex} total={queue.length} />
 
-      {/* Interactive Flashcard */}
-      <Card className="min-h-64 border-2 border-b-[6px] border-border bg-card">
-        <CardHeader className="space-y-3 pb-3">
+      {/* Interactive Flashcard — spacious full-focus card */}
+      <Card className="flex min-h-[440px] flex-col justify-between border-2 border-b-[6px] border-border bg-card">
+        <CardHeader className="flex flex-1 flex-col justify-between space-y-4 pb-4">
           <div className="flex items-center justify-between">
-            <span className="rounded-lg border border-[#263859] bg-[#111A33] px-2.5 py-1 text-[11px] font-extrabold uppercase tracking-wider text-[#CBD5E1]">
+            <span className="rounded-lg border border-[#263859] bg-[#111A33] px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-[#CBD5E1]">
               {currentCard.part_of_speech ?? 'изученное слово'}
             </span>
             <AudioPlayerButton
@@ -220,42 +220,42 @@ export function SrsReviewDeck({
             />
           </div>
 
-          <div className="py-5 text-center">
-            <p className="text-3xl font-black tracking-tight text-[#F8FAFC]">
+          <div className="my-auto py-10 text-center">
+            <p className="text-4xl font-black tracking-tight text-[#F8FAFC]">
               {currentCard.lemma_lez}
             </p>
             {currentCard.transcription_ru && (
-              <p className="mt-1.5 text-xs font-bold text-[#94A3B8]">
+              <p className="mt-2.5 text-sm font-bold text-[#94A3B8]">
                 [{currentCard.transcription_ru}]
               </p>
             )}
           </div>
         </CardHeader>
 
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 pb-6">
           {!isRevealed ? (
             <button
               type="button"
               onClick={() => setIsRevealed(true)}
-              className="duo-card-3d flex min-h-[54px] w-full cursor-pointer items-center justify-center gap-2 rounded-2xl border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC] px-6 py-3 text-sm font-black uppercase tracking-wider text-[#0B132B] hover:bg-white"
+              className="duo-card-3d flex min-h-[60px] w-full cursor-pointer items-center justify-center gap-2 rounded-2xl border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC] px-6 py-3.5 text-sm font-black uppercase tracking-wider text-[#0B132B] hover:bg-white"
             >
-              <Eye className="h-4 w-4 stroke-[2.5]" />
+              <Eye className="h-5 w-5 stroke-[2.5]" />
               <span>Показать перевод</span>
             </button>
           ) : (
-            <div className="animate-duo-popover space-y-4">
+            <div className="animate-duo-popover space-y-5">
               {/* Revealed Answer Panel */}
-              <div className="space-y-2 rounded-2xl border-2 border-[#263859] bg-[#111A33] p-4 text-center">
-                <p className="text-xl font-black text-[#FFC800]">
+              <div className="space-y-2.5 rounded-2xl border-2 border-[#263859] bg-[#111A33] p-5 text-center">
+                <p className="text-2xl font-black text-[#FFC800]">
                   {currentCard.translation_ru}
                 </p>
                 {currentCard.example_lez && (
-                  <div className="border-t border-[#263859]/80 pt-2.5 text-xs">
+                  <div className="border-t border-[#263859]/80 pt-3 text-sm">
                     <p className="font-extrabold text-[#F8FAFC]">
                       «{currentCard.example_lez}»
                     </p>
                     {currentCard.example_ru && (
-                      <p className="mt-0.5 font-semibold text-[#94A3B8]">
+                      <p className="mt-1 text-xs font-semibold text-[#94A3B8]">
                         {currentCard.example_ru}
                       </p>
                     )}
@@ -264,12 +264,12 @@ export function SrsReviewDeck({
               </div>
 
               {/* Simple 2-button grading: Didn't remember / Remembered */}
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-3.5">
                 <button
                   type="button"
                   disabled={isPending}
                   onClick={() => handleGrade(false)}
-                  className="duo-card-3d flex min-h-[64px] cursor-pointer flex-col items-center justify-center gap-0.5 rounded-2xl border-2 border-b-4 border-[#B92B1C] bg-primary/15 px-3 py-2.5 text-primary transition-all hover:bg-primary/25 disabled:opacity-50"
+                  className="duo-card-3d flex min-h-[70px] cursor-pointer flex-col items-center justify-center gap-0.5 rounded-2xl border-2 border-b-4 border-[#B92B1C] bg-primary/15 px-3 py-3 text-primary transition-all hover:bg-primary/25 disabled:opacity-50"
                 >
                   <span className="flex items-center gap-1.5 text-sm font-black uppercase tracking-wider">
                     <X className="h-4 w-4 stroke-[3]" />
@@ -284,7 +284,7 @@ export function SrsReviewDeck({
                   type="button"
                   disabled={isPending}
                   onClick={() => handleGrade(true)}
-                  className="duo-card-3d flex min-h-[64px] cursor-pointer flex-col items-center justify-center gap-0.5 rounded-2xl border-2 border-b-4 border-emerald-600 bg-emerald-500 px-3 py-2.5 text-[#0B132B] transition-all hover:brightness-105 disabled:opacity-50"
+                  className="duo-card-3d flex min-h-[70px] cursor-pointer flex-col items-center justify-center gap-0.5 rounded-2xl border-2 border-b-4 border-emerald-600 bg-emerald-500 px-3 py-3 text-[#0B132B] transition-all hover:brightness-105 disabled:opacity-50"
                 >
                   <span className="flex items-center gap-1.5 text-sm font-black uppercase tracking-wider">
                     <Check className="h-4 w-4 stroke-[3]" />
@@ -299,100 +299,6 @@ export function SrsReviewDeck({
           )}
         </CardContent>
       </Card>
-
-      {/* Subtle, non-intrusive Spaced Repetition Retention Curve widget */}
-      <div className="rounded-2xl border border-[#1E2D52] bg-[#0D1630]/80 px-4 py-3">
-        <div className="mb-2 flex items-center justify-between text-[11px] font-bold">
-          <span className="uppercase tracking-wider text-[#94A3B8]">
-            Кривая памяти · SRS
-          </span>
-          <span className="tabular-nums text-[#64748B]">
-            Повторений: {currentCard.cardState.reps}
-          </span>
-        </div>
-
-        <svg
-          viewBox="0 0 320 76"
-          className="h-[72px] w-full overflow-visible"
-          aria-hidden="true"
-        >
-          {/* Subtle horizontal reference lines */}
-          <line
-            x1="8"
-            y1="14"
-            x2="312"
-            y2="14"
-            stroke="#1E2D52"
-            strokeWidth="1"
-            strokeDasharray="3 4"
-          />
-          <line
-            x1="8"
-            y1="60"
-            x2="312"
-            y2="60"
-            stroke="#1E2D52"
-            strokeWidth="1"
-          />
-
-          {/* Fading curve without review (dashed muted vermillion) */}
-          <path
-            d="M 12 14 Q 44 54 124 58"
-            fill="none"
-            stroke="#F04E37"
-            strokeWidth="1.6"
-            strokeDasharray="4 4"
-            opacity="0.55"
-          />
-
-          {/* Reinforced SRS retention curve (1d -> 4d -> 10d -> 30d) */}
-          <path
-            d="M 12 14 Q 36 38 66 42 L 66 14 Q 108 32 150 36 L 150 14 Q 202 27 244 30 L 244 14 Q 280 20 310 22"
-            fill="none"
-            stroke="#34D399"
-            strokeWidth="2.2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-
-          {/* Review checkpoint dots */}
-          {[
-            { x: 66, label: '1д' },
-            { x: 150, label: '4д' },
-            { x: 244, label: '10д' },
-            { x: 306, label: '30д' },
-          ].map((pt) => (
-            <g key={pt.label}>
-              <circle
-                cx={pt.x}
-                cy={pt.x === 306 ? 22 : 14}
-                r="3.2"
-                fill="#FFC800"
-                stroke="#0D1630"
-                strokeWidth="1.4"
-              />
-              <text
-                x={pt.x}
-                y="72"
-                textAnchor="middle"
-                fill="#64748B"
-                fontSize="9.5"
-                fontWeight="700"
-                fontFamily="var(--font-mono), monospace"
-              >
-                {pt.label}
-              </text>
-            </g>
-          ))}
-        </svg>
-
-        <p className="mt-1.5 text-[11px] font-semibold leading-relaxed text-[#94A3B8]">
-          Каждое <span className="font-extrabold text-emerald-400">«Помню»</span>{' '}
-          поднимает память до 100% и увеличивает интервал, а{' '}
-          <span className="font-extrabold text-primary">«Не помню»</span>{' '}
-          возвращает слово сразу.
-        </p>
-      </div>
     </div>
   );
 }
