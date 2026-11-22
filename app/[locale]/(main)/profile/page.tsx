@@ -5,6 +5,7 @@ import { Link } from '@/lib/i18n/routing';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { buildPageMetadata } from '@/lib/seo';
+import { APP_VERSION } from '@/lib/version';
 
 export const metadata = buildPageMetadata({
   title: 'Профиль ученика',
@@ -87,6 +88,10 @@ export default async function ProfilePage() {
           </CardContent>
         </Card>
       )}
+
+      <p className="pt-2 text-center text-[11px] font-bold tracking-wider text-muted-foreground">
+        Lezgi Learn · v{APP_VERSION}
+      </p>
     </div>
   );
 }
