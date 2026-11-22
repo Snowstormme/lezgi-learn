@@ -40,6 +40,10 @@ describe('SRS daily review queue (strictly from completed lessons)', () => {
     const remembered = scheduleNextSrsCardState(initial, 3, now);
     const missed = scheduleNextSrsCardState(initial, 1, now);
 
+    expect(remembered.scheduled_days).toBeGreaterThanOrEqual(1);
+    expect(new Date(remembered.due).getTime() - now.getTime()).toBeGreaterThanOrEqual(
+      24 * 60 * 60 * 1000
+    );
     expect(new Date(remembered.due).getTime()).toBeGreaterThan(
       new Date(missed.due).getTime()
     );

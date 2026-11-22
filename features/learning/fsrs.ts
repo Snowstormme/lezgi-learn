@@ -86,13 +86,23 @@ export function scheduleNextSrsCardState(
       )
     : 0;
 
+  const minDailyMs = 24 * 60 * 60 * 1000;
+  let dueDate = nextCard.due;
+  let scheduledDays = nextCard.scheduled_days;
+
+  // For "Remembered" (Good / Easy), always schedule at least 1 full day ahead (daily SRS, never 10 min)
+  if (gradeNum >= 3 && dueDate.getTime() - now.getTime() < minDailyMs) {
+    dueDate = new Date(now.getTime() + minDailyMs);
+    scheduledDays = Math.max(1, scheduledDays);
+  }
+
   return {
     state: nextCard.state,
-    due: nextCard.due.toISOString(),
+    due: dueDate.toISOString(),
     stability: Number(nextCard.stability.toFixed(4)),
     difficulty: Number(nextCard.difficulty.toFixed(4)),
     elapsed_days: elapsedDays,
-    scheduled_days: nextCard.scheduled_days,
+    scheduled_days: scheduledDays,
     reps: nextCard.reps,
     lapses: nextCard.lapses,
     last_review: now.toISOString(),
