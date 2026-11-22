@@ -1,9 +1,13 @@
 'use server';
 
+import { cookies } from 'next/headers';
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { isSupabaseConfigured } from '@/lib/env';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import {
+  createSupabaseServerClient,
+  getCurrentAuthUser,
+} from '@/lib/supabase/server';
 import type { ActionResult } from '@/features/shared/types';
 import {
   createInitialSrsCardState,
@@ -11,9 +15,15 @@ import {
   type SrsRatingGrade,
   type StoredSrsCardState,
 } from './fsrs';
+import {
+  GUEST_SRS_COOKIE,
+  parseGuestSrsCookie,
+  serializeGuestSrsCookie,
+} from './srs-guest-cookie';
 
 const reviewCardSchema = z.object({
   wordId: z.string().uuid().optional(),
+  slug: z.string().min(1).max(120).optional(),
   grade: z.union([
     z.literal(1),
     z.literal(2),
@@ -55,52 +65,63 @@ export async function reviewWordCardAction(
     parsed.data.grade as SrsRatingGrade
   );
 
-  if (!isSupabaseConfigured() || !parsed.data.wordId) {
-    return {
-      ok: true,
-      data: { nextState, savedToDb: false },
-    };
+  const user = isSupabaseConfigured()
+    ? await getCurrentAuthUser().catch(() => null)
+    : null;
+
+  if (user && isSupabaseConfigured() && parsed.data.wordId) {
+    try {
+      const supabase = await createSupabaseServerClient();
+      const { error } = await supabase.from('user_word_cards').upsert(
+        {
+          user_id: user.id,
+          word_id: parsed.data.wordId,
+          state: nextState.state,
+          due: nextState.due,
+          stability: nextState.stability,
+          difficulty: nextState.difficulty,
+          elapsed_days: nextState.elapsed_days,
+          scheduled_days: nextState.scheduled_days,
+          reps: nextState.reps,
+          lapses: nextState.lapses,
+          last_review: nextState.last_review,
+        },
+        { onConflict: 'user_id,word_id' }
+      );
+
+      if (!error) {
+        revalidatePath('/review');
+        return {
+          ok: true,
+          data: { nextState, savedToDb: true },
+        };
+      }
+    } catch {
+      // Fall through to cookie persistence
+    }
   }
 
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return {
-      ok: true,
-      data: { nextState, savedToDb: false },
-    };
+  // Persist spaced-repetition schedule for guests in cookie so daily review works without login
+  if (parsed.data.slug) {
+    try {
+      const cookieStore = await cookies();
+      const existing = parseGuestSrsCookie(
+        cookieStore.get(GUEST_SRS_COOKIE)?.value
+      );
+      existing[parsed.data.slug] = nextState;
+      cookieStore.set(GUEST_SRS_COOKIE, serializeGuestSrsCookie(existing), {
+        path: '/',
+        maxAge: 60 * 60 * 24 * 180,
+        sameSite: 'lax',
+      });
+      revalidatePath('/review');
+    } catch {
+      // Ignore cookie write errors in non-request contexts
+    }
   }
 
-  const { error } = await supabase.from('user_word_cards').upsert(
-    {
-      user_id: user.id,
-      word_id: parsed.data.wordId,
-      state: nextState.state,
-      due: nextState.due,
-      stability: nextState.stability,
-      difficulty: nextState.difficulty,
-      elapsed_days: nextState.elapsed_days,
-      scheduled_days: nextState.scheduled_days,
-      reps: nextState.reps,
-      lapses: nextState.lapses,
-      last_review: nextState.last_review,
-    },
-    { onConflict: 'user_id,word_id' }
-  );
-
-  if (error) {
-    return {
-      ok: true,
-      data: { nextState, savedToDb: false },
-    };
-  }
-
-  revalidatePath('/review');
   return {
     ok: true,
-    data: { nextState, savedToDb: true },
+    data: { nextState, savedToDb: false },
   };
 }

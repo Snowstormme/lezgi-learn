@@ -3,14 +3,14 @@ import { SrsReviewDeck } from '@/features/learning/components/srs-review-deck';
 import { buildPageMetadata } from '@/lib/seo';
 
 export const metadata = buildPageMetadata({
-  title: 'Тренировка и повторение лезгинских слов',
+  title: 'Повторение пройденных лезгинских слов (SRS)',
   description:
-    'Умные карточки интервального повторения (SRS) для быстрого запоминания лезгинских слов и выражений.',
+    'Ежедневная очередь интервального повторения только из тех лезгинских слов, которые вы уже прошли в уроках.',
   path: '/review',
   keywords: [
     'повторение лезгинских слов',
+    'интервальное повторение лезгинский язык',
     'карточки лезгинский язык',
-    'учить лезгинские слова',
   ],
 });
 
@@ -21,17 +21,21 @@ export default async function SrsReviewPage() {
     <div className="space-y-4">
       <div className="space-y-1">
         <h1 className="text-2xl font-black tracking-tight">
-          Тренировка слов
+          Повторение слов
         </h1>
         <p className="text-sm font-bold text-muted-foreground">
-          Умные карточки показывают слова именно тогда, когда их пора освежить в памяти.
+          Ежедневная очередь только из пройденных уроков — отмечайте «Помню» или «Не помню», чтобы закреплять слова надолго.
         </p>
       </div>
 
       <SrsReviewDeck
         initialCards={deck.cards}
+        allLearnedCards={deck.allLearnedCards}
+        totalLearnedWords={deck.totalLearnedWords}
+        completedLessonsCount={deck.completedLessonsCount}
+        nextDueLabel={deck.nextDueLabel}
+        nextLessonSlug={deck.nextLessonSlug}
         isAuthenticated={deck.isAuthenticated}
-        totalEnrolled={deck.totalEnrolled}
       />
     </div>
   );

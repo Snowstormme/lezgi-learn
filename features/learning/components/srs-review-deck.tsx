@@ -2,11 +2,15 @@
 
 import { useMemo, useState, useTransition } from 'react';
 import {
+  BookOpen,
   Brain,
+  Check,
   CheckCircle2,
+  Clock,
   Eye,
   RotateCcw,
   Sparkles,
+  X,
 } from 'lucide-react';
 import { Link } from '@/lib/i18n/routing';
 import type { SrsReviewCardItem } from '@/features/learning/srs-queries';
@@ -16,79 +20,152 @@ import {
 } from '@/features/learning/fsrs';
 import { reviewWordCardAction } from '@/features/learning/srs-actions';
 import { AudioPlayerButton } from '@/features/shared/components/audio-player-button';
+import { ConfettiBurst } from '@/components/course/ConfettiBurst';
 import { LessonProgressBar } from '@/components/ui/progress-bar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
 
 interface SrsReviewDeckProps {
   initialCards: SrsReviewCardItem[];
+  allLearnedCards: SrsReviewCardItem[];
+  totalLearnedWords: number;
+  completedLessonsCount: number;
+  nextDueLabel: string | null;
+  nextLessonSlug: string;
   isAuthenticated: boolean;
-  totalEnrolled: number;
 }
 
 export function SrsReviewDeck({
   initialCards,
+  allLearnedCards,
+  totalLearnedWords,
+  completedLessonsCount,
+  nextDueLabel,
+  nextLessonSlug,
   isAuthenticated,
-  totalEnrolled,
 }: SrsReviewDeckProps) {
   const [queue, setQueue] = useState<SrsReviewCardItem[]>(initialCards);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isRevealed, setIsRevealed] = useState(false);
-  const [reviewedCount, setReviewedCount] = useState(0);
+  const [rememberedCount, setRememberedCount] = useState(0);
+  const [missedCount, setMissedCount] = useState(0);
+  const [hasCompletedSession, setHasCompletedSession] = useState(false);
   const [isPending, startTransition] = useTransition();
 
   const currentCard = queue[currentIndex];
 
   const intervalPreviews = useMemo(() => {
-    if (!currentCard) return { 1: '1 мин', 2: '10 мин', 3: '1 д', 4: '4 д' };
+    if (!currentCard) return { 1: 'скоро', 2: '10 мин', 3: '1 д', 4: '4 д' };
     return getSrsIntervalPreviews(currentCard.cardState);
   }, [currentCard]);
 
-  function handleRate(grade: SrsRatingGrade) {
-    if (!currentCard) return;
+  function handleGrade(remembered: boolean) {
+    if (!currentCard || isPending) return;
+    const grade: SrsRatingGrade = remembered ? 3 : 1;
 
     startTransition(async () => {
       const res = await reviewWordCardAction({
         wordId: currentCard.wordId,
+        slug: currentCard.slug,
         grade,
         currentState: currentCard.cardState,
       });
 
       const updatedState = res.ok ? res.data.nextState : currentCard.cardState;
 
-      // If rated "Again" (1), re-queue card at the end of current session
-      if (grade === 1) {
+      if (!remembered) {
+        // Re-queue missed card at the end of today's session so user practices it again
         setQueue((prev) => [
           ...prev,
           { ...currentCard, cardState: updatedState },
         ]);
+        setMissedCount((c) => c + 1);
+      } else {
+        setRememberedCount((c) => c + 1);
       }
 
-      setReviewedCount((c) => c + 1);
+      const nextIndex = currentIndex + 1;
+      const nextQueueLen = remembered ? queue.length : queue.length + 1;
+      if (nextIndex >= nextQueueLen) {
+        setHasCompletedSession(true);
+      }
+
       setIsRevealed(false);
-      setCurrentIndex((idx) => idx + 1);
+      setCurrentIndex(nextIndex);
     });
   }
 
-  if (!currentCard) {
+  function handleStartEarlyPractice() {
+    setQueue(allLearnedCards);
+    setCurrentIndex(0);
+    setRememberedCount(0);
+    setMissedCount(0);
+    setHasCompletedSession(false);
+    setIsRevealed(false);
+  }
+
+  // 1. No completed lessons yet -> strict "only what you've learned" empty state
+  if (totalLearnedWords === 0) {
     return (
-      <Card className="border-primary/50 bg-card">
-        <CardHeader className="text-center">
-          <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-2xl border-b-4 border-[#B92B1C] bg-primary text-[#F8FAFC]">
-            <CheckCircle2 className="h-6 w-6" />
+      <Card className="border-2 border-b-[6px] border-border bg-card">
+        <CardHeader className="space-y-3 text-center">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-b-4 border-[#1D2B4D] bg-[#111A33] text-primary">
+            <BookOpen className="h-8 w-8 stroke-[2.2]" />
           </div>
           <CardTitle className="text-lg font-extrabold text-[#F8FAFC]">
-            Повторение завершено!
+            Пока нет пройденных слов
+          </CardTitle>
+          <p className="mx-auto max-w-xs text-xs font-bold leading-relaxed text-[#C1D0E4]">
+            В повторение попадают только слова из уроков, которые вы уже прошли.
+            Завершите первый урок — и здесь сразу появится ваша ежедневная
+            очередь карточек!
+          </p>
+        </CardHeader>
+        <CardContent>
+          <Link
+            href={`/lesson/${nextLessonSlug}`}
+            className="duo-node-3d flex min-h-[52px] w-full items-center justify-center rounded-2xl border-2 border-b-4 border-[#B92B1C] bg-primary px-6 py-3 text-center text-sm font-black uppercase tracking-wider text-[#F8FAFC] transition-all hover:brightness-105 active:translate-y-[2px] active:border-b-2"
+          >
+            Пройти 1-й урок →
+          </Link>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // 2. Daily queue finished (either just completed or already caught up for today)
+  if (!currentCard) {
+    const justFinished = hasCompletedSession && rememberedCount + missedCount > 0;
+
+    return (
+      <Card className="relative overflow-visible border-2 border-b-[6px] border-primary/60 bg-card">
+        {justFinished && <ConfettiBurst />}
+        <CardHeader className="space-y-2 text-center">
+          <div className="animate-duo-pop mx-auto mb-1 flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-b-4 border-[#B92B1C] bg-primary text-[#F8FAFC]">
+            <CheckCircle2 className="h-7 w-7 stroke-[2.5]" />
+          </div>
+          <CardTitle className="text-lg font-extrabold text-[#F8FAFC]">
+            {justFinished
+              ? 'Дневное повторение завершено!'
+              : 'На сегодня всё повторено!'}
           </CardTitle>
           <p className="text-xs font-bold text-[#CBD5E1]">
-            Пройдено карточек: {reviewedCount}
+            {justFinished
+              ? `Запомнили: ${rememberedCount} · Повторили снова: ${missedCount}`
+              : `Изучено слов: ${totalLearnedWords} (из ${completedLessonsCount} ур.)`}
           </p>
+          {nextDueLabel && !justFinished && (
+            <div className="mx-auto inline-flex items-center gap-1.5 rounded-full border border-[#263859] bg-[#111A33] px-3 py-1 text-[11px] font-extrabold text-[#FFC800]">
+              <Clock className="h-3.5 w-3.5" />
+              <span>Следующее повторение {nextDueLabel}</span>
+            </div>
+          )}
         </CardHeader>
         <CardContent className="space-y-3">
           {!isAuthenticated && (
-            <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-200">
-              Войдите в аккаунт, чтобы интервалы FSRS сохранялись между сессиями.
+            <div className="rounded-xl border border-[#263859] bg-[#111A33] p-3 text-xs font-semibold text-[#C1D0E4]">
+              Прогресс повторения сохранён на этом устройстве. Войдите в
+              аккаунт, чтобы синхронизировать его между устройствами.
             </div>
           )}
           <div className="grid grid-cols-2 gap-3">
@@ -97,19 +174,14 @@ export function SrsReviewDeck({
               variant="secondary"
               size="default"
               className="w-full"
-              onClick={() => {
-                setQueue(initialCards);
-                setCurrentIndex(0);
-                setReviewedCount(0);
-                setIsRevealed(false);
-              }}
+              onClick={handleStartEarlyPractice}
             >
               <RotateCcw className="h-4 w-4" />
-              <span>Ещё круг</span>
+              <span>Повторить ещё</span>
             </Button>
             <Link
               href="/learn"
-              className="flex min-h-[48px] w-full items-center justify-center rounded-2xl border-2 border-b-4 border-[#B92B1C] bg-primary px-4 py-2.5 text-center text-xs font-black uppercase tracking-wider text-[#F8FAFC] transition-all active:translate-y-[2px]"
+              className="flex min-h-[48px] w-full items-center justify-center rounded-2xl border-2 border-b-4 border-[#B92B1C] bg-primary px-4 py-2.5 text-center text-xs font-black uppercase tracking-wider text-[#F8FAFC] transition-all hover:brightness-105 active:translate-y-[2px]"
             >
               К урокам
             </Link>
@@ -119,58 +191,27 @@ export function SrsReviewDeck({
     );
   }
 
-  const ratingButtons: Array<{
-    grade: SrsRatingGrade;
-    label: string;
-    colorClass: string;
-  }> = [
-    {
-      grade: 1,
-      label: 'Снова',
-      colorClass:
-        'border-2 border-b-4 border-[#B92B1C] bg-primary/20 text-primary',
-    },
-    {
-      grade: 2,
-      label: 'Трудно',
-      colorClass:
-        'border-2 border-b-4 border-border bg-secondary text-[#F8FAFC]',
-    },
-    {
-      grade: 3,
-      label: 'Хорошо',
-      colorClass:
-        'border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC] text-[#0B132B]',
-    },
-    {
-      grade: 4,
-      label: 'Легко',
-      colorClass:
-        'border-2 border-b-4 border-emerald-500/60 bg-emerald-500/15 text-emerald-300',
-    },
-  ];
-
   return (
     <div className="space-y-4">
-      {/* Progress & stats header */}
+      {/* Daily queue progress & stats header */}
       <div className="flex items-center justify-between text-xs font-extrabold uppercase tracking-wider text-muted-foreground">
         <span className="inline-flex items-center gap-1.5 text-foreground">
           <Brain className="h-4 w-4 text-primary" />
-          <span>Карточек в тренировке: {totalEnrolled || queue.length}</span>
+          <span>Пройдено слов: {totalLearnedWords}</span>
         </span>
-        <span className="tabular-nums">
+        <span className="tabular-nums text-[#FFC800]">
           {currentIndex + 1} / {queue.length}
         </span>
       </div>
 
       <LessonProgressBar current={currentIndex} total={queue.length} />
 
-      {/* Flashcard */}
-      <Card className="min-h-64 border-border/90">
+      {/* Interactive Flashcard */}
+      <Card className="min-h-64 border-2 border-b-[6px] border-border bg-card">
         <CardHeader className="space-y-3 pb-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#CBD5E1]">
-              {currentCard.part_of_speech ?? 'слово'}
+            <span className="rounded-lg border border-[#263859] bg-[#111A33] px-2.5 py-1 text-[11px] font-extrabold uppercase tracking-wider text-[#CBD5E1]">
+              {currentCard.part_of_speech ?? 'изученное слово'}
             </span>
             <AudioPlayerButton
               textLez={currentCard.lemma_lez}
@@ -180,12 +221,12 @@ export function SrsReviewDeck({
             />
           </div>
 
-          <div className="py-4 text-center">
-            <CardTitle className="text-3xl font-extrabold tracking-tight text-primary">
+          <div className="py-5 text-center">
+            <p className="text-3xl font-black tracking-tight text-[#F8FAFC]">
               {currentCard.lemma_lez}
-            </CardTitle>
+            </p>
             {currentCard.transcription_ru && (
-              <p className="mt-1 text-xs text-muted-foreground">
+              <p className="mt-1.5 text-xs font-bold text-[#94A3B8]">
                 [{currentCard.transcription_ru}]
               </p>
             )}
@@ -194,67 +235,79 @@ export function SrsReviewDeck({
 
         <CardContent className="space-y-4">
           {!isRevealed ? (
-            <Button
+            <button
               type="button"
-              size="lg"
-              variant="secondary"
-              className="w-full font-semibold"
               onClick={() => setIsRevealed(true)}
+              className="duo-card-3d flex min-h-[54px] w-full cursor-pointer items-center justify-center gap-2 rounded-2xl border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC] px-6 py-3 text-sm font-black uppercase tracking-wider text-[#0B132B] hover:bg-white"
             >
-              <Eye className="h-4 w-4" />
+              <Eye className="h-4 w-4 stroke-[2.5]" />
               <span>Показать перевод</span>
-            </Button>
+            </button>
           ) : (
-            <div className="space-y-4 border-t border-border/70 pt-4">
-              <div className="text-center">
-                <p className="text-lg font-bold text-foreground">
+            <div className="animate-duo-popover space-y-4">
+              {/* Revealed Answer Panel */}
+              <div className="space-y-2 rounded-2xl border-2 border-[#263859] bg-[#111A33] p-4 text-center">
+                <p className="text-xl font-black text-[#FFC800]">
                   {currentCard.translation_ru}
                 </p>
-                {currentCard.grammar_notes_ru && (
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    {currentCard.grammar_notes_ru}
-                  </p>
+                {currentCard.example_lez && (
+                  <div className="border-t border-[#263859]/80 pt-2.5 text-xs">
+                    <p className="font-extrabold text-[#F8FAFC]">
+                      «{currentCard.example_lez}»
+                    </p>
+                    {currentCard.example_ru && (
+                      <p className="mt-0.5 font-semibold text-[#94A3B8]">
+                        {currentCard.example_ru}
+                      </p>
+                    )}
+                  </div>
                 )}
               </div>
 
-              {currentCard.example_lez && (
-                <div className="rounded-xl border border-border/70 bg-background/60 p-3 text-xs">
-                  <p className="flex items-center gap-1 font-semibold text-foreground">
-                    <Sparkles className="h-3 w-3 text-primary" />
-                    <span>«{currentCard.example_lez}»</span>
-                  </p>
-                  {currentCard.example_ru && (
-                    <p className="mt-0.5 text-muted-foreground">
-                      {currentCard.example_ru}
-                    </p>
-                  )}
-                </div>
-              )}
+              {/* Simple 2-button grading: Didn't remember / Remembered */}
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  disabled={isPending}
+                  onClick={() => handleGrade(false)}
+                  className="duo-card-3d flex min-h-[64px] cursor-pointer flex-col items-center justify-center gap-0.5 rounded-2xl border-2 border-b-4 border-[#B92B1C] bg-primary/15 px-3 py-2.5 text-primary transition-all hover:bg-primary/25 disabled:opacity-50"
+                >
+                  <span className="flex items-center gap-1.5 text-sm font-black uppercase tracking-wider">
+                    <X className="h-4 w-4 stroke-[3]" />
+                    <span>Не помню</span>
+                  </span>
+                  <span className="text-[11px] font-bold opacity-80">
+                    повторим снова
+                  </span>
+                </button>
 
-              {/* 4 FSRS grade buttons */}
-              <div className="grid grid-cols-4 gap-2 pt-1">
-                {ratingButtons.map((btn) => (
-                  <button
-                    key={btn.grade}
-                    type="button"
-                    disabled={isPending}
-                    onClick={() => handleRate(btn.grade)}
-                    className={cn(
-                      'flex min-h-[58px] w-full flex-col items-center justify-center rounded-2xl px-2 py-2.5 text-center transition-all active:translate-y-[2px] disabled:opacity-50',
-                      btn.colorClass
-                    )}
-                  >
-                    <span className="text-xs font-bold">{btn.label}</span>
-                    <span className="mt-0.5 text-[10px] opacity-85">
-                      {intervalPreviews[btn.grade]}
-                    </span>
-                  </button>
-                ))}
+                <button
+                  type="button"
+                  disabled={isPending}
+                  onClick={() => handleGrade(true)}
+                  className="duo-card-3d flex min-h-[64px] cursor-pointer flex-col items-center justify-center gap-0.5 rounded-2xl border-2 border-b-4 border-emerald-600 bg-emerald-500 px-3 py-2.5 text-[#0B132B] transition-all hover:brightness-105 disabled:opacity-50"
+                >
+                  <span className="flex items-center gap-1.5 text-sm font-black uppercase tracking-wider">
+                    <Check className="h-4 w-4 stroke-[3]" />
+                    <span>Помню</span>
+                  </span>
+                  <span className="text-[11px] font-extrabold opacity-85">
+                    через {intervalPreviews[3]}
+                  </span>
+                </button>
               </div>
             </div>
           )}
         </CardContent>
       </Card>
+
+      <p className="flex items-center justify-center gap-1.5 text-center text-[11px] font-bold text-muted-foreground">
+        <Sparkles className="h-3.5 w-3.5 text-[#FFC800]" />
+        <span>
+          Интервальное повторение возвращает слова прямо перед тем, как они
+          забудутся
+        </span>
+      </p>
     </div>
   );
 }
