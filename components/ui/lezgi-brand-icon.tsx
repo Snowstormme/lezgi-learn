@@ -34,7 +34,7 @@ export function LezgiBrandIcon({
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/icon.svg"
+        src="/icon.svg?v=2"
         alt=""
         className="h-full w-full object-contain drop-shadow-[0_2px_4px_rgba(0,0,0,0.45)]"
       />
