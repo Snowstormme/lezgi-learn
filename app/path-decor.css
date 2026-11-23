@@ -309,3 +309,35 @@
   .ld-scene .ld-fish, .ld-scene [class^="ld-splash-"], .ld-scene .ld-drip, .ld-scene .ld-ripple,
   .ld-scene .ld-shine, .ld-scene [class^="ld-lick-"], .ld-scene [class^="ld-chimney-"] { opacity: 0 !important; }
 }
+
+/* ---------- day / night extras ---------- */
+.ld-birds { animation: ldBirds 14s ease-in-out infinite; }
+@keyframes ldBirds {
+  0%, 100% { transform: translate(-4px, 1px); }
+  50% { transform: translate(5px, -2px); }
+}
+.ld-bird-1, .ld-bird-2 { transform-box: fill-box; transform-origin: 50% 100%; }
+.ld-bird-1 { animation: ldBirdFlap 0.9s ease-in-out infinite; }
+.ld-bird-2 { animation: ldBirdFlap 1.1s ease-in-out -0.4s infinite; }
+@keyframes ldBirdFlap { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(-0.4); } }
+
+.ld-butterfly { animation: ldButterfly 8s ease-in-out infinite; }
+@keyframes ldButterfly {
+  0%, 100% { transform: translate(0, 0) rotate(-8deg); }
+  25% { transform: translate(-6px, -3px) rotate(6deg); }
+  50% { transform: translate(-10px, 2px) rotate(-4deg); }
+  75% { transform: translate(-3px, 4px) rotate(10deg); }
+}
+.ld-bwing { transform-box: fill-box; transform-origin: center; animation: ldBwing 0.35s ease-in-out infinite; }
+@keyframes ldBwing { 0%, 100% { transform: scaleX(1); } 50% { transform: scaleX(0.25); } }
+
+.ld-shooting { opacity: 0; animation: ldShooting 9s ease-out 2s infinite; }
+@keyframes ldShooting {
+  0%, 86% { opacity: 0; transform: translateX(0); }
+  88% { opacity: 1; }
+  96%, 100% { opacity: 0; transform: translateX(26px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ld-scene .ld-shooting { opacity: 0 !important; }
+}

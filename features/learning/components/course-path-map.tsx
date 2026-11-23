@@ -1,7 +1,17 @@
 'use client';
 
 import { Fragment, useState, useTransition } from 'react';
-import { Check, Flag, Lock, Sparkles, Star, Trophy, Zap } from 'lucide-react';
+import {
+  Check,
+  Flag,
+  Lock,
+  Moon,
+  Sparkles,
+  Star,
+  Sun,
+  Trophy,
+  Zap,
+} from 'lucide-react';
 import {
   buildCoursePathItems,
   buildRoadSegments,
@@ -11,8 +21,9 @@ import {
   LABEL_WIDTH,
   MAP_WIDTH,
 } from '@/features/learning/course-path';
-import { PathDecor } from '@/components/course/PathDecor';
+import { PathDecor, type TimeOfDay } from '@/components/course/PathDecor';
 import { ConfettiBurst } from '@/components/course/ConfettiBurst';
+import { Button } from '@/components/ui/button';
 import { claimMilestoneChestAction } from '@/features/learning/actions';
 import type { LessonSummary } from '@/features/learning/queries';
 import { Link, useRouter } from '@/lib/i18n/routing';
@@ -164,6 +175,7 @@ export function CoursePathMap({ lessons }: CoursePathMapProps) {
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [claimedChests, setClaimedChests] = useState<string[]>([]);
   const [burstChestKey, setBurstChestKey] = useState<string | null>(null);
+  const [time, setTime] = useState<TimeOfDay>('day');
 
   const items = buildCoursePathItems(lessons);
   const segments = buildRoadSegments(items);
@@ -195,26 +207,47 @@ export function CoursePathMap({ lessons }: CoursePathMapProps) {
   }
 
   return (
-    <div
-      className="relative mx-auto select-none"
-      style={{ width: MAP_WIDTH, height }}
-      onClick={() => setSelectedKey(null)}
-    >
-      {/* Background Mountain Decor & Winding Mountain Road */}
-      <svg
-        className="pointer-events-none absolute inset-0"
-        width={MAP_WIDTH}
-        height={height}
-        viewBox={`0 0 ${MAP_WIDTH} ${height}`}
-        overflow="visible"
-        style={{ overflow: 'visible' }}
-        aria-hidden="true"
-      >
-        <NightSkyBackdrop height={height} />
+    <div className="space-y-2">
+      <div className="flex justify-end">
+        <Button
+          type="button"
+          variant="secondary"
+          size="sm"
+          className="h-10 w-10 px-0"
+          aria-label={time === 'day' ? 'Switch to night' : 'Switch to day'}
+          title={time === 'day' ? 'Switch to night' : 'Switch to day'}
+          onClick={() =>
+            setTime((current) => (current === 'day' ? 'night' : 'day'))
+          }
+        >
+          {time === 'day' ? (
+            <Moon className="h-4 w-4" aria-hidden="true" />
+          ) : (
+            <Sun className="h-4 w-4" aria-hidden="true" />
+          )}
+        </Button>
+      </div>
 
-        {mountains.map((m) => (
-          <PathDecor key={m.key} decor={m} />
-        ))}
+      <div
+        className="relative mx-auto select-none"
+        style={{ width: MAP_WIDTH, height }}
+        onClick={() => setSelectedKey(null)}
+      >
+        {/* Background Mountain Decor & Winding Mountain Road */}
+        <svg
+          className="pointer-events-none absolute inset-0"
+          width={MAP_WIDTH}
+          height={height}
+          viewBox={`0 0 ${MAP_WIDTH} ${height}`}
+          overflow="visible"
+          style={{ overflow: 'visible' }}
+          aria-hidden="true"
+        >
+          <NightSkyBackdrop height={height} />
+
+          {mountains.map((m) => (
+            <PathDecor key={m.key} decor={m} time={time} />
+          ))}
 
         {/* Upcoming dark road segments first */}
         {darkSegments.map((seg) => (
@@ -734,6 +767,7 @@ export function CoursePathMap({ lessons }: CoursePathMapProps) {
           </Fragment>
         );
       })}
+      </div>
     </div>
   );
 }
