@@ -75,7 +75,7 @@ export function AudioPlayerButton({
         size === 'sm' ? 'h-9 px-2.5 text-xs' : 'h-10 px-3.5 text-xs',
         hasVerifiedNativeAudio
           ? 'border-[#B92B1C] bg-primary text-[#F8FAFC] hover:brightness-105'
-          : 'border-border bg-secondary text-[#F8FAFC] hover:border-primary',
+          : 'border-border bg-secondary text-foreground hover:border-primary',
         isPlaying && 'border-[#B92B1C] bg-primary text-[#F8FAFC]'
       )}
     >

@@ -150,7 +150,7 @@ export function TranslatorWorkspace({
       <Card className="border-border/90">
         <CardHeader className="space-y-3 pb-3">
           <div className="flex items-center justify-between gap-2">
-            <span className="text-xs font-extrabold uppercase tracking-wider text-[#F8FAFC]">
+            <span className="text-xs font-extrabold uppercase tracking-wider text-foreground">
               {direction === 'ru_to_lez'
                 ? 'Русский → Лезгинский'
                 : 'Лезгинский → Русский'}
@@ -413,7 +413,7 @@ export function TranslatorWorkspace({
       {/* Moderation Queue Section */}
       <Card className="border-border">
         <CardHeader className="pb-2.5">
-          <CardTitle className="text-sm font-extrabold text-[#F8FAFC]">
+          <CardTitle className="text-sm font-extrabold text-foreground">
             Очередь модерации переводов
           </CardTitle>
           <p className="text-xs font-bold text-[#CBD5E1]">

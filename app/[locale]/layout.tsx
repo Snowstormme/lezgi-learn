@@ -5,6 +5,7 @@ import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/lib/i18n/routing';
 import { getSiteUrl } from '@/lib/seo';
+import { ThemeProvider } from '@/components/theme/theme-provider';
 import '@/app/globals.css';
 import '@/app/path-decor.css';
 
@@ -84,11 +85,16 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#0B132B',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#F5F7FA' },
+    { media: '(prefers-color-scheme: dark)', color: '#0B132B' },
+  ],
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
 };
+
+const THEME_INIT_SCRIPT = `(function(){try{var t=localStorage.getItem('lezgi-theme');if(t==='dark'){document.documentElement.classList.add('dark');}else{document.documentElement.classList.remove('dark');}}catch(e){}})();`;
 
 export default async function LocaleLayout({
   children,
@@ -106,11 +112,20 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} className={`dark ${jetbrainsMono.variable}`}>
-      <body className="min-h-dvh bg-background font-mono text-foreground">
-        <NextIntlClientProvider messages={messages}>
-          {children}
-        </NextIntlClientProvider>
+    <html
+      lang={locale}
+      className={jetbrainsMono.variable}
+      suppressHydrationWarning
+    >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
+      <body className="min-h-dvh bg-background font-mono text-foreground transition-colors duration-200">
+        <ThemeProvider>
+          <NextIntlClientProvider messages={messages}>
+            {children}
+          </NextIntlClientProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

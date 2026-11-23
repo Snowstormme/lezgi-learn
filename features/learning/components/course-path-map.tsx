@@ -5,10 +5,8 @@ import {
   Check,
   Flag,
   Lock,
-  Moon,
   Sparkles,
   Star,
-  Sun,
   Trophy,
   Zap,
 } from 'lucide-react';
@@ -23,7 +21,7 @@ import {
 } from '@/features/learning/course-path';
 import { PathDecor, type TimeOfDay } from '@/components/course/PathDecor';
 import { ConfettiBurst } from '@/components/course/ConfettiBurst';
-import { Button } from '@/components/ui/button';
+import { useTheme } from '@/components/theme/theme-provider';
 import { claimMilestoneChestAction } from '@/features/learning/actions';
 import type { LessonSummary } from '@/features/learning/queries';
 import { Link, useRouter } from '@/lib/i18n/routing';
@@ -126,34 +124,35 @@ const SKY_STARS: Array<[number, number, number, string, string]> = [
   [308, 1490, 1.4, '#FFC800', '1.0s'],
 ];
 
-function NightSkyBackdrop({ height }: { height: number }) {
+function SkyBackdrop({ height, night }: { height: number; night: boolean }) {
   return (
     <g aria-hidden="true">
       {/* Subtle distant Caucasus mountain ridge silhouettes */}
       <path
         d={`M -32 280 L 42 190 L 122 245 L 222 155 L 315 235 L 368 185 L 368 380 L -32 380 Z`}
-        fill="#0E1838"
-        opacity="0.45"
+        fill={night ? '#0E1838' : '#DBE5F2'}
+        opacity={night ? 0.45 : 0.65}
       />
       <path
         d={`M -32 ${Math.round(height * 0.62)} L 68 ${Math.round(height * 0.56)} L 160 ${Math.round(height * 0.6)} L 258 ${Math.round(height * 0.54)} L 368 ${Math.round(height * 0.59)} L 368 ${height} L -32 ${height} Z`}
-        fill="#0E1838"
-        opacity="0.4"
+        fill={night ? '#0E1838' : '#DBE5F2'}
+        opacity={night ? 0.4 : 0.55}
       />
       {/* Delicate twinkling stars along the night sky */}
-      {SKY_STARS.filter(([, sy]) => sy < height - 20).map(
-        ([sx, sy, sr, fill, delay], idx) => (
-          <circle
-            key={idx}
-            cx={sx}
-            cy={sy}
-            r={sr}
-            fill={fill}
-            className="duo-sky-twinkle"
-            style={{ animationDelay: delay }}
-          />
-        )
-      )}
+      {night &&
+        SKY_STARS.filter(([, sy]) => sy < height - 20).map(
+          ([sx, sy, sr, fill, delay], idx) => (
+            <circle
+              key={idx}
+              cx={sx}
+              cy={sy}
+              r={sr}
+              fill={fill}
+              className="duo-sky-twinkle"
+              style={{ animationDelay: delay }}
+            />
+          )
+        )}
     </g>
   );
 }
@@ -172,10 +171,12 @@ export function CoursePathMap({ lessons }: CoursePathMapProps) {
   const activeLessonIndex =
     firstIncompleteIndex === -1 ? 0 : firstIncompleteIndex;
 
+  const { theme } = useTheme();
+  const isNight = theme === 'dark';
+  const time: TimeOfDay = isNight ? 'night' : 'day';
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [claimedChests, setClaimedChests] = useState<string[]>([]);
   const [burstChestKey, setBurstChestKey] = useState<string | null>(null);
-  const [time, setTime] = useState<TimeOfDay>('day');
 
   const items = buildCoursePathItems(lessons);
   const segments = buildRoadSegments(items);
@@ -207,69 +208,48 @@ export function CoursePathMap({ lessons }: CoursePathMapProps) {
   }
 
   return (
-    <div className="space-y-2">
-      <div className="flex justify-end">
-        <Button
-          type="button"
-          variant="secondary"
-          size="sm"
-          className="h-10 w-10 px-0"
-          aria-label={time === 'day' ? 'Switch to night' : 'Switch to day'}
-          title={time === 'day' ? 'Switch to night' : 'Switch to day'}
-          onClick={() =>
-            setTime((current) => (current === 'day' ? 'night' : 'day'))
-          }
-        >
-          {time === 'day' ? (
-            <Moon className="h-4 w-4" aria-hidden="true" />
-          ) : (
-            <Sun className="h-4 w-4" aria-hidden="true" />
-          )}
-        </Button>
-      </div>
-
-      <div
-        className="relative mx-auto select-none"
-        style={{ width: MAP_WIDTH, height }}
-        onClick={() => setSelectedKey(null)}
+    <div
+      className="relative mx-auto select-none"
+      style={{ width: MAP_WIDTH, height }}
+      onClick={() => setSelectedKey(null)}
+    >
+      {/* Background Mountain Decor & Winding Mountain Road */}
+      <svg
+        className="pointer-events-none absolute inset-0"
+        width={MAP_WIDTH}
+        height={height}
+        viewBox={`0 0 ${MAP_WIDTH} ${height}`}
+        overflow="visible"
+        style={{ overflow: 'visible' }}
+        aria-hidden="true"
       >
-        {/* Background Mountain Decor & Winding Mountain Road */}
-        <svg
-          className="pointer-events-none absolute inset-0"
-          width={MAP_WIDTH}
-          height={height}
-          viewBox={`0 0 ${MAP_WIDTH} ${height}`}
-          overflow="visible"
-          style={{ overflow: 'visible' }}
-          aria-hidden="true"
-        >
-          <NightSkyBackdrop height={height} />
+        <SkyBackdrop height={height} night={isNight} />
 
-          {mountains.map((m) => (
-            <PathDecor key={m.key} decor={m} time={time} />
-          ))}
+        {mountains.map((m) => (
+          <PathDecor key={m.key} decor={m} time={time} />
+        ))}
 
-        {/* Upcoming dark road segments first */}
+        {/* Upcoming road segments first */}
         {darkSegments.map((seg) => (
           <g key={seg.key}>
             <path
               d={seg.d}
               fill="none"
-              stroke="#1D2B4D"
+              stroke={isNight ? '#1D2B4D' : '#CBD5E1'}
               strokeWidth={26}
               strokeLinecap="round"
             />
             <path
               d={seg.d}
               fill="none"
-              stroke="#111A33"
+              stroke={isNight ? '#111A33' : '#E2E8F0'}
               strokeWidth={20}
               strokeLinecap="round"
             />
             <path
               d={seg.d}
               fill="none"
-              stroke="#263859"
+              stroke={isNight ? '#263859' : '#94A3B8'}
               strokeWidth={2.5}
               strokeDasharray="7 7"
               strokeLinecap="round"
@@ -283,14 +263,14 @@ export function CoursePathMap({ lessons }: CoursePathMapProps) {
             <path
               d={seg.d}
               fill="none"
-              stroke="#CBD5E1"
+              stroke={isNight ? '#CBD5E1' : '#94A3B8'}
               strokeWidth={26}
               strokeLinecap="round"
             />
             <path
               d={seg.d}
               fill="none"
-              stroke="#F8FAFC"
+              stroke="#FFFFFF"
               strokeWidth={20}
               strokeLinecap="round"
             />
@@ -346,8 +326,8 @@ export function CoursePathMap({ lessons }: CoursePathMapProps) {
             isSelected && 'is-pressed',
             isLocked &&
               (isExam
-                ? 'duo-node-locked border-[#263859] bg-[#16213E] text-[#FFC800]/75'
-                : 'duo-node-locked border-[#1D2B4D] bg-[#111A33] text-[#64748B]'),
+                ? 'duo-node-locked border-border bg-secondary text-amber-600 dark:border-[#263859] dark:bg-[#16213E] dark:text-[#FFC800]/75'
+                : 'duo-node-locked border-border bg-secondary text-muted-foreground dark:border-[#1D2B4D] dark:bg-[#111A33] dark:text-[#64748B]'),
             !isLocked &&
               isCompleted &&
               'duo-node-completed border-[#CBD5E1] bg-[#F8FAFC] text-primary',
@@ -395,8 +375,8 @@ export function CoursePathMap({ lessons }: CoursePathMapProps) {
                 </span>
               )}
               {isLocked && (
-                <span className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-[#1D2B4D] bg-background">
-                  <Lock className="h-3 w-3 text-[#94A3B8]" />
+                <span className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-border bg-background dark:border-[#1D2B4D]">
+                  <Lock className="h-3 w-3 text-muted-foreground" />
                 </span>
               )}
             </>
@@ -413,12 +393,12 @@ export function CoursePathMap({ lessons }: CoursePathMapProps) {
                   'text-balance text-xs font-extrabold leading-snug',
                   isExam && 'uppercase tracking-wider',
                   isCurrent || isSelected
-                    ? 'text-[#F8FAFC]'
+                    ? 'text-foreground'
                     : isCompleted
                       ? 'text-primary'
                       : isExam
-                        ? 'text-[#FFC800]/80'
-                        : 'text-[#64748B]'
+                        ? 'text-amber-600 dark:text-[#FFC800]/80'
+                        : 'text-muted-foreground'
                 )}
               >
                 {labelTitle}
@@ -516,7 +496,7 @@ export function CoursePathMap({ lessons }: CoursePathMapProps) {
                     className={cn(
                       'space-y-3 rounded-2xl border-2 border-b-[6px] p-4 shadow-2xl',
                       isLocked
-                        ? 'border-[#263859] bg-[#16213E] text-[#F8FAFC]'
+                        ? 'border-border bg-card text-foreground dark:border-[#263859] dark:bg-[#16213E] dark:text-[#F8FAFC]'
                         : 'border-[#B92B1C] bg-primary text-[#F8FAFC]'
                     )}
                   >
@@ -524,18 +504,23 @@ export function CoursePathMap({ lessons }: CoursePathMapProps) {
                       <p
                         className={cn(
                           'text-[11px] font-extrabold uppercase tracking-wider',
-                          isLocked ? 'text-[#94A3B8]' : 'text-[#F8FAFC]/85'
+                          isLocked ? 'text-muted-foreground' : 'text-[#F8FAFC]/85'
                         )}
                       >
                         {isExam
                           ? 'Итоговое испытание · Модуль 1'
                           : `Урок ${lesson.order_index} из ${lessons.length - 1}`}
                       </p>
-                      <h3 className="text-balance text-sm font-extrabold leading-snug text-[#F8FAFC]">
+                      <h3
+                        className={cn(
+                          'text-balance text-sm font-extrabold leading-snug',
+                          isLocked ? 'text-foreground' : 'text-[#F8FAFC]'
+                        )}
+                      >
                         {lesson.title_ru}
                       </h3>
                       {isLocked && (
-                        <p className="pt-0.5 text-xs font-bold leading-snug text-[#C1D0E4]">
+                        <p className="pt-0.5 text-xs font-bold leading-snug text-muted-foreground">
                           {isExam
                             ? 'Завершите все 10 уроков модуля, чтобы открыть экзамен раздела.'
                             : 'Сначала пройдите предыдущий урок, чтобы открыть этот.'}
@@ -544,7 +529,7 @@ export function CoursePathMap({ lessons }: CoursePathMapProps) {
                     </div>
 
                     {isLocked ? (
-                      <div className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border-2 border-b-4 border-[#1D2B4D] bg-[#111A33] text-xs font-extrabold uppercase tracking-wider text-[#64748B]">
+                      <div className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border-2 border-b-4 border-border bg-secondary text-xs font-extrabold uppercase tracking-wider text-muted-foreground dark:border-[#1D2B4D] dark:bg-[#111A33] dark:text-[#64748B]">
                         <Lock className="h-4 w-4 stroke-[2.5]" />
                         <span>Урок закрыт</span>
                       </div>
@@ -678,19 +663,19 @@ export function CoursePathMap({ lessons }: CoursePathMapProps) {
                     className={cn(
                       'space-y-3 rounded-2xl border-2 border-b-[6px] p-4 shadow-2xl',
                       item.reached
-                        ? 'border-[#FFC800] bg-[#16213E] text-[#F8FAFC]'
-                        : 'border-[#263859] bg-[#16213E] text-[#F8FAFC]'
+                        ? 'border-[#FFC800] bg-card text-foreground dark:bg-[#16213E] dark:text-[#F8FAFC]'
+                        : 'border-border bg-card text-foreground dark:border-[#263859] dark:bg-[#16213E] dark:text-[#F8FAFC]'
                     )}
                   >
                     <div className="space-y-1">
-                      <p className="flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-wider text-[#FFC800]">
+                      <p className="flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-wider text-amber-600 dark:text-[#FFC800]">
                         <Sparkles className="h-3.5 w-3.5" />
                         <span>Бонус за 5 уроков · +25 XP</span>
                       </p>
-                      <h3 className="text-balance text-sm font-extrabold leading-snug text-[#F8FAFC]">
+                      <h3 className="text-balance text-sm font-extrabold leading-snug text-foreground">
                         Сундук первого этапа
                       </h3>
-                      <p className="pt-0.5 text-xs font-bold leading-snug text-[#C1D0E4]">
+                      <p className="pt-0.5 text-xs font-bold leading-snug text-muted-foreground">
                         {isClaimed
                           ? 'Вы уже открыли этот сундук и получили +25 очков опыта!'
                           : item.reached
@@ -741,10 +726,10 @@ export function CoursePathMap({ lessons }: CoursePathMapProps) {
             >
               <div
                 className={cn(
-                  'duo-node-3d duo-node-locked flex h-[48px] w-[56px] items-center justify-center rounded-2xl border-2 bg-[#16213E]',
+                  'duo-node-3d duo-node-locked flex h-[48px] w-[56px] items-center justify-center rounded-2xl border-2 bg-secondary dark:bg-[#16213E]',
                   item.reached
-                    ? 'border-[#263859] text-primary'
-                    : 'border-[#1D2B4D] text-[#64748B]'
+                    ? 'border-border text-primary dark:border-[#263859]'
+                    : 'border-border text-muted-foreground dark:border-[#1D2B4D] dark:text-[#64748B]'
                 )}
               >
                 <Flag className="h-5 w-5 stroke-[2.5]" />
@@ -758,7 +743,7 @@ export function CoursePathMap({ lessons }: CoursePathMapProps) {
               <p
                 className={cn(
                   'text-balance text-xs font-extrabold uppercase tracking-wider leading-snug',
-                  item.reached ? 'text-[#F8FAFC]' : 'text-[#64748B]'
+                  item.reached ? 'text-foreground' : 'text-muted-foreground'
                 )}
               >
                 Финиш модуля
@@ -767,7 +752,6 @@ export function CoursePathMap({ lessons }: CoursePathMapProps) {
           </Fragment>
         );
       })}
-      </div>
     </div>
   );
 }

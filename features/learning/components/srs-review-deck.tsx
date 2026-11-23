@@ -99,13 +99,13 @@ export function SrsReviewDeck({
     return (
       <Card className="border-2 border-b-[6px] border-border bg-card">
         <CardHeader className="space-y-3 text-center">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-b-4 border-[#1D2B4D] bg-[#111A33] text-primary">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-b-4 border-border bg-secondary text-primary dark:border-[#1D2B4D] dark:bg-[#111A33]">
             <BookOpen className="h-8 w-8 stroke-[2.2]" />
           </div>
-          <CardTitle className="text-lg font-extrabold text-[#F8FAFC]">
+          <CardTitle className="text-lg font-extrabold text-foreground">
             Пока нет пройденных слов
           </CardTitle>
-          <p className="mx-auto max-w-xs text-xs font-bold leading-relaxed text-[#C1D0E4]">
+          <p className="mx-auto max-w-xs text-xs font-bold leading-relaxed text-muted-foreground">
             В повторение попадают только слова из уроков, которые вы уже прошли.
             Завершите первый урок — и здесь сразу появится ваша ежедневная
             очередь карточек!
@@ -134,13 +134,13 @@ export function SrsReviewDeck({
           <div className="animate-duo-pop mx-auto mb-1 flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-b-4 border-[#B92B1C] bg-primary text-[#F8FAFC]">
             <CheckCircle2 className="h-7 w-7 stroke-[2.5]" />
           </div>
-          <CardTitle className="text-lg font-extrabold text-[#F8FAFC]">
+          <CardTitle className="text-lg font-extrabold text-foreground">
             {justFinished
               ? 'Дневное повторение завершено!'
               : 'На сегодня всё повторено!'}
           </CardTitle>
           {nextDueLabel && !justFinished && (
-            <div className="mx-auto inline-flex items-center gap-1.5 rounded-full border border-[#263859] bg-[#111A33] px-3 py-1 text-[11px] font-extrabold text-[#FFC800]">
+            <div className="mx-auto inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary px-3 py-1 text-[11px] font-extrabold text-amber-600 dark:border-[#263859] dark:bg-[#111A33] dark:text-[#FFC800]">
               <Clock className="h-3.5 w-3.5" />
               <span>Следующее повторение {nextDueLabel}</span>
             </div>
@@ -148,7 +148,7 @@ export function SrsReviewDeck({
         </CardHeader>
         <CardContent className="space-y-3">
           {!isAuthenticated && (
-            <div className="rounded-xl border border-[#263859] bg-[#111A33] p-3 text-xs font-semibold text-[#C1D0E4]">
+            <div className="rounded-xl border border-border bg-secondary p-3 text-xs font-semibold text-muted-foreground dark:border-[#263859] dark:bg-[#111A33]">
               Прогресс повторения сохранён на этом устройстве. Войдите в
               аккаунт, чтобы синхронизировать его между устройствами.
             </div>
@@ -184,7 +184,7 @@ export function SrsReviewDeck({
           <Brain className="h-4 w-4 text-primary" />
           <span>Пройдено слов: {totalLearnedWords}</span>
         </span>
-        <span className="tabular-nums text-[#FFC800]">
+        <span className="tabular-nums text-amber-600 dark:text-[#FFC800]">
           {currentIndex + 1} / {queue.length}
         </span>
       </div>
@@ -204,11 +204,11 @@ export function SrsReviewDeck({
           </div>
 
           <div className="my-auto py-10 text-center">
-            <p className="text-4xl font-black tracking-tight text-[#F8FAFC]">
+            <p className="text-4xl font-black tracking-tight text-foreground">
               {currentCard.lemma_lez}
             </p>
             {currentCard.transcription_ru && (
-              <p className="mt-2.5 text-sm font-bold text-[#94A3B8]">
+              <p className="mt-2.5 text-sm font-bold text-muted-foreground">
                 [{currentCard.transcription_ru}]
               </p>
             )}
@@ -220,7 +220,7 @@ export function SrsReviewDeck({
             <button
               type="button"
               onClick={() => setIsRevealed(true)}
-              className="duo-card-3d flex min-h-[60px] w-full cursor-pointer items-center justify-center gap-2 rounded-2xl border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC] px-6 py-3.5 text-sm font-black uppercase tracking-wider text-[#0B132B] hover:bg-white"
+              className="duo-card-3d flex min-h-[60px] w-full cursor-pointer items-center justify-center gap-2 rounded-2xl border-2 border-b-4 border-border bg-secondary px-6 py-3.5 text-sm font-black uppercase tracking-wider text-foreground hover:bg-secondary/80 dark:border-[#CBD5E1] dark:bg-[#F8FAFC] dark:text-[#0B132B] dark:hover:bg-white"
             >
               <Eye className="h-5 w-5 stroke-[2.5]" />
               <span>Показать перевод</span>
@@ -228,17 +228,17 @@ export function SrsReviewDeck({
           ) : (
             <div className="animate-duo-popover space-y-5">
               {/* Revealed Answer Panel */}
-              <div className="space-y-2.5 rounded-2xl border-2 border-[#263859] bg-[#111A33] p-5 text-center">
-                <p className="text-2xl font-black text-[#FFC800]">
+              <div className="space-y-2.5 rounded-2xl border-2 border-border bg-secondary p-5 text-center dark:border-[#263859] dark:bg-[#111A33]">
+                <p className="text-2xl font-black text-primary dark:text-[#FFC800]">
                   {currentCard.translation_ru}
                 </p>
                 {currentCard.example_lez && (
-                  <div className="border-t border-[#263859]/80 pt-3 text-sm">
-                    <p className="font-extrabold text-[#F8FAFC]">
+                  <div className="border-t border-border/80 pt-3 text-sm dark:border-[#263859]/80">
+                    <p className="font-extrabold text-foreground">
                       «{currentCard.example_lez}»
                     </p>
                     {currentCard.example_ru && (
-                      <p className="mt-1 text-xs font-semibold text-[#94A3B8]">
+                      <p className="mt-1 text-xs font-semibold text-muted-foreground">
                         {currentCard.example_ru}
                       </p>
                     )}

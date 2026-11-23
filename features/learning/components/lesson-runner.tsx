@@ -375,7 +375,7 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
           <Link
             href="/learn"
             aria-label={t('exitToMap')}
-            className="duo-card-3d flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border-2 border-b-4 border-border bg-card text-muted-foreground hover:text-[#F8FAFC]"
+            className="duo-card-3d flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border-2 border-b-4 border-border bg-card text-muted-foreground hover:text-foreground"
           >
             <X className="h-5 w-5 stroke-[2.5]" />
           </Link>
@@ -402,7 +402,7 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
             </span>
           )}
 
-          <span className="shrink-0 rounded-xl border-2 border-border bg-card px-2.5 py-1 text-xs font-black tabular-nums text-[#F8FAFC]">
+          <span className="shrink-0 rounded-xl border-2 border-border bg-card px-2.5 py-1 text-xs font-black tabular-nums text-foreground">
             {Math.min(queueCursor + 1, exerciseQueue.length)} /{' '}
             {exerciseQueue.length}
           </span>
@@ -417,13 +417,13 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
                 <span>Новые слова перед практикой</span>
               </div>
 
-              <h1 className="text-balance text-2xl font-black leading-tight text-[#F8FAFC]">
+              <h1 className="text-balance text-2xl font-black leading-tight text-foreground">
                 {currentExercise.payload.teach_title_ru ??
                   'Изучите слова для следующих заданий'}
               </h1>
 
               {currentExercise.payload.teach_note_ru && (
-                <p className="text-balance text-sm leading-relaxed text-[#C1D0E4]">
+                <p className="text-balance text-sm leading-relaxed text-muted-foreground">
                   {currentExercise.payload.teach_note_ru}
                 </p>
               )}
@@ -438,11 +438,11 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
                   <div className="flex items-start justify-between gap-3">
                     <div className="space-y-1">
                       <div className="flex flex-wrap items-baseline gap-2">
-                        <span className="text-xl font-black text-[#F8FAFC]">
+                        <span className="text-xl font-black text-foreground">
                           {item.lez}
                         </span>
                         {item.transcription_ru && (
-                          <span className="text-xs font-bold text-[#94A3B8]">
+                          <span className="text-xs font-bold text-muted-foreground">
                             [{item.transcription_ru}]
                           </span>
                         )}
@@ -456,13 +456,13 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
                   </div>
 
                   {item.example_lez && (
-                    <div className="mt-3 flex items-center justify-between gap-2 rounded-xl border border-border bg-background/60 px-3 py-2 text-xs">
+                    <div className="mt-3 flex items-center justify-between gap-2 rounded-xl border border-border bg-secondary/60 px-3 py-2 text-xs dark:bg-background/60">
                       <div className="space-y-0.5">
-                        <p className="font-extrabold text-[#F8FAFC]">
+                        <p className="font-extrabold text-foreground">
                           «{item.example_lez}»
                         </p>
                         {item.example_ru && (
-                          <p className="text-[#C1D0E4]">— {item.example_ru}</p>
+                          <p className="text-muted-foreground">— {item.example_ru}</p>
                         )}
                       </div>
                       <AudioPlayerButton textLez={item.example_lez} />
@@ -477,7 +477,7 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
             {/* Prompt Header + Theory Toggle */}
             <div className="space-y-3 pt-2">
               {isUnitExam && !isMistakeReviewPass && (
-                <div className="inline-flex items-center gap-1.5 rounded-xl border-2 border-[#FFC800] bg-[#16213E] px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-[#FFC800]">
+                <div className="inline-flex items-center gap-1.5 rounded-xl border-2 border-[#FFC800] bg-amber-50 px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-amber-700 dark:bg-[#16213E] dark:text-[#FFC800]">
                   <Trophy className="h-3.5 w-3.5 stroke-[2.5]" />
                   <span>Экзамен раздела</span>
                 </div>
@@ -491,7 +491,7 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
               )}
 
               <div className="flex items-start justify-between gap-2.5">
-                <h1 className="text-balance text-2xl font-black leading-tight text-[#F8FAFC]">
+                <h1 className="text-balance text-2xl font-black leading-tight text-foreground">
                   {currentExercise.prompt_ru}
                 </h1>
 
@@ -505,8 +505,8 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
                       className={cn(
                         'duo-card-3d flex h-10 shrink-0 items-center gap-1.5 rounded-xl border-2 border-b-4 px-3 text-xs font-black uppercase tracking-wider',
                         showGrammarTip
-                          ? 'border-[#CBD5E1] bg-[#F8FAFC] text-[#0B132B]'
-                          : 'border-border bg-card text-[#F8FAFC] hover:border-primary'
+                          ? 'border-foreground bg-foreground text-background dark:border-[#CBD5E1] dark:bg-[#F8FAFC] dark:text-[#0B132B]'
+                          : 'border-border bg-card text-foreground hover:border-primary'
                       )}
                     >
                       <Lightbulb className="h-4 w-4 stroke-[2.5] text-primary" />
@@ -581,15 +581,15 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
                             isWrongSelected && 'animate-duo-shake',
                             checkResult === null &&
                               !isSelected &&
-                              'border-border bg-card text-[#F8FAFC] hover:bg-secondary',
+                              'border-border bg-card text-foreground hover:bg-secondary',
                             checkResult === null &&
                               isSelected &&
-                              'border-[#CBD5E1] bg-[#F8FAFC] text-[#0B132B]',
+                              'border-foreground bg-foreground text-background dark:border-[#CBD5E1] dark:bg-[#F8FAFC] dark:text-[#0B132B]',
                             checkResult !== null &&
                               isCorrectOption &&
-                              'border-emerald-500 bg-emerald-500/20 text-emerald-200',
+                              'border-emerald-500 bg-emerald-500/15 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-200',
                             isWrongSelected &&
-                              'border-primary bg-primary/20 text-primary'
+                              'border-primary bg-primary/15 text-primary dark:bg-primary/20'
                           )}
                         >
                           <span className="leading-snug">{option}</span>
@@ -597,7 +597,7 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
                             className={cn(
                               'flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border-2 text-xs font-black',
                               isSelected && checkResult === null
-                                ? 'border-[#0B132B]/30 text-[#0B132B]'
+                                ? 'border-background/30 text-background dark:border-[#0B132B]/30 dark:text-[#0B132B]'
                                 : 'border-border text-muted-foreground'
                             )}
                           >
@@ -636,10 +636,10 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
                                 'border-border/40 bg-card/30 text-muted-foreground/40',
                               !isMatched &&
                                 isSelected &&
-                                'border-[#CBD5E1] bg-[#F8FAFC] text-[#0B132B]',
+                                'border-foreground bg-foreground text-background dark:border-[#CBD5E1] dark:bg-[#F8FAFC] dark:text-[#0B132B]',
                               !isMatched &&
                                 !isSelected &&
-                                'border-border bg-card text-[#F8FAFC] hover:bg-secondary'
+                                'border-border bg-card text-foreground hover:bg-secondary'
                             )}
                           >
                             {pair.left}
@@ -674,7 +674,7 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
                                 'animate-duo-shake border-primary bg-primary/25 text-primary',
                               !isMatched &&
                                 !isMismatch &&
-                                'border-border bg-card text-[#F8FAFC] hover:bg-secondary'
+                                'border-border bg-card text-foreground hover:bg-secondary'
                             )}
                           >
                             {rightText}
@@ -750,7 +750,7 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
                                 'duo-card-3d flex h-12 min-w-[64px] items-center justify-center rounded-xl border-2 border-b-4 px-4 pt-[1px] text-base font-extrabold',
                                 isUsed
                                   ? 'border-border/30 bg-card/20 text-transparent'
-                                  : 'border-border bg-card text-[#F8FAFC] hover:border-[#F8FAFC]/60'
+                                  : 'border-border bg-card text-foreground hover:border-foreground/50'
                               )}
                             >
                               {tile}
@@ -767,7 +767,7 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
                             setTextAnswer(activeAnswerText);
                             setUseManualKeyboard(true);
                           }}
-                          className="inline-flex items-center gap-1.5 text-xs font-bold text-[#94A3B8] transition-colors hover:text-[#F8FAFC]"
+                          className="inline-flex items-center gap-1.5 text-xs font-bold text-muted-foreground transition-colors hover:text-foreground"
                         >
                           <Keyboard className="h-3.5 w-3.5" />
                           <span>Ввести вручную с клавиатуры</span>
@@ -822,7 +822,7 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
                               onClick={() =>
                                 setTextAnswer((prev) => `${prev}${char}`)
                               }
-                              className="duo-card-3d flex h-11 min-w-[44px] items-center justify-center rounded-xl border-2 border-b-4 border-border bg-card px-3 text-sm font-black text-[#F8FAFC] hover:border-primary disabled:opacity-50"
+                              className="duo-card-3d flex h-11 min-w-[44px] items-center justify-center rounded-xl border-2 border-b-4 border-border bg-card px-3 text-sm font-black text-foreground hover:border-primary disabled:opacity-50"
                             >
                               {char}
                             </button>
@@ -866,8 +866,8 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
             className={cn(
               'animate-duo-popover -mx-4 -mb-4 space-y-4 rounded-t-3xl border-t-2 p-5',
               checkResult === 'correct'
-                ? 'border-emerald-500/40 bg-[#102926]'
-                : 'border-primary/50 bg-[#2A1419]'
+                ? 'border-emerald-500/40 bg-emerald-50 dark:bg-[#102926]'
+                : 'border-primary/50 bg-red-50 dark:bg-[#2A1419]'
             )}
           >
             <div className="flex items-start justify-between gap-3">
@@ -889,7 +889,7 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
                     className={cn(
                       'text-lg font-black',
                       checkResult === 'correct'
-                        ? 'text-emerald-300'
+                        ? 'text-emerald-700 dark:text-emerald-300'
                         : 'text-primary'
                     )}
                   >
@@ -898,9 +898,9 @@ export function LessonRunner({ lesson }: LessonRunnerProps) {
                       : t('wrongHeader')}
                   </p>
                   {checkResult === 'wrong' && correctReferenceText && (
-                    <p className="text-sm font-bold text-[#F8FAFC]">
+                    <p className="text-sm font-bold text-foreground">
                       {t('correctAnswerLabel')}{' '}
-                      <span className="font-black text-emerald-300">
+                      <span className="font-black text-emerald-700 dark:text-emerald-300">
                         {correctReferenceText}
                       </span>
                     </p>

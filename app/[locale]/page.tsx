@@ -1,4 +1,5 @@
 import { Link } from '@/lib/i18n/routing';
+import { ThemeToggleButton } from '@/components/theme/theme-provider';
 import { buildPageMetadata, getSiteUrl } from '@/lib/seo';
 
 export const metadata = buildPageMetadata({
@@ -234,22 +235,24 @@ export default function StartScreenPage() {
   };
 
   return (
-    <main className="relative mx-auto flex min-h-dvh max-w-md flex-col items-center justify-center overflow-hidden border-x-2 border-[#16213E] bg-[#080E22] px-6 py-12 select-none">
+    <main className="relative mx-auto flex min-h-dvh max-w-md flex-col items-center justify-center overflow-hidden border-x-2 border-border bg-background px-6 py-12 select-none dark:border-[#16213E] dark:bg-[#080E22]">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
       />
 
+      <ThemeToggleButton className="absolute right-5 top-5 z-20" />
+
       {/* Subtle corner carpet frame brackets with madder-red corner knots */}
       <svg
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 h-full w-full"
+        className="pointer-events-none absolute inset-0 h-full w-full text-border dark:text-[#263859]"
         viewBox="0 0 410 912"
         preserveAspectRatio="none"
       >
         <path
           d="M24 36 H58 M24 36 V70 M386 36 H352 M386 36 V70 M24 876 H58 M24 876 V842 M386 876 H352 M386 876 V842"
-          stroke="#263859"
+          stroke="currentColor"
           strokeWidth="1.5"
           fill="none"
         />
@@ -261,10 +264,10 @@ export default function StartScreenPage() {
 
       {/* Top minimal title block */}
       <div className="mb-10 space-y-2.5 text-center">
-        <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-[#94A3B8]">
+        <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-muted-foreground">
           ДРЕВНИЙ ЯЗЫК КАВКАЗА
         </p>
-        <h1 className="text-3xl font-extrabold tracking-tight text-[#F8FAFC]">
+        <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
           Lezgi Learn
         </h1>
       </div>

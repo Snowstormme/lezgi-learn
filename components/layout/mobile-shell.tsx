@@ -14,6 +14,7 @@ import {
 import { Link, usePathname } from '@/lib/i18n/routing';
 import { useTranslations } from 'next-intl';
 import { LezgiBrandIcon } from '@/components/ui/lezgi-brand-icon';
+import { ThemeToggleButton } from '@/components/theme/theme-provider';
 import { cn } from '@/lib/utils';
 
 const WEEK_DAYS = ['ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ', 'ВС'];
@@ -71,19 +72,19 @@ export function MobileShell({
   return (
     <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col border-x-2 border-border bg-background">
       {/* Top Stat Bar */}
-      <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-2 border-b-2 border-border bg-background/95 px-4 backdrop-blur">
+      <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-1.5 border-b-2 border-border bg-background/95 px-3 backdrop-blur">
         <Link
           href="/learn"
           onClick={() => setOptimisticHref('/learn')}
-          className="flex shrink-0 items-center gap-2.5 rounded-xl py-1 transition-transform duration-75 active:scale-95"
+          className="flex shrink-0 items-center gap-2 rounded-xl py-1 transition-transform duration-75 active:scale-95"
         >
           <LezgiBrandIcon size="sm" />
-          <span className="text-sm font-extrabold uppercase tracking-wider text-[#F8FAFC]">
+          <span className="text-sm font-extrabold uppercase tracking-wider text-foreground">
             Лезги
           </span>
         </Link>
 
-        <div className="flex shrink-0 items-center gap-2">
+        <div className="flex shrink-0 items-center gap-1.5">
           <button
             type="button"
             onClick={() =>
@@ -92,7 +93,7 @@ export function MobileShell({
               )
             }
             className={cn(
-              'duo-card-3d flex h-9 items-center gap-1.5 rounded-xl border-2 border-b-[3px] px-2.5 text-sm font-extrabold transition-colors',
+              'duo-card-3d flex h-9 items-center gap-1 rounded-xl border-2 border-b-[3px] px-2 text-sm font-extrabold transition-colors',
               activeHeaderCard === 'streak'
                 ? 'border-[#B92B1C] bg-primary text-[#F8FAFC]'
                 : 'border-border bg-card text-primary hover:border-primary/60'
@@ -101,7 +102,7 @@ export function MobileShell({
           >
             <Flame
               className={cn(
-                'h-[17px] w-[17px] -translate-y-[0.5px]',
+                'h-[16px] w-[16px] -translate-y-[0.5px]',
                 activeHeaderCard === 'streak'
                   ? 'fill-[#F8FAFC] text-[#F8FAFC]'
                   : 'fill-primary text-primary'
@@ -116,29 +117,31 @@ export function MobileShell({
               setActiveHeaderCard((prev) => (prev === 'xp' ? null : 'xp'))
             }
             className={cn(
-              'duo-card-3d flex h-9 items-center gap-1 rounded-xl border-2 border-b-[3px] px-2.5 text-sm font-extrabold transition-colors',
+              'duo-card-3d flex h-9 items-center gap-1 rounded-xl border-2 border-b-[3px] px-2 text-sm font-extrabold transition-colors',
               activeHeaderCard === 'xp'
-                ? 'border-[#CBD5E1] bg-[#F8FAFC] text-[#0B132B]'
-                : 'border-border bg-card text-[#F8FAFC] hover:border-[#FFC800]/60'
+                ? 'border-[#CBD5E1] bg-foreground text-background'
+                : 'border-border bg-card text-foreground hover:border-[#FFC800]/60'
             )}
             title="Очки опыта (XP)"
           >
-            <Zap className="h-[17px] w-[17px] -translate-y-[0.5px] fill-[#FFC800] text-[#FFC800]" />
+            <Zap className="h-[16px] w-[16px] -translate-y-[0.5px] fill-[#FFC800] text-[#FFC800]" />
             <span className="tabular-nums">{xp}</span>
           </button>
+
+          <ThemeToggleButton />
         </div>
 
         <Link
           href={isAuthenticated ? '/profile' : '/login'}
           className={cn(
-            'duo-card-3d flex h-10 shrink-0 items-center gap-1.5 rounded-xl border-2 border-b-4 px-3 pt-[1px] text-xs font-extrabold uppercase tracking-wide',
+            'duo-card-3d flex h-9 shrink-0 items-center gap-1.5 rounded-xl border-2 border-b-[3px] px-2.5 pt-[1px] text-xs font-extrabold uppercase tracking-wide',
             isAuthenticated
-              ? 'border-border bg-card text-[#F8FAFC]'
-              : 'border-[#CBD5E1] bg-[#F8FAFC] text-[#0B132B]'
+              ? 'border-border bg-card text-foreground'
+              : 'border-border bg-card text-foreground dark:border-[#CBD5E1] dark:bg-[#F8FAFC] dark:text-[#0B132B]'
           )}
         >
           <User className="h-4 w-4 shrink-0 -translate-y-[0.5px]" />
-          <span className="max-w-[96px] truncate">
+          <span className="max-w-[76px] truncate">
             {isAuthenticated ? (displayName ?? 'Профиль') : 'Войти'}
           </span>
         </Link>
@@ -192,22 +195,22 @@ export function MobileShell({
         )}
 
         {activeHeaderCard === 'xp' && (
-          <div className="animate-duo-popover absolute inset-x-4 top-[68px] z-40 rounded-2xl border-2 border-b-[6px] border-[#263859] bg-[#16213E] p-4 text-[#F8FAFC] shadow-2xl">
+          <div className="animate-duo-popover absolute inset-x-4 top-[68px] z-40 rounded-2xl border-2 border-b-[6px] border-border bg-card p-4 text-foreground shadow-2xl">
             <div className="flex items-center justify-between gap-3">
               <div>
-                <p className="text-[11px] font-extrabold uppercase tracking-wider text-[#FFC800]">
+                <p className="text-[11px] font-extrabold uppercase tracking-wider text-amber-600 dark:text-[#FFC800]">
                   Дневная цель опыта
                 </p>
                 <h3 className="text-lg font-black">
                   {xp} / {DAILY_XP_GOAL} XP
                 </h3>
               </div>
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl border-2 border-[#FFC800] bg-[#0B132B] text-[#FFC800]">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl border-2 border-[#FFC800] bg-secondary text-amber-500 dark:bg-[#0B132B] dark:text-[#FFC800]">
                 <Zap className="h-7 w-7 fill-[#FFC800] text-[#FFC800]" />
               </div>
             </div>
 
-            <div className="mt-3 h-4 w-full overflow-hidden rounded-full border border-border bg-[#0B132B]">
+            <div className="mt-3 h-4 w-full overflow-hidden rounded-full border border-border bg-secondary dark:bg-[#0B132B]">
               <div
                 className="relative h-full rounded-full bg-[#FFC800] transition-all duration-300"
                 style={{ width: `${Math.max(8, dailyXpRatio)}%` }}
@@ -216,7 +219,7 @@ export function MobileShell({
               </div>
             </div>
 
-            <p className="mt-2.5 text-xs font-bold leading-snug text-[#C1D0E4]">
+            <p className="mt-2.5 text-xs font-bold leading-snug text-muted-foreground">
               +15 XP за каждый пройденный урок · +25 XP за сундук этапа и экзамен раздела.
             </p>
           </div>
@@ -248,7 +251,7 @@ export function MobileShell({
                 'duo-card-3d flex h-14 w-full flex-col items-center justify-center gap-1 rounded-2xl border-2 px-1 text-[10px] font-extrabold uppercase tracking-wide',
                 isActive
                   ? 'border-primary bg-primary/15 text-primary'
-                  : 'border-transparent text-muted-foreground hover:text-[#F8FAFC]'
+                  : 'border-transparent text-muted-foreground hover:text-foreground'
               )}
             >
               <Icon className="h-5 w-5 shrink-0 stroke-[2.2]" />

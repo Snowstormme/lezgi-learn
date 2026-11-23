@@ -60,15 +60,15 @@ export default async function LessonScreenPage({
     return (
       <div className="mx-auto max-w-md py-10">
         <div className="space-y-5 rounded-3xl border-2 border-b-[6px] border-border bg-card p-6 text-center">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border-2 border-b-4 border-[#1D2B4D] bg-[#111A33] pt-[2px] text-[#94A3B8]">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border-2 border-b-4 border-border bg-secondary pt-[2px] text-muted-foreground dark:border-[#1D2B4D] dark:bg-[#111A33]">
             <Lock className="h-7 w-7 stroke-[2.5]" />
           </div>
 
           <div className="space-y-2">
-            <h1 className="text-balance text-xl font-extrabold text-[#F8FAFC]">
+            <h1 className="text-balance text-xl font-extrabold text-foreground">
               Урок пока закрыт
             </h1>
-            <p className="text-balance text-sm leading-relaxed text-[#C1D0E4]">
+            <p className="text-balance text-sm leading-relaxed text-muted-foreground">
               Уроки открываются поэтапно. Сначала пройдите {prevTitle}, чтобы открыть{' '}
               {lesson.order_index}-й урок «{lesson.title_ru}».
             </p>
@@ -85,7 +85,7 @@ export default async function LessonScreenPage({
             )}
             <Link
               href="/learn"
-              className="flex h-11 w-full items-center justify-center rounded-2xl border-2 border-b-4 border-border bg-background pt-[1px] text-xs font-extrabold uppercase tracking-wider text-[#CBD5E1] transition-all hover:text-[#F8FAFC] active:translate-y-[2px] active:border-b-2"
+              className="flex h-11 w-full items-center justify-center rounded-2xl border-2 border-b-4 border-border bg-background pt-[1px] text-xs font-extrabold uppercase tracking-wider text-muted-foreground transition-all hover:text-foreground active:translate-y-[2px] active:border-b-2"
             >
               К карте курса
             </Link>

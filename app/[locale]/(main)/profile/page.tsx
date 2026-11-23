@@ -21,17 +21,17 @@ export default async function ProfilePage() {
 
   return (
     <div className="space-y-5">
-      <h1 className="text-2xl font-black tracking-tight text-[#F8FAFC]">
+      <h1 className="text-2xl font-black tracking-tight text-foreground">
         {tProfile('title')}
       </h1>
 
       {session.isAuthenticated ? (
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg font-black text-[#F8FAFC]">
+            <CardTitle className="text-lg font-black text-foreground">
               {session.displayName}
             </CardTitle>
-            <p className="text-xs font-bold text-[#CBD5E1]">
+            <p className="text-xs font-bold text-muted-foreground">
               {session.email}
             </p>
           </CardHeader>
@@ -44,7 +44,7 @@ export default async function ProfilePage() {
                 </p>
               </div>
               <div className="rounded-2xl border-2 border-b-4 border-border bg-secondary p-3.5">
-                <p className="text-2xl font-black text-[#F8FAFC]">
+                <p className="text-2xl font-black text-foreground">
                   {session.streakDays}
                 </p>
                 <p className="text-xs font-extrabold uppercase tracking-wider text-muted-foreground">

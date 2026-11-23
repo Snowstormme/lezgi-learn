@@ -60,7 +60,7 @@ export default async function LessonResultScreenPage({
           </div>
         </div>
 
-        <h1 className="text-3xl font-black tracking-tight text-[#F8FAFC]">
+        <h1 className="text-3xl font-black tracking-tight text-foreground">
           {tResult('title')}
         </h1>
         <p className="text-sm font-bold text-muted-foreground">
@@ -107,7 +107,7 @@ export default async function LessonResultScreenPage({
                   <p className="text-base font-black text-primary">
                     {word.lemma_lez}
                   </p>
-                  <p className="text-xs font-bold text-[#F8FAFC]">
+                  <p className="text-xs font-bold text-foreground">
                     {word.translation_ru}
                   </p>
                 </div>
@@ -137,7 +137,7 @@ export default async function LessonResultScreenPage({
         <div className="grid grid-cols-2 gap-3">
           <Link
             href="/learn"
-            className="flex min-h-[48px] items-center justify-center rounded-2xl border-2 border-b-4 border-border bg-card px-4 py-2.5 text-center text-xs font-extrabold uppercase tracking-wider text-[#F8FAFC] transition-all hover:bg-secondary active:translate-y-[2px] active:border-b-2"
+            className="flex min-h-[48px] items-center justify-center rounded-2xl border-2 border-b-4 border-border bg-card px-4 py-2.5 text-center text-xs font-extrabold uppercase tracking-wider text-foreground transition-all hover:bg-secondary active:translate-y-[2px] active:border-b-2"
           >
             К КАРТЕ КУРСА
           </Link>

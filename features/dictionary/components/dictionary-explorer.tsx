@@ -105,8 +105,8 @@ export function DictionaryExplorer({ words }: DictionaryExplorerProps) {
               className={cn(
                 'rounded-xl border-2 border-b-4 px-3.5 py-2 text-xs font-extrabold uppercase tracking-wide transition-all active:translate-y-[1px] active:border-b-2',
                 isActive
-                  ? 'border-[#CBD5E1] bg-[#F8FAFC] text-[#0B132B]'
-                  : 'border-border bg-card text-muted-foreground hover:text-[#F8FAFC]'
+                  ? 'border-foreground bg-foreground text-background dark:border-[#CBD5E1] dark:bg-[#F8FAFC] dark:text-[#0B132B]'
+                  : 'border-border bg-card text-muted-foreground hover:text-foreground'
               )}
             >
               {chip.label}
@@ -149,7 +149,7 @@ export function DictionaryExplorer({ words }: DictionaryExplorerProps) {
                         </span>
                       )}
                     </div>
-                    <p className="text-sm font-bold text-[#F8FAFC]">
+                    <p className="text-sm font-bold text-foreground">
                       {word.translation_ru}
                     </p>
                   </div>

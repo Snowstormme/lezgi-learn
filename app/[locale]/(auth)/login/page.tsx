@@ -18,7 +18,7 @@ export default async function LoginPage() {
     <div className="mx-auto flex min-h-dvh max-w-md flex-col justify-center border-x-2 border-border bg-background px-5 py-10">
       <div className="mb-6 space-y-2 text-center">
         <LezgiBrandIcon size="md" className="mx-auto mb-3" />
-        <h1 className="text-2xl font-black tracking-tight text-[#F8FAFC]">
+        <h1 className="text-2xl font-black tracking-tight text-foreground">
           {tAuth('title')}
         </h1>
         <p className="text-sm font-bold text-muted-foreground">
@@ -31,7 +31,7 @@ export default async function LoginPage() {
       <div className="mt-5">
         <Link
           href="/learn"
-          className="flex min-h-[48px] w-full items-center justify-center rounded-2xl border-2 border-b-4 border-border bg-card px-4 py-2.5 text-center text-xs font-extrabold uppercase tracking-wider text-[#F8FAFC] transition-all hover:bg-secondary active:translate-y-[2px] active:border-b-2"
+          className="flex min-h-[48px] w-full items-center justify-center rounded-2xl border-2 border-b-4 border-border bg-card px-4 py-2.5 text-center text-xs font-extrabold uppercase tracking-wider text-foreground transition-all hover:bg-secondary active:translate-y-[2px] active:border-b-2"
         >
           {tAuth('continueAsGuest')}
         </Link>
