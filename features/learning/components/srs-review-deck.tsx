@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState, useTransition } from 'react';
+import { useState, useTransition } from 'react';
 import {
   BookOpen,
   Brain,
@@ -13,10 +13,7 @@ import {
 } from 'lucide-react';
 import { Link } from '@/lib/i18n/routing';
 import type { SrsReviewCardItem } from '@/features/learning/srs-queries';
-import {
-  getSrsIntervalPreviews,
-  type SrsRatingGrade,
-} from '@/features/learning/fsrs';
+import type { SrsRatingGrade } from '@/features/learning/fsrs';
 import { reviewWordCardAction } from '@/features/learning/srs-actions';
 import { AudioPlayerButton } from '@/features/shared/components/audio-player-button';
 import { ConfettiBurst } from '@/components/course/ConfettiBurst';
@@ -52,11 +49,6 @@ export function SrsReviewDeck({
   const [isPending, startTransition] = useTransition();
 
   const currentCard = queue[currentIndex];
-
-  const intervalPreviews = useMemo(() => {
-    if (!currentCard) return { 1: 'скоро', 2: '10 мин', 3: '1 д', 4: '4 д' };
-    return getSrsIntervalPreviews(currentCard.cardState);
-  }, [currentCard]);
 
   function handleGrade(remembered: boolean) {
     if (!currentCard || isPending) return;
@@ -266,30 +258,20 @@ export function SrsReviewDeck({
                   type="button"
                   disabled={isPending}
                   onClick={() => handleGrade(false)}
-                  className="duo-card-3d flex min-h-[70px] cursor-pointer flex-col items-center justify-center gap-0.5 rounded-2xl border-2 border-b-4 border-[#B92B1C] bg-primary/15 px-3 py-3 text-primary transition-all hover:bg-primary/25 disabled:opacity-50"
+                  className="duo-card-3d flex min-h-[60px] cursor-pointer items-center justify-center gap-1.5 rounded-2xl border-2 border-b-4 border-[#B92B1C] bg-primary/15 px-3 py-3 text-sm font-black uppercase tracking-wider text-primary transition-all hover:bg-primary/25 disabled:opacity-50"
                 >
-                  <span className="flex items-center gap-1.5 text-sm font-black uppercase tracking-wider">
-                    <X className="h-4 w-4 stroke-[3]" />
-                    <span>Не помню</span>
-                  </span>
-                  <span className="text-[11px] font-bold opacity-80">
-                    повторим снова
-                  </span>
+                  <X className="h-4 w-4 stroke-[3]" />
+                  <span>Не помню</span>
                 </button>
 
                 <button
                   type="button"
                   disabled={isPending}
                   onClick={() => handleGrade(true)}
-                  className="duo-card-3d flex min-h-[70px] cursor-pointer flex-col items-center justify-center gap-0.5 rounded-2xl border-2 border-b-4 border-emerald-600 bg-emerald-500 px-3 py-3 text-[#0B132B] transition-all hover:brightness-105 disabled:opacity-50"
+                  className="duo-card-3d flex min-h-[60px] cursor-pointer items-center justify-center gap-1.5 rounded-2xl border-2 border-b-4 border-emerald-600 bg-emerald-500 px-3 py-3 text-sm font-black uppercase tracking-wider text-[#0B132B] transition-all hover:brightness-105 disabled:opacity-50"
                 >
-                  <span className="flex items-center gap-1.5 text-sm font-black uppercase tracking-wider">
-                    <Check className="h-4 w-4 stroke-[3]" />
-                    <span>Помню</span>
-                  </span>
-                  <span className="text-[11px] font-extrabold opacity-85">
-                    через {intervalPreviews[3]}
-                  </span>
+                  <Check className="h-4 w-4 stroke-[3]" />
+                  <span>Помню</span>
                 </button>
               </div>
             </div>
