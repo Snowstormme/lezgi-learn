@@ -243,25 +243,6 @@ export default function StartScreenPage() {
 
       <ThemeToggleButton className="absolute right-5 top-5 z-20" />
 
-      {/* Subtle corner carpet frame brackets with madder-red corner knots */}
-      <svg
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 h-full w-full text-border dark:text-[#263859]"
-        viewBox="0 0 410 912"
-        preserveAspectRatio="none"
-      >
-        <path
-          d="M24 36 H58 M24 36 V70 M386 36 H352 M386 36 V70 M24 876 H58 M24 876 V842 M386 876 H352 M386 876 V842"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          fill="none"
-        />
-        <rect x="21" y="33" width="6" height="6" fill="#C83A22" />
-        <rect x="383" y="33" width="6" height="6" fill="#C83A22" />
-        <rect x="21" y="873" width="6" height="6" fill="#C83A22" />
-        <rect x="383" y="873" width="6" height="6" fill="#C83A22" />
-      </svg>
-
       {/* Top minimal title block */}
       <div className="mb-10 space-y-2.5 text-center">
         <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-muted-foreground">
