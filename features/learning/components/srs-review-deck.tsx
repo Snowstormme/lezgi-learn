@@ -35,7 +35,6 @@ export function SrsReviewDeck({
   initialCards,
   allLearnedCards,
   totalLearnedWords,
-  completedLessonsCount,
   nextDueLabel,
   nextLessonSlug,
   isAuthenticated,
@@ -140,11 +139,6 @@ export function SrsReviewDeck({
               ? 'Дневное повторение завершено!'
               : 'На сегодня всё повторено!'}
           </CardTitle>
-          {!justFinished && (
-            <p className="text-xs font-bold text-[#CBD5E1]">
-              Изучено слов: {totalLearnedWords} (из {completedLessonsCount} ур.)
-            </p>
-          )}
           {nextDueLabel && !justFinished && (
             <div className="mx-auto inline-flex items-center gap-1.5 rounded-full border border-[#263859] bg-[#111A33] px-3 py-1 text-[11px] font-extrabold text-[#FFC800]">
               <Clock className="h-3.5 w-3.5" />
