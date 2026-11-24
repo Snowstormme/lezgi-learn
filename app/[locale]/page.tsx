@@ -235,7 +235,7 @@ export default function StartScreenPage() {
   };
 
   return (
-    <main className="relative mx-auto flex min-h-dvh max-w-md flex-col items-center justify-center overflow-hidden border-x-2 border-border bg-background px-6 py-12 select-none dark:border-[#16213E] dark:bg-[#080E22]">
+    <main className="relative mx-auto flex min-h-dvh max-w-md flex-col items-center justify-between overflow-hidden border-x-2 border-border bg-background px-6 pt-16 pb-10 select-none dark:border-[#16213E] dark:bg-[#080E22]">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
@@ -244,7 +244,7 @@ export default function StartScreenPage() {
       <ThemeToggleButton className="absolute right-5 top-5 z-20" />
 
       {/* Top minimal title block */}
-      <div className="mb-10 space-y-2.5 text-center">
+      <div className="space-y-2 text-center">
         <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-muted-foreground">
           ДРЕВНИЙ ЯЗЫК КАВКАЗА
         </p>
@@ -257,11 +257,11 @@ export default function StartScreenPage() {
       <Link
         href="/learn"
         aria-label="Lezgi Learn — Перейти к курсу"
-        className="group relative flex items-center justify-center rounded-full focus:outline-none"
+        className="group relative my-4 flex items-center justify-center rounded-full focus:outline-none"
       >
         <svg
           viewBox="-185 -185 370 370"
-          className="h-[336px] w-[336px] overflow-visible transition-transform duration-300 ease-out group-hover:scale-[1.04] group-active:scale-[0.96]"
+          className="h-[300px] w-[300px] overflow-visible transition-transform duration-300 ease-out group-hover:scale-[1.04] group-active:scale-[0.96] sm:h-[320px] sm:w-[320px]"
           aria-hidden="true"
         >
           <defs>
@@ -535,6 +535,22 @@ export default function StartScreenPage() {
           </g>
         </svg>
       </Link>
+
+      {/* Bottom Action Buttons (Variant 2 without tagline) */}
+      <div className="w-full max-w-xs space-y-3">
+        <Link
+          href="/learn"
+          className="flex min-h-[54px] w-full items-center justify-center rounded-2xl border-2 border-b-4 border-[#B92B1C] bg-primary px-6 py-3 text-sm font-black uppercase tracking-wider text-[#F8FAFC] transition-all hover:brightness-105 active:translate-y-[2px] active:border-b-2"
+        >
+          Начать обучение
+        </Link>
+        <Link
+          href="/login"
+          className="flex min-h-[48px] w-full items-center justify-center rounded-2xl border-2 border-b-4 border-border bg-card px-6 py-2.5 text-xs font-extrabold uppercase tracking-wider text-foreground transition-all hover:bg-secondary active:translate-y-[2px] active:border-b-2"
+        >
+          Уже есть аккаунт
+        </Link>
+      </div>
     </main>
   );
 }
