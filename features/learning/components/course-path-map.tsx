@@ -266,64 +266,74 @@ export function CoursePathMap({ lessons }: CoursePathMapProps) {
           const isLocked = !lesson.is_unlocked;
           const isCurrent = !isLocked && item.lessonIdx === activeLessonIndex;
           const isCompleted = lesson.is_completed;
+          const numLabel = String(lesson.order_index).padStart(2, '0');
 
-          // Duolingo-style 3D elliptical puck (78x70) with 8px 3D base that lowers on hover & press
+          // 4B "Beacon in the Mountains" circular 3D milestone medallions (01, 02, 03...)
           const puckClasses = cn(
-            'duo-node-3d relative flex h-[70px] w-[78px] cursor-pointer items-center justify-center border-2',
-            isExam ? 'rounded-3xl' : 'rounded-full',
+            'duo-node-3d relative flex cursor-pointer flex-col items-center justify-center border-2',
+            isExam ? 'h-[68px] w-[72px] rounded-3xl' : 'h-[68px] w-[68px] rounded-full',
+            isLocked && !isExam && 'h-[64px] w-[64px]',
             isSelected && 'is-pressed',
             isLocked &&
               (isExam
-                ? 'duo-node-locked border-border bg-secondary text-amber-600 dark:border-[#263859] dark:bg-[#16213E] dark:text-[#FFC800]/75'
-                : 'duo-node-locked border-border bg-secondary text-muted-foreground dark:border-[#1D2B4D] dark:bg-[#111A33] dark:text-[#64748B]'),
+                ? 'duo-node-locked border-[#CBD5E1] bg-gradient-to-b from-[#F1F5F9] to-[#E2E8F0] text-amber-600 dark:border-[#293D66] dark:from-[#1B294B] dark:to-[#101932] dark:text-[#FFC800]/75'
+                : 'duo-node-locked border-[#CBD5E1] bg-gradient-to-b from-[#F1F5F9] to-[#E2E8F0] text-[#64748B] dark:border-[#293D66] dark:from-[#1B294B] dark:to-[#101932] dark:text-[#64748B]'),
             !isLocked &&
               isCompleted &&
-              'duo-node-completed border-[#CBD5E1] bg-[#F8FAFC] text-primary',
+              'duo-node-completed border-[#CBD5E1] bg-gradient-to-b from-white to-[#EEF2F7] text-[#0F172A]',
             !isLocked &&
               !isCompleted &&
               isCurrent &&
-              'duo-node-active border-[#B92B1C] bg-primary text-[#F8FAFC]',
+              'duo-node-active border-[#FDE047]/75 bg-gradient-to-b from-[#FF6650] to-[#E5412A] text-white',
             !isLocked &&
               !isCompleted &&
               !isCurrent &&
-              'duo-node-active border-[#B92B1C] bg-primary text-[#F8FAFC]'
+              'duo-node-active border-[#B92B1C] bg-gradient-to-b from-[#FF6650] to-[#E5412A] text-white'
           );
 
           const nodeInner = (
             <>
-              {/* Glossy sweeping sheen clipped strictly to the 3D oval puck */}
+              {/* Inner precision bezel ring */}
               <span
                 aria-hidden="true"
                 className={cn(
-                  'duo-node-shine pointer-events-none absolute inset-0 overflow-hidden rounded-[32px]',
-                  isCompleted && 'duo-node-shine-completed',
-                  isLocked && 'duo-node-shine-locked'
-                )}
-              />
-              {/* Glossy top specular crescent for lacquered 3D depth */}
-              <span
-                aria-hidden="true"
-                className={cn(
-                  'pointer-events-none absolute inset-x-3 top-1.5 h-3 rounded-full bg-gradient-to-b',
+                  'pointer-events-none absolute inset-[5px] border',
+                  isExam ? 'rounded-[18px]' : 'rounded-full',
                   isCompleted
-                    ? 'from-white via-white/80 to-white/10'
+                    ? 'border-[1.8px] border-primary/35'
                     : isLocked
-                      ? 'from-white/15 to-transparent'
-                      : 'from-white/55 via-white/25 to-transparent'
+                      ? 'border-slate-300/80 dark:border-[#334155]'
+                      : 'border-white/25'
                 )}
               />
+
               {isExam ? (
-                <Trophy className="relative z-10 h-7 w-7 stroke-[2.5] drop-shadow-[0_1px_2px_rgba(0,0,0,0.28)]" />
+                <Trophy className="relative z-10 h-7 w-7 stroke-[2.4] drop-shadow-[0_1px_2px_rgba(0,0,0,0.22)]" />
+              ) : isLocked ? (
+                <span className="relative z-10 text-[18px] font-black leading-none tracking-tight tabular-nums">
+                  {numLabel}
+                </span>
               ) : (
-                <Star className="relative z-10 h-7 w-7 fill-current stroke-[2.2] drop-shadow-[0_1px_2px_rgba(0,0,0,0.25)]" />
+                <div className="relative z-10 flex flex-col items-center justify-center leading-none">
+                  <Star
+                    className={cn(
+                      'mb-0.5 h-3 w-3 fill-current stroke-[2]',
+                      isCompleted ? 'text-primary' : 'text-[#FDE047]'
+                    )}
+                  />
+                  <span className="text-[19px] font-black leading-none tracking-tight tabular-nums">
+                    {numLabel}
+                  </span>
+                </div>
               )}
+
               {isCompleted && (
-                <span className="absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-background bg-primary shadow-sm">
-                  <Check className="h-3.5 w-3.5 stroke-[3.5] text-[#F8FAFC]" />
+                <span className="absolute -right-1 -top-1 z-20 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-emerald-500 shadow-sm">
+                  <Check className="h-3.5 w-3.5 stroke-[3.5] text-white" />
                 </span>
               )}
               {isLocked && (
-                <span className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-border bg-background dark:border-[#1D2B4D]">
+                <span className="absolute -bottom-1 -right-1 z-20 flex h-6 w-6 items-center justify-center rounded-full border-2 border-border bg-background dark:border-[#293D66]">
                   <Lock className="h-3 w-3 text-muted-foreground" />
                 </span>
               )}
@@ -374,33 +384,42 @@ export function CoursePathMap({ lessons }: CoursePathMapProps) {
                 )}
                 onClick={(e) => e.stopPropagation()}
               >
-                <div className="relative">
-                  {isCurrent && !isSelected && (
-                    <button
-                      type="button"
-                      onClick={() => handleToggleNode(item.key)}
-                      className="animate-duo-float absolute bottom-full left-1/2 mb-2.5 flex cursor-pointer flex-col items-center"
-                    >
-                      <div className="rounded-xl border-2 border-b-4 border-[#CBD5E1] bg-[#F8FAFC] px-4 py-1.5 pt-[7px] text-xs font-extrabold uppercase tracking-wider text-primary shadow-md">
-                        {isCompleted
-                          ? 'Повторить'
-                          : isExam
-                            ? 'Экзамен'
-                            : 'Начать'}
-                      </div>
-                      <div className="h-0 w-0 border-x-[7px] border-t-[7px] border-x-transparent border-t-[#CBD5E1]" />
-                    </button>
+                <div className="relative flex items-center justify-center">
+                  {/* 4B Expanding Beacon Signal Waves around Current Lesson */}
+                  {isCurrent && !isCompleted && (
+                    <>
+                      <span
+                        aria-hidden="true"
+                        className={cn(
+                          'duo-beacon-wave-1 pointer-events-none absolute -inset-1 border-[2.5px] border-primary',
+                          isExam ? 'rounded-3xl' : 'rounded-full'
+                        )}
+                      />
+                      <span
+                        aria-hidden="true"
+                        className={cn(
+                          'duo-beacon-wave-2 pointer-events-none absolute -inset-1 border-2 border-[#FFC800]',
+                          isExam ? 'rounded-3xl' : 'rounded-full'
+                        )}
+                      />
+                    </>
                   )}
 
-                  <button
-                    type="button"
-                    aria-expanded={isSelected}
-                    aria-label={labelTitle}
-                    onClick={() => handleToggleNode(item.key)}
-                    className={puckClasses}
+                  <div
+                    className={cn(
+                      isCurrent && !isCompleted && !isSelected && 'duo-beacon-breathe'
+                    )}
                   >
-                    {nodeInner}
-                  </button>
+                    <button
+                      type="button"
+                      aria-expanded={isSelected}
+                      aria-label={labelTitle}
+                      onClick={() => handleToggleNode(item.key)}
+                      className={puckClasses}
+                    >
+                      {nodeInner}
+                    </button>
+                  </div>
                 </div>
               </div>
 
