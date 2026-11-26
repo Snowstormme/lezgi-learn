@@ -180,18 +180,15 @@
   animation: duoPopoverIn 180ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Tactile 3D Cards & Word Tiles inside Lesson Runner */
+/* Tactile 3D Cards & Buttons: single-step press on click only (no hover drop) */
 .duo-card-3d {
   transition:
     transform 110ms cubic-bezier(0.2, 0.8, 0.2, 1),
     background-color 110ms ease,
     border-color 110ms ease;
 }
-.duo-card-3d:not(:disabled):hover {
-  transform: translateY(2px);
-}
 .duo-card-3d:not(:disabled):active {
-  transform: translateY(4px);
+  transform: translateY(2px);
 }
 
 @keyframes duoFloat {
