@@ -107,56 +107,6 @@ function ChestIcon({
   );
 }
 
-const SKY_STARS: Array<[number, number, number, string, string]> = [
-  [26, 48, 1.3, '#F8FAFC', '0s'],
-  [308, 72, 1.5, '#FFC800', '0.9s'],
-  [54, 190, 1.1, '#F8FAFC', '1.7s'],
-  [292, 275, 1.4, '#F8FAFC', '0.4s'],
-  [24, 385, 1.2, '#FFC800', '2.1s'],
-  [314, 465, 1.5, '#F8FAFC', '1.1s'],
-  [38, 610, 1.3, '#F8FAFC', '2.6s'],
-  [298, 705, 1.2, '#FFC800', '0.7s'],
-  [28, 860, 1.4, '#F8FAFC', '1.4s'],
-  [312, 955, 1.2, '#F8FAFC', '2.9s'],
-  [44, 1110, 1.5, '#FFC800', '0.3s'],
-  [304, 1230, 1.3, '#F8FAFC', '1.9s'],
-  [30, 1380, 1.2, '#F8FAFC', '2.3s'],
-  [308, 1490, 1.4, '#FFC800', '1.0s'],
-];
-
-function SkyBackdrop({ height, night }: { height: number; night: boolean }) {
-  return (
-    <g aria-hidden="true">
-      {/* Subtle distant Caucasus mountain ridge silhouettes */}
-      <path
-        d={`M -32 280 L 42 190 L 122 245 L 222 155 L 315 235 L 368 185 L 368 380 L -32 380 Z`}
-        fill={night ? '#0E1838' : '#DBE5F2'}
-        opacity={night ? 0.45 : 0.65}
-      />
-      <path
-        d={`M -32 ${Math.round(height * 0.62)} L 68 ${Math.round(height * 0.56)} L 160 ${Math.round(height * 0.6)} L 258 ${Math.round(height * 0.54)} L 368 ${Math.round(height * 0.59)} L 368 ${height} L -32 ${height} Z`}
-        fill={night ? '#0E1838' : '#DBE5F2'}
-        opacity={night ? 0.4 : 0.55}
-      />
-      {/* Delicate twinkling stars along the night sky */}
-      {night &&
-        SKY_STARS.filter(([, sy]) => sy < height - 20).map(
-          ([sx, sy, sr, fill, delay], idx) => (
-            <circle
-              key={idx}
-              cx={sx}
-              cy={sy}
-              r={sr}
-              fill={fill}
-              className="duo-sky-twinkle"
-              style={{ animationDelay: delay }}
-            />
-          )
-        )}
-    </g>
-  );
-}
-
 interface CoursePathMapProps {
   lessons: LessonSummary[];
 }
@@ -223,8 +173,6 @@ export function CoursePathMap({ lessons }: CoursePathMapProps) {
         style={{ overflow: 'visible' }}
         aria-hidden="true"
       >
-        <SkyBackdrop height={height} night={isNight} />
-
         {mountains.map((m) => (
           <PathDecor key={m.key} decor={m} time={time} />
         ))}
