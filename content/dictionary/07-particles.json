@@ -1,0 +1,200 @@
+[
+  {
+    "slug": "particle-gelbetda",
+    "lemma_lez": "гьелбетда",
+    "translation_ru": "конечно / безусловно",
+    "transcription_ru": "гьелбе́тда",
+    "part_of_speech": "particle",
+    "grammar_notes_ru": "Утвердительно-модальная частица. Может употребляться самостоятельно как уверенный ответ «конечно».",
+    "status": "published",
+    "verified": true,
+    "examples": [
+      {
+        "slug": "particle-gelbetda-ex-1",
+        "sentence_lez": "Ам рази хьанани? — Гьелбетда.",
+        "translation_ru": "Он согласился? — Конечно.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "particle-inge",
+    "lemma_lez": "ингье",
+    "translation_ru": "вот (рядом)",
+    "transcription_ru": "ингье́",
+    "part_of_speech": "particle",
+    "grammar_notes_ru": "Указательная препозитивная частица: указывает на близкий предмет или только что наступившее явление.",
+    "status": "published",
+    "verified": true,
+    "examples": [
+      {
+        "slug": "particle-inge-ex-1",
+        "sentence_lez": "Ингье гила гадни алукьнава.",
+        "translation_ru": "Вот теперь и лето наступило.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "particle-ange",
+    "lemma_lez": "ангье",
+    "translation_ru": "вон / вот (подальше)",
+    "transcription_ru": "ангье́",
+    "part_of_speech": "particle",
+    "grammar_notes_ru": "Указательная препозитивная частица: указывает на более отдалённый предмет.",
+    "status": "published",
+    "verified": true,
+    "examples": [
+      {
+        "slug": "particle-ange-ex-1",
+        "sentence_lez": "Ангье, атӀа хеб аквазвани?",
+        "translation_ru": "Вон ту овцу видишь?",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "particle-anzhah",
+    "lemma_lez": "анжах",
+    "translation_ru": "только / лишь",
+    "transcription_ru": "анжа́х",
+    "part_of_speech": "particle",
+    "grammar_notes_ru": "Определительно-выделительная частица, ограничивающая значение слова или высказывания.",
+    "status": "published",
+    "verified": true,
+    "examples": [
+      {
+        "slug": "particle-anzhah-ex-1",
+        "sentence_lez": "Анжах вун галаз фида зун шегьердиз.",
+        "translation_ru": "Только с тобой пойду я в город.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "particle-saki",
+    "lemma_lez": "саки",
+    "translation_ru": "почти",
+    "transcription_ru": "саки́",
+    "part_of_speech": "particle",
+    "grammar_notes_ru": "Определительная частица, выражающая приближённость («почти, едва не»).",
+    "status": "published",
+    "verified": true,
+    "examples": [
+      {
+        "slug": "particle-saki-ex-1",
+        "sentence_lez": "КӀвалах саки куьтягь хьана.",
+        "translation_ru": "Работа почти закончилась.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "particle-lap",
+    "lemma_lez": "лап",
+    "translation_ru": "совсем / очень / именно",
+    "transcription_ru": "ла́п",
+    "part_of_speech": "particle",
+    "grammar_notes_ru": "Усилительно-определительная частица. В сочетании «лап гьа» означает «точь-в-точь, именно, как раз».",
+    "status": "published",
+    "verified": true,
+    "examples": [
+      {
+        "slug": "particle-lap-ex-1",
+        "sentence_lez": "Им лап гьа Магьамед тир.",
+        "translation_ru": "Это был именно Магомед.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "particle-gich",
+    "lemma_lez": "гьич",
+    "translation_ru": "совсем / вообще / даже",
+    "transcription_ru": "гьи́ч",
+    "part_of_speech": "particle",
+    "grammar_notes_ru": "Препозитивная усилительная частица. Часто употребляется с -ни для усиления отрицания («никто, нисколько»).",
+    "status": "published",
+    "verified": true,
+    "examples": [
+      {
+        "slug": "particle-gich-ex-1",
+        "sentence_lez": "Гьич садни фидач.",
+        "translation_ru": "Никто не пойдёт.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "particle-gatta",
+    "lemma_lez": "гьатта",
+    "translation_ru": "даже / вплоть до",
+    "transcription_ru": "гьатта́",
+    "part_of_speech": "particle",
+    "grammar_notes_ru": "Препозитивная усилительная частица, выделяющая слово или целое высказывание.",
+    "status": "published",
+    "verified": true,
+    "examples": [
+      {
+        "slug": "particle-gatta-ex-1",
+        "sentence_lez": "Гьатта аяларни рази хьана.",
+        "translation_ru": "Даже дети согласились.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "particle-sha",
+    "lemma_lez": "ша",
+    "translation_ru": "давай / давай-ка",
+    "transcription_ru": "ша́",
+    "part_of_speech": "particle",
+    "grammar_notes_ru": "Модально-волевая побудительная частица, употребляется перед сказуемым для приглашения к совместному действию.",
+    "status": "published",
+    "verified": true,
+    "examples": [
+      {
+        "slug": "particle-sha-ex-1",
+        "sentence_lez": "Ша чун аниз фин.",
+        "translation_ru": "Давай мы туда пойдём.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "particle-hiz",
+    "lemma_lez": "хьиз",
+    "translation_ru": "как / словно / будто",
+    "transcription_ru": "хьи́з",
+    "part_of_speech": "particle",
+    "grammar_notes_ru": "Сравнительная постпозитивная частица: ставится после слова, с которым производится сравнение.",
+    "status": "published",
+    "verified": true,
+    "examples": [
+      {
+        "slug": "particle-hiz-ex-1",
+        "sentence_lez": "Ам билбил хьиз рахазва.",
+        "translation_ru": "Он говорит, как соловей.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "particle-htin",
+    "lemma_lez": "хьтин",
+    "translation_ru": "такой как / подобный",
+    "transcription_ru": "хьти́н",
+    "part_of_speech": "particle",
+    "grammar_notes_ru": "Сравнительная частица, указывающая на сходный признак предмета или лица.",
+    "status": "published",
+    "verified": true,
+    "examples": [
+      {
+        "slug": "particle-htin-ex-1",
+        "sentence_lez": "Вун хьтин дуст мад авач.",
+        "translation_ru": "Такого друга, как ты, больше нет.",
+        "status": "published"
+      }
+    ]
+  }
+]
