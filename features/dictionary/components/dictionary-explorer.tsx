@@ -110,19 +110,32 @@ export function DictionaryExplorer({ words }: DictionaryExplorerProps) {
       <div className="flex flex-wrap items-center gap-1.5">
         {filterChips.map((chip) => {
           const isActive = posFilter === chip.key;
+          const isVerifiedCategory =
+            chip.key !== 'all' &&
+            words.some((w) => w.part_of_speech === chip.key) &&
+            words
+              .filter((w) => w.part_of_speech === chip.key)
+              .every((w) => w.verified);
           return (
             <button
               key={chip.key}
               type="button"
               onClick={() => setPosFilter(chip.key)}
+              title={isVerifiedCategory ? 'Раздел точно проверен' : undefined}
               className={cn(
-                'rounded-xl border-2 border-b-4 px-3.5 py-2 text-xs font-extrabold uppercase tracking-wide transition-all active:translate-y-[1px] active:border-b-2',
+                'inline-flex items-center gap-1.5 rounded-xl border-2 border-b-4 px-3.5 py-2 text-xs font-extrabold uppercase tracking-wide transition-all active:translate-y-[1px] active:border-b-2',
                 isActive
                   ? 'border-foreground bg-foreground text-background dark:border-[#CBD5E1] dark:bg-[#F8FAFC] dark:text-[#0B132B]'
                   : 'border-border bg-card text-muted-foreground hover:text-foreground'
               )}
             >
-              {chip.label}
+              <span>{chip.label}</span>
+              {isVerifiedCategory && (
+                <BadgeCheck
+                  aria-label="Проверено"
+                  className="h-3.5 w-3.5 shrink-0 stroke-[2.5] text-emerald-500"
+                />
+              )}
             </button>
           );
         })}
