@@ -462,7 +462,8 @@
         "translation_ru": "Да, ты прав.",
         "status": "published"
       }
-    ]
+    ],
+    "verified": true
   },
   {
     "slug": "vaa",
@@ -479,7 +480,8 @@
         "translation_ru": "Нет, это не моя книга.",
         "status": "published"
       }
-    ]
+    ],
+    "verified": true
   },
   {
     "slug": "belki",
@@ -496,7 +498,8 @@
         "translation_ru": "Возможно, он придёт завтра.",
         "status": "published"
       }
-    ]
+    ],
+    "verified": true
   },
   {
     "slug": "duz-ya",
