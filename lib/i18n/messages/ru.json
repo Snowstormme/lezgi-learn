@@ -96,6 +96,7 @@
     "pronounFilter": "Мест.",
     "adverbFilter": "Наречия",
     "particleFilter": "Частицы",
+    "numeralFilter": "Числительные",
     "emptyResults": "По вашему запросу слов не найдено.",
     "audioSoon": "Озвучка • Этап 4",
     "foundCount": "Найдено слов: {count}"

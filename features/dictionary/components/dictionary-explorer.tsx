@@ -19,6 +19,7 @@ const POS_LABELS: Record<string, string> = {
   verb: 'Глагол',
   adjective: 'Прил.',
   particle: 'Частица',
+  numeral: 'Числ.',
 };
 
 interface DictionaryExplorerProps {
@@ -39,13 +40,14 @@ export function DictionaryExplorer({ words }: DictionaryExplorerProps) {
     { key: 'pronoun', label: t('pronounFilter') },
     { key: 'adverb', label: t('adverbFilter') },
     { key: 'particle', label: t('particleFilter') },
+    { key: 'numeral', label: t('numeralFilter') },
   ];
 
   const filteredWords = useMemo(() => {
     const normalizedQuery = normalizeLezgiInputForComparison(query);
     const rawLowerQuery = query.trim().toLowerCase();
 
-    return words.filter((word) => {
+    const list = words.filter((word) => {
       if (posFilter !== 'all' && word.part_of_speech !== posFilter) {
         return false;
       }
@@ -68,6 +70,17 @@ export function DictionaryExplorer({ words }: DictionaryExplorerProps) {
 
       return matchesLezgi || matchesRussian || matchesExamples;
     });
+
+    if (posFilter === 'numeral') {
+      return [...list].sort((a, b) => {
+        const na = Number.parseInt(a.translation_ru, 10);
+        const nb = Number.parseInt(b.translation_ru, 10);
+        if (!Number.isNaN(na) && !Number.isNaN(nb)) return na - nb;
+        return a.lemma_lez.localeCompare(b.lemma_lez, 'ru');
+      });
+    }
+
+    return list;
   }, [words, query, posFilter]);
 
   return (
@@ -115,7 +128,7 @@ export function DictionaryExplorer({ words }: DictionaryExplorerProps) {
         })}
       </div>
 
-      <div className="flex items-center justify-between text-xs font-semibold text-[#CBD5E1]">
+      <div className="flex items-center justify-between text-xs font-semibold text-muted-foreground">
         <span>{t('foundCount', { count: filteredWords.length })}</span>
         <span className="text-[11px]">1 / I → Ӏ</span>
       </div>
@@ -123,7 +136,7 @@ export function DictionaryExplorer({ words }: DictionaryExplorerProps) {
       {/* Word cards */}
       {filteredWords.length === 0 ? (
         <Card>
-          <CardContent className="py-8 text-center text-xs font-semibold text-[#CBD5E1]">
+          <CardContent className="py-8 text-center text-xs font-semibold text-muted-foreground">
             {t('emptyResults')}
           </CardContent>
         </Card>
@@ -139,12 +152,12 @@ export function DictionaryExplorer({ words }: DictionaryExplorerProps) {
                         {word.lemma_lez}
                       </CardTitle>
                       {word.transcription_ru && (
-                        <span className="text-xs font-medium text-[#CBD5E1]">
+                        <span className="text-xs font-medium text-muted-foreground">
                           [{word.transcription_ru}]
                         </span>
                       )}
                       {word.part_of_speech && (
-                        <span className="text-xs font-bold text-[#CBD5E1]">
+                        <span className="text-xs font-bold text-muted-foreground">
                           · {POS_LABELS[word.part_of_speech] ?? word.part_of_speech}
                         </span>
                       )}
@@ -163,7 +176,7 @@ export function DictionaryExplorer({ words }: DictionaryExplorerProps) {
                 </div>
               </CardHeader>
 
-              <CardContent className="space-y-3 text-xs text-[#CBD5E1]">
+              <CardContent className="space-y-3 text-xs text-muted-foreground">
                 {word.grammar_notes_ru && (
                   <p className="leading-relaxed">{word.grammar_notes_ru}</p>
                 )}

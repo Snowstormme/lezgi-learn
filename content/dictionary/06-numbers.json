@@ -1,0 +1,172 @@
+[
+  {
+    "slug": "num-1-sad",
+    "lemma_lez": "сад",
+    "translation_ru": "1 — один",
+    "transcription_ru": "са́д",
+    "part_of_speech": "numeral",
+    "grammar_notes_ru": "Количественное числительное 1. Перед существительным обычно используется краткая форма «са» (например, са кас — один человек).",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "num-1-sad-ex-1",
+        "sentence_lez": "Сад, кьвед, пуд.",
+        "translation_ru": "Один, два, три.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "num-2-kved",
+    "lemma_lez": "кьвед",
+    "translation_ru": "2 — два",
+    "transcription_ru": "кьве́д",
+    "part_of_speech": "numeral",
+    "grammar_notes_ru": "Количественное числительное 2. Перед существительным используется форма «кьве» (кьве ктаб — две книги).",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "num-2-kved-ex-1",
+        "sentence_lez": "Захъ кьве дуст ава.",
+        "translation_ru": "У меня есть два друга.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "num-3-pud",
+    "lemma_lez": "пуд",
+    "translation_ru": "3 — три",
+    "transcription_ru": "пу́д",
+    "part_of_speech": "numeral",
+    "grammar_notes_ru": "Количественное числительное 3.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "num-3-pud-ex-1",
+        "sentence_lez": "Пуд югъ.",
+        "translation_ru": "Три дня.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "num-4-kud",
+    "lemma_lez": "кьуд",
+    "translation_ru": "4 — четыре",
+    "transcription_ru": "кьу́д",
+    "part_of_speech": "numeral",
+    "grammar_notes_ru": "Количественное числительное 4.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "num-4-kud-ex-1",
+        "sentence_lez": "Кьуд чӀал.",
+        "translation_ru": "Четыре языка.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "num-5-vad",
+    "lemma_lez": "вад",
+    "translation_ru": "5 — пять",
+    "transcription_ru": "ва́д",
+    "part_of_speech": "numeral",
+    "grammar_notes_ru": "Количественное числительное 5.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "num-5-vad-ex-1",
+        "sentence_lez": "Вад декьикьа.",
+        "translation_ru": "Пять минут.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "num-6-rugud",
+    "lemma_lez": "ругуд",
+    "translation_ru": "6 — шесть",
+    "transcription_ru": "ругу́д",
+    "part_of_speech": "numeral",
+    "grammar_notes_ru": "Количественное числительное 6. Ударение падает на второй слог.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "num-6-rugud-ex-1",
+        "sentence_lez": "Ругуд сят.",
+        "translation_ru": "Шесть часов.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "num-7-irid",
+    "lemma_lez": "ирид",
+    "translation_ru": "7 — семь",
+    "transcription_ru": "ири́д",
+    "part_of_speech": "numeral",
+    "grammar_notes_ru": "Количественное числительное 7. Ударение падает на второй слог.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "num-7-irid-ex-1",
+        "sentence_lez": "Гьафтеда ирид югъ ава.",
+        "translation_ru": "В неделе семь дней.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "num-8-muzhud",
+    "lemma_lez": "мужьуьд",
+    "translation_ru": "8 — восемь",
+    "transcription_ru": "мужьуь́д",
+    "part_of_speech": "numeral",
+    "grammar_notes_ru": "Количественное числительное 8. Ударение падает на второй слог.",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "num-8-muzhud-ex-1",
+        "sentence_lez": "Мужьуьд гаф.",
+        "translation_ru": "Восемь слов.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "num-9-kud",
+    "lemma_lez": "кӀуьд",
+    "translation_ru": "9 — девять",
+    "transcription_ru": "кӀуь́д",
+    "part_of_speech": "numeral",
+    "grammar_notes_ru": "Количественное числительное 9. Звук «кӀ» — абруптивный (с палочкой Ӏ).",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "num-9-kud-ex-1",
+        "sentence_lez": "КӀуьд сят.",
+        "translation_ru": "Девять часов.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "num-10-tsud",
+    "lemma_lez": "цӀуд",
+    "translation_ru": "10 — десять",
+    "transcription_ru": "цӀу́д",
+    "part_of_speech": "numeral",
+    "grammar_notes_ru": "Количественное числительное 10. Звук «цӀ» — абруптивный (с палочкой Ӏ).",
+    "status": "published",
+    "examples": [
+      {
+        "slug": "num-10-tsud-ex-1",
+        "sentence_lez": "ЦӀуд цӀийи гаф.",
+        "translation_ru": "Десять новых слов.",
+        "status": "published"
+      }
+    ]
+  }
+]
