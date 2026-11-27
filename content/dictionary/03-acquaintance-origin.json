@@ -235,7 +235,8 @@
         "translation_ru": "Он молодой парень.",
         "status": "published"
       }
-    ]
+    ],
+    "verified": true
   },
   {
     "slug": "chexi",
@@ -508,6 +509,7 @@
         "translation_ru": "Наше село близко к городу.",
         "status": "published"
       }
-    ]
+    ],
+    "verified": true
   }
 ]

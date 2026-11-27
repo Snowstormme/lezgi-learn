@@ -116,7 +116,8 @@
         "translation_ru": "Дела неплохо.",
         "status": "published"
       }
-    ]
+    ],
+    "verified": true
   },
   {
     "slug": "yavash-yavash",
@@ -167,7 +168,8 @@
         "translation_ru": "Здоровый человек счастлив.",
         "status": "published"
       }
-    ]
+    ],
+    "verified": true
   },
   {
     "slug": "kvalax",
@@ -235,7 +237,8 @@
         "translation_ru": "Я рад тебя видеть.",
         "status": "published"
       }
-    ]
+    ],
+    "verified": true
   },
   {
     "slug": "sekin",
@@ -252,7 +255,8 @@
         "translation_ru": "Дома всё спокойно.",
         "status": "published"
       }
-    ]
+    ],
+    "verified": true
   },
   {
     "slug": "zun",

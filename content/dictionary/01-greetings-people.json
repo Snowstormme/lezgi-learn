@@ -116,7 +116,8 @@
         "translation_ru": "Привет, дорогой друг!",
         "status": "published"
       }
-    ]
+    ],
+    "verified": true
   },
   {
     "slug": "igrami",
@@ -133,7 +134,8 @@
         "translation_ru": "Дорогие друзья, как вы?",
         "status": "published"
       }
-    ]
+    ],
+    "verified": true
   },
   {
     "slug": "muhman",
