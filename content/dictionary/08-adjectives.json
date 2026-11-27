@@ -1,0 +1,362 @@
+[
+  {
+    "slug": "adj-latsu",
+    "lemma_lez": "лацу",
+    "translation_ru": "белый",
+    "transcription_ru": "лацу́",
+    "part_of_speech": "adjective",
+    "grammar_notes_ru": "Прилагательное цвета (белый). Не изменяется по падежам перед существительным.",
+    "status": "published",
+    "verified": true,
+    "examples": [
+      {
+        "slug": "adj-latsu-ex-1",
+        "sentence_lez": "Лацу жив.",
+        "translation_ru": "Белый снег.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "adj-chulav",
+    "lemma_lez": "чӀулав",
+    "translation_ru": "чёрный",
+    "transcription_ru": "чӀула́в",
+    "part_of_speech": "adjective",
+    "grammar_notes_ru": "Прилагательное цвета (чёрный). Звук «чӀ» — абруптивный (с палочкой Ӏ).",
+    "status": "published",
+    "verified": true,
+    "examples": [
+      {
+        "slug": "adj-chulav-ex-1",
+        "sentence_lez": "ЧӀулав чай.",
+        "translation_ru": "Чёрный чай.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "adj-yaru",
+    "lemma_lez": "яру",
+    "translation_ru": "красный",
+    "transcription_ru": "яру́",
+    "part_of_speech": "adjective",
+    "grammar_notes_ru": "Прилагательное цвета (красный). Самостоятельная (субстантивированная) форма — «яруди».",
+    "status": "published",
+    "verified": true,
+    "examples": [
+      {
+        "slug": "adj-yaru-ex-1",
+        "sentence_lez": "Яру ич.",
+        "translation_ru": "Красное яблоко.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "adj-katsu",
+    "lemma_lez": "къацу",
+    "translation_ru": "зелёный",
+    "transcription_ru": "къацу́",
+    "part_of_speech": "adjective",
+    "grammar_notes_ru": "Прилагательное цвета (зелёный).",
+    "status": "published",
+    "verified": true,
+    "examples": [
+      {
+        "slug": "adj-katsu-ex-1",
+        "sentence_lez": "Къацу векь.",
+        "translation_ru": "Зелёная трава.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "adj-qipi",
+    "lemma_lez": "хъипи",
+    "translation_ru": "жёлтый",
+    "transcription_ru": "хъипи́",
+    "part_of_speech": "adjective",
+    "grammar_notes_ru": "Прилагательное цвета (жёлтый).",
+    "status": "published",
+    "verified": true,
+    "examples": [
+      {
+        "slug": "adj-qipi-ex-1",
+        "sentence_lez": "Хъипи цуьк.",
+        "translation_ru": "Жёлтый цветок.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "adj-rehi",
+    "lemma_lez": "рехи",
+    "translation_ru": "серый / седой",
+    "transcription_ru": "рехи́",
+    "part_of_speech": "adjective",
+    "grammar_notes_ru": "Прилагательное цвета: «серый», а о волосах — «седой».",
+    "status": "published",
+    "verified": true,
+    "examples": [
+      {
+        "slug": "adj-rehi-ex-1",
+        "sentence_lez": "Рехи цифер.",
+        "translation_ru": "Серые облака.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "adj-vertsi",
+    "lemma_lez": "верцӀи",
+    "translation_ru": "сладкий / вкусный",
+    "transcription_ru": "верцӀи́",
+    "part_of_speech": "adjective",
+    "grammar_notes_ru": "Означает «сладкий» или «вкусный, лакомый». Звук «цӀ» — абруптивный.",
+    "status": "published",
+    "verified": true,
+    "examples": [
+      {
+        "slug": "adj-vertsi-ex-1",
+        "sentence_lez": "ВерцӀи вирт.",
+        "translation_ru": "Сладкий мёд.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "adj-shirin",
+    "lemma_lez": "ширин",
+    "translation_ru": "сладкий",
+    "transcription_ru": "шири́н",
+    "part_of_speech": "adjective",
+    "grammar_notes_ru": "Также употребляется в переносном смысле: «сладкий, приятный» (ширин ахвар — сладкий сон).",
+    "status": "published",
+    "verified": true,
+    "examples": [
+      {
+        "slug": "adj-shirin-ex-1",
+        "sentence_lez": "Ширин чай.",
+        "translation_ru": "Сладкий чай.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "adj-tukyul",
+    "lemma_lez": "туькьуьл",
+    "translation_ru": "горький",
+    "transcription_ru": "туькьуь́л",
+    "part_of_speech": "adjective",
+    "grammar_notes_ru": "Антоним к «верцӀи / ширин» (сладкий).",
+    "status": "published",
+    "verified": true,
+    "examples": [
+      {
+        "slug": "adj-tukyul-ex-1",
+        "sentence_lez": "Туькьуьл дад.",
+        "translation_ru": "Горький вкус.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "adj-kayi",
+    "lemma_lez": "къайи",
+    "translation_ru": "холодный (о воде, предмете)",
+    "transcription_ru": "къайи́",
+    "part_of_speech": "adjective",
+    "grammar_notes_ru": "Обычно употребляется о воде, пище, руках или предметах (в отличие от «мекьи» — о погоде).",
+    "status": "published",
+    "verified": true,
+    "examples": [
+      {
+        "slug": "adj-kayi-ex-1",
+        "sentence_lez": "Къайи булахдин яд.",
+        "translation_ru": "Холодная родниковая вода.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "adj-mekyi",
+    "lemma_lez": "мекьи",
+    "translation_ru": "холодный (о погоде, воздухе)",
+    "transcription_ru": "мекьи́",
+    "part_of_speech": "adjective",
+    "grammar_notes_ru": "Чаще всего употребляется о погоде, воздухе, времени года (мекьи кьуьд — холодная зима).",
+    "status": "published",
+    "verified": true,
+    "examples": [
+      {
+        "slug": "adj-mekyi-ex-1",
+        "sentence_lez": "Къе гьава мекьи я.",
+        "translation_ru": "Сегодня погода холодная.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "adj-kuru",
+    "lemma_lez": "куьруь",
+    "translation_ru": "короткий",
+    "transcription_ru": "куьруь́",
+    "part_of_speech": "adjective",
+    "grammar_notes_ru": "О длине, пути или времени («короткий»).",
+    "status": "published",
+    "verified": true,
+    "examples": [
+      {
+        "slug": "adj-kuru-ex-1",
+        "sentence_lez": "Куьруь рехъ.",
+        "translation_ru": "Короткая дорога.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "adj-derin",
+    "lemma_lez": "дерин",
+    "translation_ru": "глубокий",
+    "transcription_ru": "дери́н",
+    "part_of_speech": "adjective",
+    "grammar_notes_ru": "Употребляется в прямом и переносном значении (дерин вацӀ — глубокая река, дерин чирвилер — глубокие знания).",
+    "status": "published",
+    "verified": true,
+    "examples": [
+      {
+        "slug": "adj-derin-ex-1",
+        "sentence_lez": "Дерин гьуьл.",
+        "translation_ru": "Глубокое море.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "adj-gutu",
+    "lemma_lez": "гуьтӀуь",
+    "translation_ru": "узкий",
+    "transcription_ru": "гуьтӀуь́",
+    "part_of_speech": "adjective",
+    "grammar_notes_ru": "Синоним в значении «тесный, узкий» — «дар».",
+    "status": "published",
+    "verified": true,
+    "examples": [
+      {
+        "slug": "adj-gutu-ex-1",
+        "sentence_lez": "ГуьтӀуь куьче.",
+        "translation_ru": "Узкая улица.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "adj-kugne",
+    "lemma_lez": "куьгьне",
+    "translation_ru": "старый / древний",
+    "transcription_ru": "куьгьне́",
+    "part_of_speech": "adjective",
+    "grammar_notes_ru": "О вещах, зданиях, городах и обычаях («старый, старинный, устаревший»).",
+    "status": "published",
+    "verified": true,
+    "examples": [
+      {
+        "slug": "adj-kugne-ex-1",
+        "sentence_lez": "Куьгьне хуьр.",
+        "translation_ru": "Древнее село.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "adj-erchi",
+    "lemma_lez": "эрчӀи",
+    "translation_ru": "правый",
+    "transcription_ru": "эрчӀи́",
+    "part_of_speech": "adjective",
+    "grammar_notes_ru": "Направление и сторона: эрчӀи гъил — правая рука, эрчӀи пад — правая сторона.",
+    "status": "published",
+    "verified": true,
+    "examples": [
+      {
+        "slug": "adj-erchi-ex-1",
+        "sentence_lez": "ЭрчӀи патахъ элкъуьгъ.",
+        "translation_ru": "Поверни направо.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "adj-chapla",
+    "lemma_lez": "чапла",
+    "translation_ru": "левый",
+    "transcription_ru": "чапла́",
+    "part_of_speech": "adjective",
+    "grammar_notes_ru": "Антоним к «эрчӀи» (правый): чапла гъил — левая рука, чапла пад — левая сторона.",
+    "status": "published",
+    "verified": true,
+    "examples": [
+      {
+        "slug": "adj-chapla-ex-1",
+        "sentence_lez": "Чапла пата хуьр ава.",
+        "translation_ru": "С левой стороны находится село.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "adj-gurcheg",
+    "lemma_lez": "гуьрчег",
+    "translation_ru": "красивый",
+    "transcription_ru": "гуьрче́г",
+    "part_of_speech": "adjective",
+    "grammar_notes_ru": "Употребляется о природе, местах, вещах и людях (синоним — «гуьзел»).",
+    "status": "published",
+    "verified": true,
+    "examples": [
+      {
+        "slug": "adj-gurcheg-ex-1",
+        "sentence_lez": "Чи дагълар гзаф гуьрчег я.",
+        "translation_ru": "Наши горы очень красивые.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "adj-kuvatlu",
+    "lemma_lez": "къуватлу",
+    "translation_ru": "сильный / могучий",
+    "transcription_ru": "къуватлу́",
+    "part_of_speech": "adjective",
+    "grammar_notes_ru": "О силе, мощи. Близкий синоним — «гужлу» (сильный).",
+    "status": "published",
+    "verified": true,
+    "examples": [
+      {
+        "slug": "adj-kuvatlu-ex-1",
+        "sentence_lez": "Ам къуватлу инсан я.",
+        "translation_ru": "Он сильный человек.",
+        "status": "published"
+      }
+    ]
+  },
+  {
+    "slug": "adj-gishin",
+    "lemma_lez": "гишин",
+    "translation_ru": "голодный",
+    "transcription_ru": "гиши́н",
+    "part_of_speech": "adjective",
+    "grammar_notes_ru": "О состоянии голода (зун гишин я — я голоден).",
+    "status": "published",
+    "verified": true,
+    "examples": [
+      {
+        "slug": "adj-gishin-ex-1",
+        "sentence_lez": "Зун гишин я.",
+        "translation_ru": "Я голоден.",
+        "status": "published"
+      }
+    ]
+  }
+]

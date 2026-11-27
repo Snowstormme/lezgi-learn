@@ -5,6 +5,7 @@ import dict04LanguagePoliteness from './dictionary/04-language-politeness.json';
 import dict05HospitalityFarewell from './dictionary/05-hospitality-farewell.json';
 import dict06Numbers from './dictionary/06-numbers.json';
 import dict07Particles from './dictionary/07-particles.json';
+import dict08Adjectives from './dictionary/08-adjectives.json';
 import corePhrasesJson from './phrasebook/core-phrases.json';
 
 import unit01Json from './courses/ru-lez/unit-01-greetings/unit.json';
@@ -41,6 +42,7 @@ const RAW_DICTIONARY_FILES: unknown[] = [
   dict05HospitalityFarewell,
   dict06Numbers,
   dict07Particles,
+  dict08Adjectives,
 ];
 
 const RAW_PHRASEBOOK_FILES: unknown[] = [corePhrasesJson];
