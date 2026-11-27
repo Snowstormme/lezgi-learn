@@ -11,6 +11,7 @@ export interface DictionaryWordItem {
   grammar_notes_ru: string | null;
   audio_path: string | null;
   audio_status: ContentStatus;
+  verified?: boolean;
   examples: Array<{
     slug: string;
     sentence_lez: string;
@@ -44,6 +45,7 @@ export async function getPublishedDictionaryWords(): Promise<
       grammar_notes_ru: w.grammar_notes_ru ?? null,
       audio_path: w.audio_path ?? null,
       audio_status: w.audio_status ?? 'draft',
+      verified: w.verified ?? false,
       examples: w.examples
         .filter((ex) => ex.status === 'published')
         .map((ex) => ({

@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Search, X } from 'lucide-react';
+import { BadgeCheck, Search, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import type { DictionaryWordItem } from '@/features/dictionary/queries';
 import { normalizeLezgiInputForComparison } from '@/lib/lezgi-utils';
@@ -159,6 +159,15 @@ export function DictionaryExplorer({ words }: DictionaryExplorerProps) {
                       {word.part_of_speech && (
                         <span className="text-xs font-bold text-muted-foreground">
                           · {POS_LABELS[word.part_of_speech] ?? word.part_of_speech}
+                        </span>
+                      )}
+                      {word.verified && (
+                        <span
+                          title="Точно проверено"
+                          className="inline-flex items-center gap-1 rounded-full border border-emerald-500/40 bg-emerald-500/15 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-emerald-600 dark:text-emerald-400"
+                        >
+                          <BadgeCheck className="h-3.5 w-3.5 stroke-[2.5]" />
+                          <span>Проверено</span>
                         </span>
                       )}
                     </div>

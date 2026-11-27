@@ -54,6 +54,7 @@ export const wordSeedSchema = z.object({
   audio_path: z.string().nullable().optional(),
   audio_status: contentStatusSchema.default('draft'),
   status: contentStatusSchema.default('draft'),
+  verified: z.boolean().default(false),
   examples: z.array(wordExampleSeedSchema).default([]),
 });
 

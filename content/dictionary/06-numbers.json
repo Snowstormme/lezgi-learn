@@ -14,7 +14,8 @@
         "translation_ru": "Один, два, три.",
         "status": "published"
       }
-    ]
+    ],
+    "verified": true
   },
   {
     "slug": "num-2-kved",
@@ -31,7 +32,8 @@
         "translation_ru": "У меня есть два друга.",
         "status": "published"
       }
-    ]
+    ],
+    "verified": true
   },
   {
     "slug": "num-3-pud",
@@ -48,7 +50,8 @@
         "translation_ru": "Три дня.",
         "status": "published"
       }
-    ]
+    ],
+    "verified": true
   },
   {
     "slug": "num-4-kud",
@@ -65,7 +68,8 @@
         "translation_ru": "Четыре языка.",
         "status": "published"
       }
-    ]
+    ],
+    "verified": true
   },
   {
     "slug": "num-5-vad",
@@ -82,7 +86,8 @@
         "translation_ru": "Пять минут.",
         "status": "published"
       }
-    ]
+    ],
+    "verified": true
   },
   {
     "slug": "num-6-rugud",
@@ -99,7 +104,8 @@
         "translation_ru": "Шесть часов.",
         "status": "published"
       }
-    ]
+    ],
+    "verified": true
   },
   {
     "slug": "num-7-irid",
@@ -116,7 +122,8 @@
         "translation_ru": "В неделе семь дней.",
         "status": "published"
       }
-    ]
+    ],
+    "verified": true
   },
   {
     "slug": "num-8-muzhud",
@@ -133,7 +140,8 @@
         "translation_ru": "Восемь слов.",
         "status": "published"
       }
-    ]
+    ],
+    "verified": true
   },
   {
     "slug": "num-9-kud",
@@ -150,7 +158,8 @@
         "translation_ru": "Девять часов.",
         "status": "published"
       }
-    ]
+    ],
+    "verified": true
   },
   {
     "slug": "num-10-tsud",
@@ -167,6 +176,7 @@
         "translation_ru": "Десять новых слов.",
         "status": "published"
       }
-    ]
+    ],
+    "verified": true
   }
 ]
