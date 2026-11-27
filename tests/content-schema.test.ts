@@ -6,10 +6,10 @@ import {
 } from '@/content/schema';
 
 describe('Content JSON bundle & Zod schema integrity (Stage 3)', () => {
-  it('loads and validates all 176 words, 11 lessons (10 lessons + 1 unit exam), and 66 exercises in Unit 1 without errors', () => {
+  it('loads and validates all 175 words, 11 lessons (10 lessons + 1 unit exam), and 66 exercises in Unit 1 without errors', () => {
     const bundle = loadAndValidateContentBundle();
 
-    expect(bundle.words.length).toBe(176);
+    expect(bundle.words.length).toBe(175);
     expect(bundle.units.length).toBe(1);
     expect(bundle.lessons.length).toBe(11);
     expect(bundle.phrases.length).toBe(40);
@@ -19,7 +19,7 @@ describe('Content JSON bundle & Zod schema integrity (Stage 3)', () => {
       (w) => w.status !== 'published'
     );
 
-    expect(publishedWords.length).toBe(171);
+    expect(publishedWords.length).toBe(170);
     expect(nonPublishedWords.length).toBe(5);
 
     const allExercises = bundle.lessons.flatMap((l) => l.exercises);

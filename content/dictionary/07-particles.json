@@ -72,24 +72,6 @@
     ]
   },
   {
-    "slug": "particle-saki",
-    "lemma_lez": "саки",
-    "translation_ru": "почти",
-    "transcription_ru": "саки́",
-    "part_of_speech": "particle",
-    "grammar_notes_ru": "Определительная частица, выражающая приближённость («почти, едва не»).",
-    "status": "published",
-    "verified": true,
-    "examples": [
-      {
-        "slug": "particle-saki-ex-1",
-        "sentence_lez": "КӀвалах саки куьтягь хьана.",
-        "translation_ru": "Работа почти закончилась.",
-        "status": "published"
-      }
-    ]
-  },
-  {
     "slug": "particle-lap",
     "lemma_lez": "лап",
     "translation_ru": "совсем / очень / именно",
