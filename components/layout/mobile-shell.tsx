@@ -107,6 +107,7 @@ export function MobileShell({
   }
 
   const activePath = optimisticHref ?? pathname;
+  const activeTabIdx = getTabIndex(activePath);
   const isPendingNavigation =
     optimisticHref !== null && optimisticHref !== pathname;
   const dailyXpRatio = Math.min(100, Math.round((xp / DAILY_XP_GOAL) * 100));
@@ -315,35 +316,49 @@ export function MobileShell({
         </div>
       </main>
 
-      {/* Bottom Tab Bar (4 equal-width tactile tabs with instant optimistic highlight) */}
-      <nav className="fixed bottom-0 left-1/2 z-20 grid h-20 w-full max-w-md -translate-x-1/2 grid-cols-4 items-center gap-1.5 border-x-2 border-t-2 border-border bg-background/95 px-2.5 backdrop-blur">
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          const isActive =
-            activePath === item.href || activePath.startsWith(`${item.href}/`);
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              prefetch={item.prefetch}
-              onClick={() => handleTabSelect(item.href)}
-              className={cn(
-                'duo-card-3d flex h-14 w-full flex-col items-center justify-center gap-1 rounded-2xl border-2 px-1 text-[10px] font-extrabold uppercase tracking-wide transition-all duration-150',
-                isActive
-                  ? 'border-primary bg-primary/15 text-primary shadow-sm'
-                  : 'border-transparent text-muted-foreground hover:text-foreground'
-              )}
+      {/* Bottom Tab Bar (4 equal-width tactile tabs with smooth gliding active slider) */}
+      <nav className="fixed bottom-0 left-1/2 z-20 flex h-20 w-full max-w-md -translate-x-1/2 items-center border-x-2 border-t-2 border-border bg-background/95 px-2 backdrop-blur">
+        <div className="relative grid h-14 w-full grid-cols-4 items-center">
+          {activeTabIdx !== -1 && (
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-y-0 left-0 z-0 w-1/4 px-[3px] transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform motion-reduce:transition-none"
+              style={{ transform: `translate3d(${activeTabIdx * 100}%, 0, 0)` }}
             >
-              <Icon
+              <span className="relative block h-full w-full rounded-2xl border-2 border-b-[3px] border-primary bg-primary/15 shadow-[0_6px_16px_-6px_rgba(240,78,55,0.42)]">
+                <span className="absolute left-1/2 top-1 h-[3px] w-6 -translate-x-1/2 rounded-full bg-primary/85" />
+              </span>
+            </span>
+          )}
+
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            const isActive =
+              activePath === item.href || activePath.startsWith(`${item.href}/`);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                prefetch={item.prefetch}
+                onClick={() => handleTabSelect(item.href)}
                 className={cn(
-                  'h-5 w-5 shrink-0 stroke-[2.2] transition-transform duration-200',
-                  isActive && 'animate-tab-icon-pop scale-105'
+                  'relative z-10 flex h-14 w-full flex-col items-center justify-center gap-1 rounded-2xl px-1 pt-0.5 text-[10px] font-extrabold uppercase tracking-wide transition-all duration-200 active:scale-95',
+                  isActive
+                    ? 'text-primary'
+                    : 'text-muted-foreground hover:text-foreground'
                 )}
-              />
-              <span className="truncate">{item.label}</span>
-            </Link>
-          );
-        })}
+              >
+                <Icon
+                  className={cn(
+                    'h-5 w-5 shrink-0 stroke-[2.2] transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]',
+                    isActive && '-translate-y-[1px] scale-110'
+                  )}
+                />
+                <span className="max-w-full truncate">{item.label}</span>
+              </Link>
+            );
+          })}
+        </div>
       </nav>
     </div>
   );
