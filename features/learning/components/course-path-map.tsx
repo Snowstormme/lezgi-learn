@@ -177,61 +177,210 @@ export function CoursePathMap({ lessons }: CoursePathMapProps) {
           <PathDecor key={m.key} decor={m} time={time} />
         ))}
 
-        {/* Upcoming road segments first */}
-        {darkSegments.map((seg) => (
-          <g key={seg.key}>
-            <path
-              d={seg.d}
-              fill="none"
-              stroke={isNight ? '#1D2B4D' : '#CBD5E1'}
-              strokeWidth={26}
-              strokeLinecap="round"
-            />
-            <path
-              d={seg.d}
-              fill="none"
-              stroke={isNight ? '#111A33' : '#E2E8F0'}
-              strokeWidth={20}
-              strokeLinecap="round"
-            />
-            <path
-              d={seg.d}
-              fill="none"
-              stroke={isNight ? '#263859' : '#94A3B8'}
-              strokeWidth={2.5}
-              strokeDasharray="7 7"
-              strokeLinecap="round"
-            />
-          </g>
-        ))}
+        {/* Upcoming 3D cobblestone mountain trail segments */}
+        {darkSegments.map((seg) => {
+          const shadowCol = isNight
+            ? 'rgba(2, 6, 23, 0.62)'
+            : 'rgba(15, 23, 42, 0.15)';
+          const cliffWall = isNight ? '#0B1328' : '#94A3B8';
+          const cliffJoint = isNight ? '#1E2F54' : '#CBD5E1';
+          const curbCol = isNight ? '#273B63' : '#CBD5E1';
+          const surfaceCol = isNight ? '#162342' : '#E2E8F0';
+          const stoneFill = isNight ? '#1E2F56' : '#F1F5F9';
+          const stoneStroke = isNight ? '#314875' : '#94A3B8';
+          const stoneLip = isNight ? '#0F182E' : '#CBD5E1';
 
-        {/* Completed lit Cloud White road segments */}
-        {litSegments.map((seg) => (
-          <g key={seg.key}>
-            <path
-              d={seg.d}
-              fill="none"
-              stroke={isNight ? '#CBD5E1' : '#94A3B8'}
-              strokeWidth={26}
-              strokeLinecap="round"
-            />
-            <path
-              d={seg.d}
-              fill="none"
-              stroke="#FFFFFF"
-              strokeWidth={20}
-              strokeLinecap="round"
-            />
-            <path
-              d={seg.d}
-              fill="none"
-              stroke="#F04E37"
-              strokeWidth={2.5}
-              strokeDasharray="7 7"
-              strokeLinecap="round"
-            />
-          </g>
-        ))}
+          return (
+            <g key={seg.key}>
+              {/* Soft ground contact shadow */}
+              <path
+                d={seg.dShadow}
+                fill="none"
+                stroke={shadowCol}
+                strokeWidth={29}
+                strokeLinecap="round"
+              />
+              {/* 3D Extruded rock cliff wall */}
+              <path
+                d={seg.dWall}
+                fill="none"
+                stroke={cliffWall}
+                strokeWidth={26.5}
+                strokeLinecap="round"
+              />
+              <path
+                d={seg.dWall}
+                fill="none"
+                stroke={cliffJoint}
+                strokeWidth={2}
+                strokeDasharray="11 6"
+                strokeLinecap="round"
+                opacity={0.45}
+              />
+              {/* Chiseled stone curb rim */}
+              <path
+                d={seg.d}
+                fill="none"
+                stroke={curbCol}
+                strokeWidth={26.5}
+                strokeLinecap="round"
+              />
+              {/* Limestone top surface */}
+              <path
+                d={seg.d}
+                fill="none"
+                stroke={surfaceCol}
+                strokeWidth={20.5}
+                strokeLinecap="round"
+              />
+              {/* Hand-laid 3D cobblestones & shoulder pebbles */}
+              {seg.stones.map((st, idx) => (
+                <g
+                  key={idx}
+                  transform={`translate(${st.x}, ${st.y}) rotate(${st.angleDeg + 90})`}
+                >
+                  <rect
+                    x={st.side * 3.4 - 5.75}
+                    y={-2.8}
+                    width={11.5}
+                    height={7.8}
+                    rx={3.3}
+                    fill={stoneLip}
+                  />
+                  <rect
+                    x={st.side * 3.4 - 5.75}
+                    y={-4}
+                    width={11.5}
+                    height={7.6}
+                    rx={3.3}
+                    fill={stoneFill}
+                    stroke={stoneStroke}
+                    strokeWidth={1.1}
+                  />
+                  <rect
+                    x={-st.side * 5.2 - 3.1}
+                    y={-2.5}
+                    width={6.2}
+                    height={5}
+                    rx={2.2}
+                    fill={stoneFill}
+                    stroke={stoneStroke}
+                    strokeWidth={0.95}
+                    opacity={0.82}
+                  />
+                  <circle
+                    cx={-st.side * 14.2}
+                    cy={0}
+                    r={2.2}
+                    fill={cliffWall}
+                    opacity={0.65}
+                  />
+                </g>
+              ))}
+            </g>
+          );
+        })}
+
+        {/* Completed warm-lit 3D cobblestone mountain trail segments */}
+        {litSegments.map((seg) => {
+          const shadowCol = isNight
+            ? 'rgba(2, 6, 23, 0.68)'
+            : 'rgba(15, 23, 42, 0.2)';
+          const cliffWall = isNight ? '#7C2D12' : '#9A3412';
+          const curbCol = isNight ? '#FDBA74' : '#EA580C';
+          const surfaceCol = isNight ? '#FFF7ED' : '#FFFBEB';
+
+          return (
+            <g key={seg.key}>
+              {/* Soft ground contact shadow */}
+              <path
+                d={seg.dShadow}
+                fill="none"
+                stroke={shadowCol}
+                strokeWidth={29}
+                strokeLinecap="round"
+              />
+              {/* 3D Extruded terracotta stone cliff wall */}
+              <path
+                d={seg.dWall}
+                fill="none"
+                stroke={cliffWall}
+                strokeWidth={26.5}
+                strokeLinecap="round"
+              />
+              <path
+                d={seg.dWall}
+                fill="none"
+                stroke="#F97316"
+                strokeWidth={2}
+                strokeDasharray="11 6"
+                strokeLinecap="round"
+                opacity={0.38}
+              />
+              {/* Warm golden-sandstone curb bevel */}
+              <path
+                d={seg.d}
+                fill="none"
+                stroke={curbCol}
+                strokeWidth={26.5}
+                strokeLinecap="round"
+              />
+              {/* Sunlit travertine stone surface */}
+              <path
+                d={seg.d}
+                fill="none"
+                stroke={surfaceCol}
+                strokeWidth={20.5}
+                strokeLinecap="round"
+              />
+              {/* Hand-laid warm 3D cobblestones & shoulder pebbles */}
+              {seg.stones.map((st, idx) => (
+                <g
+                  key={idx}
+                  transform={`translate(${st.x}, ${st.y}) rotate(${st.angleDeg + 90})`}
+                >
+                  <rect
+                    x={st.side * 3.4 - 5.75}
+                    y={-2.8}
+                    width={11.5}
+                    height={7.8}
+                    rx={3.3}
+                    fill="#EA580C"
+                    opacity={0.45}
+                  />
+                  <rect
+                    x={st.side * 3.4 - 5.75}
+                    y={-4}
+                    width={11.5}
+                    height={7.6}
+                    rx={3.3}
+                    fill="#FFEDD5"
+                    stroke="#F97316"
+                    strokeWidth={1.15}
+                  />
+                  <rect
+                    x={-st.side * 5.2 - 3.1}
+                    y={-2.5}
+                    width={6.2}
+                    height={5}
+                    rx={2.2}
+                    fill="#FFEDD5"
+                    stroke="#FB923C"
+                    strokeWidth={0.95}
+                    opacity={0.9}
+                  />
+                  <circle
+                    cx={-st.side * 14.2}
+                    cy={0}
+                    r={2.2}
+                    fill={cliffWall}
+                    opacity={0.7}
+                  />
+                </g>
+              ))}
+            </g>
+          );
+        })}
       </svg>
 
       {/* Path Nodes, Sibling Labels & Animated Start Popovers */}

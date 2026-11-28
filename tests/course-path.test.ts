@@ -73,6 +73,9 @@ describe('course path layout geometry and milestones', () => {
 
     for (let k = 0; k < segments.length; k++) {
       expect(segments[k].lit).toBe(items[k].reached);
+      expect(segments[k].dWall).toContain('C ');
+      expect(segments[k].dShadow).toContain('C ');
+      expect(segments[k].stones).toHaveLength(6);
     }
   });
 

@@ -23,9 +23,19 @@ export interface PathItem {
   reached: boolean;
 }
 
+export interface RoadCobble {
+  x: number;
+  y: number;
+  angleDeg: number;
+  side: -1 | 1;
+}
+
 export interface RoadSegment {
   key: string;
   d: string;
+  dWall: string;
+  dShadow: string;
+  stones: RoadCobble[];
   lit: boolean;
 }
 
@@ -113,8 +123,42 @@ export function buildCoursePathItems<
   });
 }
 
+const COBBLE_T_STEPS = [0.24, 0.34, 0.44, 0.56, 0.66, 0.76] as const;
+
+function round1(value: number): number {
+  return Math.round(value * 10) / 10;
+}
+
+function sampleSegmentCobbles(
+  x0: number,
+  y0: number,
+  my: number,
+  x3: number,
+  y3: number
+): RoadCobble[] {
+  return COBBLE_T_STEPS.map((t, idx) => {
+    const mt = 1 - t;
+    const x = (mt * mt * mt + 3 * mt * mt * t) * x0 + (3 * mt * t * t + t * t * t) * x3;
+    const y =
+      mt * mt * mt * y0 +
+      3 * mt * mt * t * my +
+      3 * mt * t * t * my +
+      t * t * t * y3;
+    const dx = 6 * mt * t * (x3 - x0);
+    const dy = 3 * (mt * mt + t * t) * ((y3 - y0) / 2);
+    const angleDeg = (Math.atan2(dy, dx) * 180) / Math.PI;
+
+    return {
+      x: round1(x),
+      y: round1(y),
+      angleDeg: round1(angleDeg),
+      side: idx % 2 === 0 ? -1 : 1,
+    };
+  });
+}
+
 /**
- * Builds smooth cubic Bezier road segments linking consecutive path items.
+ * Builds smooth cubic Bezier 3D cobblestone mountain trail segments linking consecutive path items.
  */
 export function buildRoadSegments(items: PathItem[]): RoadSegment[] {
   const segments: RoadSegment[] = [];
@@ -123,9 +167,15 @@ export function buildRoadSegments(items: PathItem[]): RoadSegment[] {
     const a = items[k];
     const b = items[k + 1];
     const my = (a.cy + b.cy) / 2;
+    const wallDy = 6.5;
+    const shadowDy = 11.5;
+
     segments.push({
       key: `${a.key}->${b.key}`,
       d: `M ${a.cx} ${a.cy} C ${a.cx} ${my}, ${b.cx} ${my}, ${b.cx} ${b.cy}`,
+      dWall: `M ${a.cx} ${a.cy + wallDy} C ${a.cx} ${my + wallDy}, ${b.cx} ${my + wallDy}, ${b.cx} ${b.cy + wallDy}`,
+      dShadow: `M ${a.cx} ${a.cy + shadowDy} C ${a.cx} ${my + shadowDy}, ${b.cx} ${my + shadowDy}, ${b.cx} ${b.cy + shadowDy}`,
+      stones: sampleSegmentCobbles(a.cx, a.cy, my, b.cx, b.cy),
       lit: a.reached,
     });
   }
