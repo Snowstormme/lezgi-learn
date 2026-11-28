@@ -8,6 +8,7 @@ import {
   Flame,
   GraduationCap,
   Languages,
+  Trophy,
   User,
   Zap,
 } from 'lucide-react';
@@ -50,6 +51,8 @@ export function MobileShell({
   // Hide shell chrome inside active lesson runner for distraction-free focus
   const isInsideLessonRunner =
     pathname.startsWith('/lesson/') && !pathname.endsWith('/result');
+  const isFullWidthProfile =
+    pathname === '/profile' || pathname.startsWith('/profile/');
 
   const navItems = [
     { href: '/learn', label: tNav('learn'), icon: GraduationCap, prefetch: true },
@@ -57,6 +60,10 @@ export function MobileShell({
     { href: '/dictionary', label: tNav('dictionary'), icon: BookOpen, prefetch: false },
     { href: '/translate', label: tNav('translate'), icon: Languages, prefetch: true },
   ];
+
+  if (isFullWidthProfile) {
+    return <>{children}</>;
+  }
 
   if (isInsideLessonRunner) {
     return (
@@ -79,12 +86,12 @@ export function MobileShell({
           className="flex shrink-0 items-center gap-2 rounded-xl py-1 transition-transform duration-75 active:scale-95"
         >
           <LezgiBrandIcon size="sm" />
-          <span className="text-sm font-extrabold uppercase tracking-wider text-foreground">
+          <span className="hidden text-sm font-extrabold uppercase tracking-wider text-foreground min-[410px]:inline">
             Лезги
           </span>
         </Link>
 
-        <div className="flex shrink-0 items-center gap-1.5">
+        <div className="flex shrink-0 items-center gap-1">
           <button
             type="button"
             onClick={() =>
@@ -129,6 +136,15 @@ export function MobileShell({
           </button>
 
           <ThemeToggleButton />
+
+          <Link
+            href="/profile"
+            aria-label="Достижения"
+            title="Достижения и профиль"
+            className="duo-card-3d flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border-2 border-b-[3px] border-border bg-card text-amber-500 transition-colors hover:border-[#FFC800]/60 dark:text-[#FFC800]"
+          >
+            <Trophy className="h-[16px] w-[16px]" aria-hidden="true" />
+          </Link>
         </div>
 
         <Link

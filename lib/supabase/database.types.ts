@@ -33,6 +33,7 @@ export type Database = {
           xp: number;
           streak_days: number;
           last_active_date: string | null;
+          pinned_medal_id: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -44,6 +45,7 @@ export type Database = {
           xp?: number;
           streak_days?: number;
           last_active_date?: string | null;
+          pinned_medal_id?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -54,6 +56,7 @@ export type Database = {
           xp?: number;
           streak_days?: number;
           last_active_date?: string | null;
+          pinned_medal_id?: string | null;
           updated_at?: string;
         };
         Relationships: [];
