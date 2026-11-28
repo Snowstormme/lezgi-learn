@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   BookOpen,
   Brain,
@@ -11,7 +11,7 @@ import {
   User,
   Zap,
 } from 'lucide-react';
-import { Link, usePathname } from '@/lib/i18n/routing';
+import { Link, usePathname, useRouter } from '@/lib/i18n/routing';
 import { useTranslations } from 'next-intl';
 import { LezgiBrandIcon } from '@/components/ui/lezgi-brand-icon';
 import { ThemeToggleButton } from '@/components/theme/theme-provider';
@@ -19,6 +19,13 @@ import { cn } from '@/lib/utils';
 
 const WEEK_DAYS = ['ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ', 'ВС'];
 const DAILY_XP_GOAL = 50;
+const TAB_ORDER = ['/learn', '/review', '/dictionary', '/translate'] as const;
+
+function getTabIndex(path: string): number {
+  return TAB_ORDER.findIndex(
+    (tab) => path === tab || path.startsWith(`${tab}/`)
+  );
+}
 
 interface MobileShellProps {
   children: React.ReactNode;
@@ -36,16 +43,43 @@ export function MobileShell({
   streakDays = 0,
 }: MobileShellProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const tNav = useTranslations('nav');
   const [optimisticHref, setOptimisticHref] = useState<string | null>(null);
+  const [transitionDir, setTransitionDir] = useState<'left' | 'right' | 'fade'>(
+    'fade'
+  );
+  const prevTabIdxRef = useRef<number>(getTabIndex(pathname));
   const [activeHeaderCard, setActiveHeaderCard] = useState<
     'streak' | 'xp' | null
   >(null);
 
   useEffect(() => {
+    const nextIdx = getTabIndex(pathname);
+    const prevIdx = prevTabIdxRef.current;
+    if (prevIdx !== -1 && nextIdx !== -1 && prevIdx !== nextIdx) {
+      setTransitionDir(nextIdx > prevIdx ? 'right' : 'left');
+    } else {
+      setTransitionDir('fade');
+    }
+    prevTabIdxRef.current = nextIdx;
     setOptimisticHref(null);
     setActiveHeaderCard(null);
   }, [pathname]);
+
+  // Pre-warm all main tabs and profile route right after mount for instant switching
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      for (const href of [...TAB_ORDER, '/profile']) {
+        try {
+          router.prefetch(href);
+        } catch {
+          // Ignore prefetch errors
+        }
+      }
+    }, 80);
+    return () => window.clearTimeout(timer);
+  }, [router]);
 
   // Hide shell chrome inside active lesson runner for distraction-free focus
   const isInsideLessonRunner =
@@ -55,8 +89,8 @@ export function MobileShell({
 
   const navItems = [
     { href: '/learn', label: tNav('learn'), icon: GraduationCap, prefetch: true },
-    { href: '/review', label: tNav('review'), icon: Brain, prefetch: false },
-    { href: '/dictionary', label: tNav('dictionary'), icon: BookOpen, prefetch: false },
+    { href: '/review', label: tNav('review'), icon: Brain, prefetch: true },
+    { href: '/dictionary', label: tNav('dictionary'), icon: BookOpen, prefetch: true },
     { href: '/translate', label: tNav('translate'), icon: Languages, prefetch: true },
   ];
 
@@ -73,7 +107,27 @@ export function MobileShell({
   }
 
   const activePath = optimisticHref ?? pathname;
+  const isPendingNavigation =
+    optimisticHref !== null && optimisticHref !== pathname;
   const dailyXpRatio = Math.min(100, Math.round((xp / DAILY_XP_GOAL) * 100));
+  const enterAnimClass =
+    transitionDir === 'right'
+      ? 'animate-tab-enter-right'
+      : transitionDir === 'left'
+        ? 'animate-tab-enter-left'
+        : 'animate-tab-enter';
+
+  function handleTabSelect(targetHref: string) {
+    if (targetHref === pathname) return;
+    const currentIdx = getTabIndex(pathname);
+    const targetIdx = getTabIndex(targetHref);
+    if (currentIdx !== -1 && targetIdx !== -1 && currentIdx !== targetIdx) {
+      setTransitionDir(targetIdx > currentIdx ? 'right' : 'left');
+    } else {
+      setTransitionDir('fade');
+    }
+    setOptimisticHref(targetHref);
+  }
 
   return (
     <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col border-x-2 border-border bg-background">
@@ -81,7 +135,8 @@ export function MobileShell({
       <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-1.5 border-b-2 border-border bg-background/95 px-3 backdrop-blur">
         <Link
           href="/learn"
-          onClick={() => setOptimisticHref('/learn')}
+          prefetch
+          onClick={() => handleTabSelect('/learn')}
           className="flex shrink-0 items-center gap-2 rounded-xl py-1 transition-transform duration-75 active:scale-95"
         >
           <LezgiBrandIcon size="sm" />
@@ -139,6 +194,7 @@ export function MobileShell({
 
         <Link
           href={isAuthenticated ? '/profile' : '/login'}
+          prefetch
           className={cn(
             'duo-card-3d flex h-9 shrink-0 items-center gap-1.5 rounded-xl border-2 border-b-[3px] px-2.5 pt-[1px] text-xs font-extrabold uppercase tracking-wide',
             isAuthenticated
@@ -230,19 +286,37 @@ export function MobileShell({
             </p>
           </div>
         )}
+
+        {isPendingNavigation && (
+          <div
+            className="pointer-events-none absolute inset-x-0 bottom-[-2px] h-[3px] overflow-hidden bg-primary/20"
+            aria-hidden="true"
+          >
+            <div className="duo-nav-progress-bar h-full w-1/2 rounded-full bg-gradient-to-r from-primary via-[#FFC800] to-primary" />
+          </div>
+        )}
       </header>
 
       <main
-        className="flex-1 px-4 py-6 pb-28"
+        className="flex-1 overflow-x-hidden px-4 py-6 pb-28"
         onClick={() => {
           if (activeHeaderCard) setActiveHeaderCard(null);
         }}
       >
-        {children}
+        <div
+          key={pathname}
+          className={cn(
+            enterAnimClass,
+            isPendingNavigation &&
+              'pointer-events-none opacity-75 transition-opacity duration-100'
+          )}
+        >
+          {children}
+        </div>
       </main>
 
       {/* Bottom Tab Bar (4 equal-width tactile tabs with instant optimistic highlight) */}
-      <nav className="fixed bottom-0 left-1/2 z-20 grid h-20 w-full max-w-md -translate-x-1/2 grid-cols-4 items-center gap-1.5 border-x-2 border-t-2 border-border bg-background px-2.5">
+      <nav className="fixed bottom-0 left-1/2 z-20 grid h-20 w-full max-w-md -translate-x-1/2 grid-cols-4 items-center gap-1.5 border-x-2 border-t-2 border-border bg-background/95 px-2.5 backdrop-blur">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive =
@@ -252,15 +326,20 @@ export function MobileShell({
               key={item.href}
               href={item.href}
               prefetch={item.prefetch}
-              onClick={() => setOptimisticHref(item.href)}
+              onClick={() => handleTabSelect(item.href)}
               className={cn(
-                'duo-card-3d flex h-14 w-full flex-col items-center justify-center gap-1 rounded-2xl border-2 px-1 text-[10px] font-extrabold uppercase tracking-wide',
+                'duo-card-3d flex h-14 w-full flex-col items-center justify-center gap-1 rounded-2xl border-2 px-1 text-[10px] font-extrabold uppercase tracking-wide transition-all duration-150',
                 isActive
-                  ? 'border-primary bg-primary/15 text-primary'
+                  ? 'border-primary bg-primary/15 text-primary shadow-sm'
                   : 'border-transparent text-muted-foreground hover:text-foreground'
               )}
             >
-              <Icon className="h-5 w-5 shrink-0 stroke-[2.2]" />
+              <Icon
+                className={cn(
+                  'h-5 w-5 shrink-0 stroke-[2.2] transition-transform duration-200',
+                  isActive && 'animate-tab-icon-pop scale-105'
+                )}
+              />
               <span className="truncate">{item.label}</span>
             </Link>
           );

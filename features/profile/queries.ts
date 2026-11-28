@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import { cookies } from 'next/headers';
 import { isSupabaseConfigured } from '@/lib/env';
 import {
@@ -72,7 +73,8 @@ async function computeGuestStatsFromCookie(): Promise<{
   }
 }
 
-export async function getCurrentUserSession(): Promise<CurrentUserSession> {
+export const getCurrentUserSession = cache(
+  async (): Promise<CurrentUserSession> => {
   const [cookiePinned, cookieAvatar] = await Promise.all([
     readPinnedMedalCookieSafe(),
     readProfileAvatarCookieSafe(),
@@ -188,4 +190,4 @@ export async function getCurrentUserSession(): Promise<CurrentUserSession> {
       lastActiveDate: null,
     };
   }
-}
+});
