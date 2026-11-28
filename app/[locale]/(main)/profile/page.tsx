@@ -130,6 +130,7 @@ export default async function ProfilePage() {
       profileHref="/profile"
       items={items}
       initialShowcase={session.pinnedMedalId}
+      initialAvatarId={session.avatarId}
       learnerName={learnerName}
       level={level}
       subtitle="Исследователь лезгинского языка"

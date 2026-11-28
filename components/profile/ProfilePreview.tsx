@@ -5,10 +5,12 @@ import {
   ArrowLeft,
   ArrowUpRight,
   BookOpen,
+  Camera,
   Check,
   Compass,
   Flame,
   Gem,
+  ImagePlus,
   LockKeyhole,
   Pin,
   Trophy,
@@ -16,9 +18,24 @@ import {
 } from "lucide-react";
 
 import { Link } from "@/lib/i18n/routing";
-import { pinProfileMedalAction } from "@/features/profile/actions";
+import {
+  pinProfileMedalAction,
+  updateProfileAvatarAction,
+} from "@/features/profile/actions";
 import { AchievementBadge } from "./AchievementBadge";
-import { achievements as defaultAchievements, type Achievement, type Category } from "./achievements";
+import {
+  AVATAR_PRESETS,
+  CUSTOM_AVATAR_STORAGE_KEY,
+  DEFAULT_AVATAR_ID,
+  isAvatarPresetId,
+  ProfileAvatarGraphic,
+  resizeImageFileToDataUrl,
+} from "./avatars";
+import {
+  achievements as defaultAchievements,
+  type Achievement,
+  type Category,
+} from "./achievements";
 
 const CATEGORIES: readonly Category[] = ["Все", "Учёба", "Постоянство", "Открытия"];
 
@@ -28,6 +45,7 @@ interface ProfilePreviewProps {
   sampleLabel?: string;
   items?: Achievement[];
   initialShowcase?: string | null;
+  initialAvatarId?: string | null;
   learnerName?: string;
   level?: number;
   subtitle?: string;
@@ -43,6 +61,7 @@ export function ProfilePreview({
   sampleLabel,
   items = defaultAchievements,
   initialShowcase,
+  initialAvatarId,
   learnerName = "Ученик",
   level = 1,
   subtitle = "Исследователь лезгинского языка",
@@ -57,11 +76,36 @@ export function ProfilePreview({
       ? initialShowcase
       : earned[0]?.id) ?? "";
 
+  const resolvedInitialAvatarId =
+    initialAvatarId === "custom" || isAvatarPresetId(initialAvatarId)
+      ? initialAvatarId
+      : DEFAULT_AVATAR_ID;
+
   const [category, setCategory] = useState<Category>("Все");
   const [earnedOnly, setEarnedOnly] = useState(false);
   const [selected, setSelected] = useState<Achievement | null>(null);
   const [showcase, setShowcase] = useState<string>(resolvedInitialShowcase);
+
+  const [avatarId, setAvatarId] = useState<string>(resolvedInitialAvatarId);
+  const [customAvatarUrl, setCustomAvatarUrl] = useState<string | null>(null);
+  const [avatarDialogOpen, setAvatarDialogOpen] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
   const closeRef = useRef<HTMLButtonElement>(null);
+  const avatarCloseRef = useRef<HTMLButtonElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Hydrate saved custom photo data URL from localStorage if user previously uploaded one
+  useEffect(() => {
+    try {
+      const savedCustom = window.localStorage.getItem(CUSTOM_AVATAR_STORAGE_KEY);
+      if (savedCustom && savedCustom.startsWith("data:image/")) {
+        setCustomAvatarUrl(savedCustom);
+      }
+    } catch {
+      // Ignore storage access errors
+    }
+  }, []);
 
   const featured =
     items.find((item) => item.id === showcase && item.earned) ?? earned[0];
@@ -89,11 +133,63 @@ export function ProfilePreview({
     };
   }, [selected]);
 
+  // The avatar picker window: focus close button, close on Escape, lock body scroll.
+  useEffect(() => {
+    if (!avatarDialogOpen) return;
+    avatarCloseRef.current?.focus();
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setAvatarDialogOpen(false);
+    };
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [avatarDialogOpen]);
+
   function handlePinMedal(medalId: string) {
     setShowcase(medalId);
     setSelected(null);
     void pinProfileMedalAction(medalId);
   }
+
+  function handleSelectAvatarPreset(nextId: string) {
+    setUploadError(null);
+    setAvatarId(nextId);
+    void updateProfileAvatarAction(nextId);
+  }
+
+  async function handleCustomFileChange(
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      setUploadError("Выберите изображение (PNG, JPG или WebP).");
+      return;
+    }
+
+    try {
+      setUploadError(null);
+      const resizedDataUrl = await resizeImageFileToDataUrl(file, 160);
+      try {
+        window.localStorage.setItem(CUSTOM_AVATAR_STORAGE_KEY, resizedDataUrl);
+      } catch {
+        // Ignore quota errors
+      }
+      setCustomAvatarUrl(resizedDataUrl);
+      setAvatarId("custom");
+      void updateProfileAvatarAction("custom");
+    } catch {
+      setUploadError("Не удалось обработать фото. Попробуйте другой файл.");
+    }
+  }
+
+  const activePreset = AVATAR_PRESETS.find((preset) => preset.id === avatarId);
 
   return (
     <div className="achievement-page">
@@ -117,14 +213,24 @@ export function ProfilePreview({
 
         <section className="learner-section" aria-label="Профиль ученика">
           <div className="learner-info">
-            <div className="learner-avatar" aria-hidden="true">
-              <svg viewBox="0 0 80 80">
-                <path d="M5 61L27 28L39 45L51 19L75 61Z" fill="var(--profile-jade)" />
-                <path d="M37 44L51 19L64 45L54 39L49 44L45 39Z" fill="var(--profile-text)" />
-                <path d="M15 63H66" stroke="var(--profile-gold)" strokeWidth="3" strokeLinecap="round" />
-                <circle cx="24" cy="18" r="5" fill="var(--profile-gold)" />
-              </svg>
-            </div>
+            <button
+              type="button"
+              className="learner-avatar"
+              onClick={() => {
+                setUploadError(null);
+                setAvatarDialogOpen(true);
+              }}
+              aria-label="Изменить фото профиля"
+              title="Изменить фото профиля"
+            >
+              <ProfileAvatarGraphic
+                avatarId={avatarId}
+                customDataUrl={customAvatarUrl}
+              />
+              <span className="learner-avatar-edit-badge" aria-hidden="true">
+                <Camera />
+              </span>
+            </button>
             <div>
               <div className="learner-name-line">
                 <h1>{learnerName}</h1>
@@ -292,6 +398,106 @@ export function ProfilePreview({
           <span>ЛЕЗГИ · РАСТИ С КАЖДЫМ СЛОВОМ</span>
         </footer>
       </main>
+
+      {avatarDialogOpen && (
+        <>
+          <div
+            className="achievement-dialog-overlay"
+            onClick={() => setAvatarDialogOpen(false)}
+          />
+          <div
+            className="achievement-dialog avatar-picker-dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="avatar-dialog-title"
+            aria-describedby="avatar-dialog-description"
+          >
+            <button
+              type="button"
+              ref={avatarCloseRef}
+              className="btn dialog-close"
+              aria-label="Закрыть"
+              onClick={() => setAvatarDialogOpen(false)}
+            >
+              <X aria-hidden="true" />
+            </button>
+            <span className="section-kicker">ОБЛИК УЧЕНИКА</span>
+            <div className="avatar-preview-hero">
+              <ProfileAvatarGraphic
+                avatarId={avatarId}
+                customDataUrl={customAvatarUrl}
+              />
+            </div>
+            <h2 id="avatar-dialog-title" className="dialog-title">
+              Фото профиля
+            </h2>
+            <p id="avatar-dialog-description" className="dialog-description">
+              {avatarId === "custom" && customAvatarUrl
+                ? "Загружено ваше собственное фото"
+                : `${activePreset?.name ?? "Горные вершины"} — ${activePreset?.subtitle ?? "Изумрудные хребты и солнце"}`}
+            </p>
+
+            <div
+              className="avatar-preset-grid"
+              role="group"
+              aria-label="Готовые варианты аватара"
+            >
+              {AVATAR_PRESETS.map((preset) => {
+                const isActive = avatarId === preset.id;
+                return (
+                  <button
+                    key={preset.id}
+                    type="button"
+                    className={`btn avatar-preset-option ${isActive ? "is-active" : ""}`}
+                    aria-pressed={isActive}
+                    onClick={() => handleSelectAvatarPreset(preset.id)}
+                  >
+                    <span className="avatar-preset-thumb">
+                      <ProfileAvatarGraphic avatarId={preset.id} />
+                    </span>
+                    <span className="avatar-preset-label">{preset.name}</span>
+                    {isActive && (
+                      <span className="avatar-preset-check" aria-hidden="true">
+                        <Check />
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="avatar-upload-row">
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                hidden
+                onChange={handleCustomFileChange}
+              />
+              <button
+                type="button"
+                className="btn avatar-upload-btn"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <ImagePlus aria-hidden="true" />
+                {customAvatarUrl ? "Загрузить другое фото с устройства" : "Загрузить своё фото с устройства"}
+              </button>
+              {uploadError && (
+                <span className="avatar-upload-error">{uploadError}</span>
+              )}
+            </div>
+
+            <button
+              type="button"
+              className="btn pin-button"
+              onClick={() => setAvatarDialogOpen(false)}
+            >
+              <Check aria-hidden="true" />
+              Готово
+            </button>
+          </div>
+        </>
+      )}
 
       {selected && (
         <>

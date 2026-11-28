@@ -11,6 +11,7 @@ import {
 import type { UserRole } from '@/features/shared/types';
 
 export const PINNED_MEDAL_COOKIE = 'lezgi_pinned_medal';
+export const PROFILE_AVATAR_COOKIE = 'lezgi_profile_avatar';
 
 export interface CurrentUserSession {
   isAuthenticated: boolean;
@@ -20,6 +21,7 @@ export interface CurrentUserSession {
   xp: number;
   streakDays: number;
   pinnedMedalId: string | null;
+  avatarId: string | null;
   createdAt: string | null;
   lastActiveDate: string | null;
 }
@@ -28,6 +30,15 @@ async function readPinnedMedalCookieSafe(): Promise<string | null> {
   try {
     const cookieStore = await cookies();
     return cookieStore.get(PINNED_MEDAL_COOKIE)?.value?.trim() || null;
+  } catch {
+    return null;
+  }
+}
+
+async function readProfileAvatarCookieSafe(): Promise<string | null> {
+  try {
+    const cookieStore = await cookies();
+    return cookieStore.get(PROFILE_AVATAR_COOKIE)?.value?.trim() || null;
   } catch {
     return null;
   }
@@ -62,7 +73,10 @@ async function computeGuestStatsFromCookie(): Promise<{
 }
 
 export async function getCurrentUserSession(): Promise<CurrentUserSession> {
-  const cookiePinned = await readPinnedMedalCookieSafe();
+  const [cookiePinned, cookieAvatar] = await Promise.all([
+    readPinnedMedalCookieSafe(),
+    readProfileAvatarCookieSafe(),
+  ]);
 
   if (!isSupabaseConfigured()) {
     const guest = await computeGuestStatsFromCookie();
@@ -74,6 +88,7 @@ export async function getCurrentUserSession(): Promise<CurrentUserSession> {
       xp: guest.xp,
       streakDays: guest.streakDays,
       pinnedMedalId: cookiePinned,
+      avatarId: cookieAvatar,
       createdAt: null,
       lastActiveDate: null,
     };
@@ -92,6 +107,7 @@ export async function getCurrentUserSession(): Promise<CurrentUserSession> {
         xp: guest.xp,
         streakDays: guest.streakDays,
         pinnedMedalId: cookiePinned,
+        avatarId: cookieAvatar,
         createdAt: null,
         lastActiveDate: null,
       };
@@ -99,7 +115,7 @@ export async function getCurrentUserSession(): Promise<CurrentUserSession> {
 
     const supabase = await createSupabaseServerClient();
 
-    // Try reading pinned_medal_id from profiles first; fall back cleanly if migration 0003 is not yet applied
+    // Try reading pinned_medal_id & avatar_id from profiles first; fall back cleanly if migrations 0003/0004 are not yet applied
     let profileRow: {
       display_name: string | null;
       role: UserRole | null;
@@ -108,12 +124,13 @@ export async function getCurrentUserSession(): Promise<CurrentUserSession> {
       created_at?: string | null;
       last_active_date?: string | null;
       pinned_medal_id?: string | null;
+      avatar_id?: string | null;
     } | null = null;
 
     const fullRes = await supabase
       .from('profiles')
       .select(
-        'display_name, role, xp, streak_days, created_at, last_active_date, pinned_medal_id'
+        'display_name, role, xp, streak_days, created_at, last_active_date, pinned_medal_id, avatar_id'
       )
       .eq('id', user.id)
       .single();
@@ -135,6 +152,10 @@ export async function getCurrentUserSession(): Promise<CurrentUserSession> {
       typeof user.user_metadata?.pinned_medal_id === 'string'
         ? user.user_metadata.pinned_medal_id
         : null;
+    const metaAvatar =
+      typeof user.user_metadata?.avatar_id === 'string'
+        ? user.user_metadata.avatar_id
+        : null;
 
     return {
       isAuthenticated: true,
@@ -148,6 +169,7 @@ export async function getCurrentUserSession(): Promise<CurrentUserSession> {
       xp: profileRow?.xp ?? 0,
       streakDays: profileRow?.streak_days ?? 0,
       pinnedMedalId: profileRow?.pinned_medal_id ?? metaPinned ?? cookiePinned,
+      avatarId: profileRow?.avatar_id ?? metaAvatar ?? cookieAvatar,
       createdAt: profileRow?.created_at ?? user.created_at ?? null,
       lastActiveDate: profileRow?.last_active_date ?? null,
     };
@@ -161,6 +183,7 @@ export async function getCurrentUserSession(): Promise<CurrentUserSession> {
       xp: guest.xp,
       streakDays: guest.streakDays,
       pinnedMedalId: cookiePinned,
+      avatarId: cookieAvatar,
       createdAt: null,
       lastActiveDate: null,
     };

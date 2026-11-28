@@ -3,6 +3,12 @@ import {
   ACHIEVEMENT_IDS,
   buildLearnerAchievements,
 } from '@/components/profile/achievements';
+import {
+  AVATAR_PRESET_IDS,
+  AVATAR_PRESETS,
+  DEFAULT_AVATAR_ID,
+  isAvatarPresetId,
+} from '@/components/profile/avatars';
 
 describe('buildLearnerAchievements', () => {
   it('returns all 12 collectible medals locked when progress is zero', () => {
@@ -46,5 +52,13 @@ describe('buildLearnerAchievements', () => {
 
     const firstMedal = items.find((m) => m.id === 'first');
     expect(firstMedal?.date).toBe('28 ноября 2026');
+  });
+
+  it('exposes 8 ready-made profile avatar presets', () => {
+    expect(AVATAR_PRESETS).toHaveLength(8);
+    expect(AVATAR_PRESETS.map((p) => p.id)).toEqual([...AVATAR_PRESET_IDS]);
+    expect(isAvatarPresetId(DEFAULT_AVATAR_ID)).toBe(true);
+    expect(isAvatarPresetId('eagle')).toBe(true);
+    expect(isAvatarPresetId('unknown')).toBe(false);
   });
 });

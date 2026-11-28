@@ -9,7 +9,11 @@ import {
   getCurrentAuthUser,
 } from '@/lib/supabase/server';
 import { ACHIEVEMENT_IDS } from '@/components/profile/achievements';
-import { PINNED_MEDAL_COOKIE } from '@/features/profile/queries';
+import { AVATAR_PRESET_IDS } from '@/components/profile/avatars';
+import {
+  PINNED_MEDAL_COOKIE,
+  PROFILE_AVATAR_COOKIE,
+} from '@/features/profile/queries';
 import type { ActionResult } from '@/features/shared/types';
 
 const displayNameSchema = z
@@ -19,6 +23,7 @@ const displayNameSchema = z
   .max(40, 'Имя должно быть короче 40 символов');
 
 const medalIdSchema = z.enum(ACHIEVEMENT_IDS);
+const avatarIdSchema = z.enum([...AVATAR_PRESET_IDS, 'custom'] as const);
 
 export async function updateDisplayNameAction(
   displayName: string
@@ -114,4 +119,49 @@ export async function pinProfileMedalAction(
 
   revalidatePath('/profile');
   return { ok: true, data: { medalId: parsed.data } };
+}
+
+export async function updateProfileAvatarAction(
+  avatarId: string
+): Promise<ActionResult<{ avatarId: string }>> {
+  const parsed = avatarIdSchema.safeParse(avatarId);
+  if (!parsed.success) {
+    return {
+      ok: false,
+      error: 'Некорректный вариант аватара',
+      code: 'VALIDATION_ERROR',
+    };
+  }
+
+  try {
+    const cookieStore = await cookies();
+    cookieStore.set(PROFILE_AVATAR_COOKIE, parsed.data, {
+      path: '/',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 365,
+    });
+  } catch {
+    // Ignore cookie write failure outside request context
+  }
+
+  if (isSupabaseConfigured()) {
+    try {
+      const user = await getCurrentAuthUser();
+      if (user) {
+        const supabase = await createSupabaseServerClient();
+        await supabase
+          .from('profiles')
+          .update({ avatar_id: parsed.data })
+          .eq('id', user.id);
+        await supabase.auth
+          .updateUser({ data: { avatar_id: parsed.data } })
+          .catch(() => null);
+      }
+    } catch {
+      // Cookie fallback still preserves choice if DB column is pending migration
+    }
+  }
+
+  revalidatePath('/profile');
+  return { ok: true, data: { avatarId: parsed.data } };
 }
