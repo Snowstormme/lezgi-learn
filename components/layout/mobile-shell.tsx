@@ -325,9 +325,7 @@ export function MobileShell({
               className="pointer-events-none absolute inset-y-0 left-0 z-0 w-1/4 px-[3px] transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform motion-reduce:transition-none"
               style={{ transform: `translate3d(${activeTabIdx * 100}%, 0, 0)` }}
             >
-              <span className="relative block h-full w-full rounded-2xl border-2 border-b-[3px] border-primary bg-primary/15 shadow-[0_6px_16px_-6px_rgba(240,78,55,0.42)]">
-                <span className="absolute left-1/2 top-1 h-[3px] w-6 -translate-x-1/2 rounded-full bg-primary/85" />
-              </span>
+              <span className="block h-full w-full rounded-2xl border-2 border-b-[3px] border-primary bg-primary/15 shadow-[0_6px_16px_-6px_rgba(240,78,55,0.42)]" />
             </span>
           )}
 
@@ -342,7 +340,7 @@ export function MobileShell({
                 prefetch={item.prefetch}
                 onClick={() => handleTabSelect(item.href)}
                 className={cn(
-                  'relative z-10 flex h-14 w-full flex-col items-center justify-center gap-1 rounded-2xl px-1 pt-0.5 text-[10px] font-extrabold uppercase tracking-wide transition-all duration-200 active:scale-95',
+                  'relative z-10 flex h-14 w-full flex-col items-center justify-center gap-1 rounded-2xl px-1 text-[10px] font-extrabold uppercase tracking-wide transition-all duration-200 active:scale-95',
                   isActive
                     ? 'text-primary'
                     : 'text-muted-foreground hover:text-foreground'
