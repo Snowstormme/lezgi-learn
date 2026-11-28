@@ -3,11 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import {
   ArrowLeft,
-  ArrowUpRight,
   BookOpen,
   Camera,
   Check,
-  Compass,
   Flame,
   Gem,
   ImagePlus,
@@ -194,14 +192,15 @@ export function ProfilePreview({
   return (
     <div className="achievement-page">
       <nav className="profile-nav" aria-label="Основная навигация">
-        <Link href={profileHref} className="profile-brand">
+        <Link
+          href={homeHref}
+          className="profile-brand"
+          aria-label="Вернуться на главную"
+          title="Вернуться на главную"
+        >
+          <ArrowLeft className="brand-back-icon" aria-hidden="true" />
           <span className="brand-seal" aria-hidden="true">❖</span> ЛЕЗГИ<span className="brand-divider">/</span>
           <span className="brand-section">ПРОФИЛЬ</span>
-        </Link>
-        <Link href={homeHref} className="animation-link">
-          <Compass aria-hidden="true" />
-          Анимации
-          <ArrowUpRight aria-hidden="true" />
         </Link>
       </nav>
 
