@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import {
-  ArrowLeft,
   Check,
   Lightbulb,
   Lock,
@@ -150,10 +149,6 @@ export function UnitHeaderBanner({ unit, allUnits }: UnitHeaderBannerProps) {
           aria-label="Открыть разделы и модули курса"
         >
           <span className="inline-flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-wider text-[#F8FAFC]/85">
-            <ArrowLeft
-              className="h-3.5 w-3.5 shrink-0 stroke-[2.8] transition-transform duration-150 group-hover:-translate-x-0.5"
-              aria-hidden="true"
-            />
             <span>
               Раздел 1, Модуль {unit.order_index}
             </span>
